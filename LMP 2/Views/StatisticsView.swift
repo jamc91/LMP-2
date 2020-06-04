@@ -14,7 +14,9 @@ struct StatisticsView: View {
     @State private var pickerSelection = 0
     @State private var pickerCategorie = 0
     
+    
     var body: some View {
+        
         VStack {
             Picker(selection: $pickerCategorie, label: Text("")) {
                 Text("Regular").tag(0)
@@ -27,12 +29,16 @@ struct StatisticsView: View {
                 Text("RBI").tag(3)
                 Text("SB").tag(4)
             }.pickerStyle(SegmentedPickerStyle())
+            
+            
             typeStastistic(categorie: pickerCategorie, type: pickerSelection)
+            
         }
         .padding()
         .background(Color("BackgroundCell"))
         .cornerRadius(10)
     }
+    
     func typeStastistic(categorie: Int, type: Int) -> some View {
         
         if categorie == 0 {
@@ -145,8 +151,6 @@ struct StatisticsView_Previews: PreviewProvider {
     
     }
 }
-
-
 
 struct leaderView: View {
     

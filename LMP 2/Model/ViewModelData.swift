@@ -20,19 +20,14 @@ class RowViewModel: ObservableObject {
     @Published var showSelector = false
     @Published var standingIs = "Regular"
     @Published var standingType = 0
-    @Published var isLoading = false
     
-    init() {
+
+    func parseData() {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY/MM/dd"
         self.date = formatter.string(from: self.dateNow)
         
-    }
-    
-    func parseData() {
-        
-        isLoading = true
         let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(self.date)")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             guard let data = data else { return }
@@ -44,7 +39,7 @@ class RowViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     
                     self.Results = fetched.response
-                    self.isLoading = false
+                    
                 }
                 
             }
@@ -71,7 +66,6 @@ class RowViewModel: ObservableObject {
                     
                     self.standingList = stand.response
                     
-                    
                 }
                 
             }
@@ -96,10 +90,8 @@ class RowViewModel: ObservableObject {
                         
                 DispatchQueue.main.async {
                     
+                    self.statisticsListRegular.append(contentsOf: stat.response)
                 
-                    self.statisticsListRegular = stat.response
-                    
-                    
                 }
                 
             }
@@ -124,8 +116,8 @@ class RowViewModel: ObservableObject {
                         
                 DispatchQueue.main.async {
                     
-                    self.statisticsListPlayoffs = stat.response
-                    
+                    self.statisticsListPlayoffs.append(contentsOf: stat.response)
+                        
                 }
                 
             }
