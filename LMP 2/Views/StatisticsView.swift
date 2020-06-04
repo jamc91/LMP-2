@@ -27,16 +27,18 @@ struct StatisticsView: View {
                 Text("RBI").tag(3)
                 Text("SB").tag(4)
             }.pickerStyle(SegmentedPickerStyle())
-            typeStastistic(type: pickerSelection)
+            typeStastistic(categorie: pickerCategorie, type: pickerSelection)
         }
         .padding()
         .background(Color("BackgroundCell"))
         .cornerRadius(10)
     }
-    func typeStastistic(type: Int) -> some View {
+    func typeStastistic(categorie: Int, type: Int) -> some View {
+        
+        if categorie == 0 {
         switch type {
         case 0:
-            return ForEach(statisticsData.staticticsList.sorted(by: { (a, b) -> Bool in
+            return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                 return a.avg.localizedStandardCompare(b.avg) == .orderedDescending
             }), id: \.milb_id) { item in
                                 
@@ -44,7 +46,7 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
             case 1:
-                return ForEach(statisticsData.staticticsList.sorted(by: { (a, b) -> Bool in
+                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.r.localizedStandardCompare(b.r) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -52,7 +54,7 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
             case 2:
-                return ForEach(statisticsData.staticticsList.sorted(by: { (s1, s2) -> Bool in
+                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (s1, s2) -> Bool in
                     return s1.hr.localizedStandardCompare(s2.hr) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -60,7 +62,7 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
             case 3:
-                return ForEach(statisticsData.staticticsList.sorted(by: { (a, b) -> Bool in
+                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.rbi.localizedStandardCompare(b.rbi) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -68,7 +70,7 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
             case 4:
-                return ForEach(statisticsData.staticticsList.sorted(by: { (a, b) -> Bool in
+                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.sb.localizedStandardCompare(b.sb) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -76,11 +78,62 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
         default:
-            return ForEach(statisticsData.staticticsList, id: \.milb_id) { item in
+            return ForEach(statisticsData.statisticsListRegular, id: \.milb_id) { item in
                                 
                 leaderView(leaderData: item)
-                    
+                
             }.eraseToAnyView()
+            }
+        } else {
+            switch type {
+            case 0:
+                return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                    return a.avg.localizedStandardCompare(b.avg) == .orderedDescending
+                }), id: \.milb_id) { item in
+                                    
+                    leaderPlayoffsView(leaderData: item)
+                        
+                }.eraseToAnyView()
+                case 1:
+                    return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                        return a.r.localizedStandardCompare(b.r) == .orderedDescending
+                    }), id: \.milb_id) { item in
+                                    
+                    leaderPlayoffsView(leaderData: item)
+                        
+                }.eraseToAnyView()
+                case 2:
+                    return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (s1, s2) -> Bool in
+                        return s1.hr.localizedStandardCompare(s2.hr) == .orderedDescending
+                    }), id: \.milb_id) { item in
+                                    
+                    leaderPlayoffsView(leaderData: item)
+                        
+                }.eraseToAnyView()
+                case 3:
+                    return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                        return a.rbi.localizedStandardCompare(b.rbi) == .orderedDescending
+                    }), id: \.milb_id) { item in
+                                    
+                    leaderPlayoffsView(leaderData: item)
+                        
+                }.eraseToAnyView()
+                case 4:
+                    return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                        return a.sb.localizedStandardCompare(b.sb) == .orderedDescending
+                    }), id: \.milb_id) { item in
+                                    
+                    leaderPlayoffsView(leaderData: item)
+                        
+                }.eraseToAnyView()
+            default:
+                return ForEach(statisticsData.statisticsListPlayoffs, id: \.milb_id) { item in
+                                    
+                    leaderPlayoffsView(leaderData: item)
+                    
+                }.eraseToAnyView()
+                }
+            
         }
     }
 }
@@ -97,12 +150,43 @@ struct StatisticsView_Previews: PreviewProvider {
 
 struct leaderView: View {
     
-    var leaderData: Leaders
+    var leaderData: leadersRegular
 
     var body: some View {
         VStack {
             HStack {
-                URLImage(url: leaderData.thumb)
+                Image(systemName: "person.crop.circle")
+                    .resizable()
+                    .frame(width: 35, height: 35)
+                VStack (alignment: .leading) {
+                    Text(leaderData.name)
+                        .font(.system(.headline))
+                        .foregroundColor(.primary)
+                    Text(leaderData.team)
+                        .font(.system(.body))
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                Text(leaderData.avg)
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundColor(.primary)
+                
+            }
+            Divider()
+        }
+    }
+}
+
+struct leaderPlayoffsView: View {
+    
+    var leaderData: leadersPlayoffs
+
+    var body: some View {
+        VStack {
+            HStack {
+                Image(systemName: "person.crop.circle")
+                .resizable()
+                .frame(width: 35, height: 35)
                 VStack (alignment: .leading) {
                     Text(leaderData.name)
                         .font(.system(.headline, design: .rounded))
@@ -122,40 +206,8 @@ struct leaderView: View {
     }
 }
 
-struct URLImage: View {
-    
-    let imageURL: String
-    @ObservedObject var imageDownloader = ImageLoader()
-    
-    init(url: String) {
-        self.imageURL = url
-        self.imageDownloader.downloadImage(url: url)
-    }
-    
-    var body: some View {
-        if let imageData = self.imageDownloader.downLoadedData {
-            let img = UIImage(data: imageData)
-            return Image(uiImage: img!)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Circle())
-                    .frame(width: 50, height: 50, alignment: .leading)
-                    .padding(.trailing, 5)
-            
-        }
-        else
-        {
-            return Image(systemName: "person.crop.circle")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .clipShape(Circle())
-                .frame(width: 50, height: 50, alignment: .leading)
-                .padding(.trailing, 5)
-            
-        }
-        
-    }
-    
-}
+
+
+
 
 

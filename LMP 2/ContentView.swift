@@ -52,7 +52,8 @@ struct ContentView: View {
                         .environment(\.horizontalSizeClass, .compact)
                         .onAppear(perform: self.results.parseStandings)
                         .onAppear(perform: self.results.parseData)
-                        .onAppear(perform: self.results.parseStatistics)
+                        .onAppear(perform: self.results.parseStatisticsRegular)
+                        .onAppear(perform: self.results.parseStatisticsPlayoffs)
             }
             VStack {
                 Spacer()

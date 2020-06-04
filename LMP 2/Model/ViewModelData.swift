@@ -12,7 +12,8 @@ class RowViewModel: ObservableObject {
     
     @Published var Results = [Response]()
     @Published var standingList = Standings()
-    @Published var staticticsList = [Leaders]()
+    @Published var statisticsListRegular = [leadersRegular]()
+    @Published var statisticsListPlayoffs = [leadersPlayoffs]()
     @Published var date = ""
     @Published var showPickerView = false
     @Published var dateNow = Date()
@@ -70,6 +71,7 @@ class RowViewModel: ObservableObject {
                     
                     self.standingList = stand.response
                     
+                    
                 }
                 
             }
@@ -82,7 +84,7 @@ class RowViewModel: ObservableObject {
         }.resume()
     }
     
-    func parseStatistics() {
+    func parseStatisticsRegular() {
         
         let url = URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=batting&type=regular&format=table-stats-batting&limit=300")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
@@ -90,13 +92,39 @@ class RowViewModel: ObservableObject {
             
             do {
                 
-                let stat = try JSONDecoder().decode(statistics.self, from: data)
+                let stat = try JSONDecoder().decode(statisticsRegular.self, from: data)
                         
                 DispatchQueue.main.async {
                     
                 
-                    self.staticticsList = stat.response
+                    self.statisticsListRegular = stat.response
                     
+                    
+                }
+                
+            }
+                
+            catch {
+                
+                print(error.localizedDescription)
+                
+            }
+        }.resume()
+    }
+    
+    func parseStatisticsPlayoffs() {
+        
+        let url = URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=batting&type=playoffs&format=table-stats-batting&limit=300")
+        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+            guard let data = data else { return }
+            
+            do {
+                
+                let stat = try JSONDecoder().decode(statisticsPlayoffs.self, from: data)
+                        
+                DispatchQueue.main.async {
+                    
+                    self.statisticsListPlayoffs = stat.response
                     
                 }
                 
