@@ -11,17 +11,19 @@ import SwiftUI
 struct StandingView: View {
     
     @ObservedObject var standingData = RowViewModel()
-    @State private var statusPicker = 0
+    @State private var statusTopPicker = 0
+    @State private var statusBottomPicker = 0
+     
     
     var body: some View {
         VStack (alignment: .center) {
-            Picker(selection: $statusPicker, label: Text("")) {
+            Picker(selection: $statusBottomPicker, label: Text("")) {
                 Text("Regular").tag(0)
                 Text("Playoffs").tag(1)
                 
             }.pickerStyle(SegmentedPickerStyle())
-            Picker(selection: self.$standingData.standingType, label: Text("")) {
-                if self.statusPicker == 0 {
+            Picker(selection: $statusTopPicker, label: Text("")) {
+                if self.statusBottomPicker == 0 {
                     Text("1ra Vuelta").tag(0)
                     Text("2da Vuelta").tag(1)
                     Text("General").tag(2)
@@ -34,10 +36,9 @@ struct StandingView: View {
                 }
             }.pickerStyle(SegmentedPickerStyle())
              .padding(.bottom)
-             .animation(nil)
             
-            headerStatus(status: self.standingData.standingType, type: self.statusPicker)
-            standingType(type: self.standingData.standingType, status: self.statusPicker)
+            headerStatus(status: self.statusTopPicker, type: self.statusBottomPicker)
+            standingType(type: self.statusTopPicker, status: self.statusBottomPicker)
             
         }
         .padding()
@@ -125,34 +126,18 @@ struct StandingRegularView: View {
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(name!)
                     .font(.caption)
-                    .bold()
                     .multilineTextAlignment(.leading)
                 Spacer()
                 Text(wins!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 20, font: .caption))
                 Text(losses!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 20, font: .caption))
                 Text(percent!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 Text(gb!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 Text(pts!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 
             }
             Divider()
@@ -175,21 +160,11 @@ struct StandingPointsView: View {
                 .bold()
                 Spacer()
                 Text(first!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 Text(second!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 Text(total!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 40)
-                    .multilineTextAlignment(.leading)
-                
+                    .modifier(modifierText(frameSize: 40, font: .caption))
             }
             Divider()
         }
@@ -211,25 +186,13 @@ struct StandingPlayoffsView: View {
                 .bold()
                 Spacer()
                 Text(away_wins!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 20, font: .caption))
                 Text(away_losses!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 20, font: .caption))
                 Text(away_percent!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 Text(away_games_played!)
-                .font(.caption)
-                    .bold()
-                .frame(width: 30)
-                .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
             }
             HStack (spacing: 5) {
                 Image(home_image!)
@@ -240,32 +203,112 @@ struct StandingPlayoffsView: View {
                 .bold()
                 Spacer()
                 Text(home_wins!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 20, font: .caption))
                 Text(home_losses!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 20, font: .caption))
                 Text(home_percent!)
-                    .font(.caption)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
                 Text(home_games_played!)
-                .font(.caption)
-                    .bold()
-                .frame(width: 30)
-                .multilineTextAlignment(.leading)
+                    .modifier(modifierText(frameSize: 30, font: .caption))
             }
             Divider()
         }
     }
 }
 
-struct HeaderRegularView: View {
+struct headerView: View {
+    
+    @Binding var type: Int
+    @Binding var status: Int
+    
+    var body: some View {
+        
+           headerStatus(status: status, type: type)
+        }
+    }
+    func headerStatus(status: Int, type: Int) -> some View {
+        if type == 0 {
+            switch status {
+            case 3:
+                return VStack {
+                    
+                    HStack (spacing: 5) {
+                        Text("Equipos")
+                            .font(.subheadline)
+                        Spacer()
+                        Text("1V")
+                            .modifier(modifierText(frameSize: 30))
+                        Text("2V")
+                            .modifier(modifierText(frameSize: 30))
+                        Text("Total")
+                            .modifier(modifierText(frameSize: 40))
+                    }
+                    Divider()
+                }
+                .eraseToAnyView()
+            default:
+                return VStack {
+                    HStack (spacing: 5){
+                        Text("Equipos")
+                            .font(.subheadline)
+                        Spacer()
+                        Text("G")
+                            .modifier(modifierText(frameSize: 20))
+                        Text("P")
+                            .modifier(modifierText(frameSize: 20))
+                        Text("%")
+                            .modifier(modifierText(frameSize: 30))
+                        Text("JV")
+                            .modifier(modifierText(frameSize: 30))
+                        Text("PTS")
+                            .modifier(modifierText(frameSize: 30))
+
+                    }
+                    Divider()
+                }
+            .eraseToAnyView()
+        }
+        } else {
+          return VStack {
+                HStack (spacing: 5){
+                    Text("Equipos")
+                        .font(.subheadline)
+                    Spacer()
+                    Text("G")
+                        .modifier(modifierText(frameSize: 20))
+                    Text("P")
+                        .modifier(modifierText(frameSize: 20))
+                    Text("%")
+                        .modifier(modifierText(frameSize: 30))
+                    Text("JV")
+                       .modifier(modifierText(frameSize: 30))
+                    
+                }
+                Divider()
+            }
+        .eraseToAnyView()
+        }
+}
+
+struct modifierText: ViewModifier {
+    
+    @State var frameSize: CGFloat
+    @State var font: Font = .subheadline
+    
+    func body(content: Content) -> some View {
+    return content
+        .font(font)
+        .frame(width: frameSize)
+        .multilineTextAlignment(.leading)
+        
+    }
+}
+
+
+
+
+
+/*struct HeaderRegularView: View {
     
     var body: some View {
         
@@ -377,122 +420,4 @@ struct HeaderPlayoffsView: View {
             Divider()
         }
     }
-}
-
-struct headerView: View {
-    
-    @Binding var type: Int
-    @Binding var status: Int
-    
-    var body: some View {
-        
-           headerStatus(status: status, type: type)
-        }
-    }
-    func headerStatus(status: Int, type: Int) -> some View {
-        if type == 0 {
-            switch status {
-            case 3:
-                return VStack {
-                    
-                    HStack (spacing: 5) {
-                        Text("Equipos")
-                            .font(.subheadline)
-                            .bold()
-                        Spacer()
-                        Text("1V")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 30)
-                            .multilineTextAlignment(.leading)
-                        Text("2V")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 30)
-                            .multilineTextAlignment(.leading)
-                        Text("Total")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 40)
-                            .multilineTextAlignment(.leading)
-                    }
-                    Divider()
-                }
-                .eraseToAnyView()
-            default:
-                return VStack {
-                    HStack (spacing: 5){
-                        Text("Equipos")
-                            .font(.subheadline)
-                            .bold()
-                        
-                        Spacer()
-                        Text("G")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 20)
-                            .multilineTextAlignment(.leading)
-                        Text("P")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 20)
-                            .multilineTextAlignment(.leading)
-                        Text("%")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 30)
-                            .multilineTextAlignment(.leading)
-                        Text("JV")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 30)
-                            .multilineTextAlignment(.leading)
-                        Text("PTS")
-                            .font(.subheadline)
-                            .bold()
-                            .frame(width: 30)
-                            .multilineTextAlignment(.leading)
-                            .font(.subheadline)
-
-                    }
-                    Divider()
-                }
-            .eraseToAnyView()
-        }
-        } else {
-          return VStack {
-                HStack (spacing: 5){
-                    Text("Equipos")
-                        .font(.subheadline)
-                        .bold()
-                    
-                    Spacer()
-                    Text("G")
-                        .font(.subheadline)
-                        .bold()
-                        .frame(width: 20)
-                        .multilineTextAlignment(.leading)
-                    Text("P")
-                        .font(.subheadline)
-                        .bold()
-                        .frame(width: 20)
-                        .multilineTextAlignment(.leading)
-                    Text("%")
-                        .font(.subheadline)
-                        .bold()
-                        .frame(width: 30)
-                        .multilineTextAlignment(.leading)
-                    Text("JV")
-                        .font(.subheadline)
-                        .bold()
-                        .frame(width: 30)
-                        .multilineTextAlignment(.leading)
-
-                }
-                Divider()
-            }
-        .eraseToAnyView()
-        }
-}
-
-
+}*/

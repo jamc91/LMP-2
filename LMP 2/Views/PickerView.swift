@@ -10,14 +10,14 @@ import SwiftUI
 
 struct PickerView: View {
     
-    @ObservedObject var data: RowViewModel
+    @ObservedObject var viewModel: RowViewModel
    
     var body: some View {
             VStack {
                 HStack {
                     Button(action: {
                         
-                        self.data.showPickerView = false
+                        self.viewModel.showPickerView = false
                        
                     }) {
                         Image(systemName: "xmark.circle.fill")
@@ -34,18 +34,17 @@ struct PickerView: View {
                     Button(action: {
                         let formatter = DateFormatter()
                         formatter.dateFormat = "YYYY/MM/dd"
-                        self.data.date = formatter.string(from: self.data.dateNow)
-                        self.data.showPickerView = false
-                        self.data.parseData()
-                        
-                        
+                        self.viewModel.date = formatter.string(from: self.viewModel.dateNow)
+                        self.viewModel.showPickerView = false
+                        self.viewModel.parseData()
+
                     }) {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 25))
                             .foregroundColor(Color(.systemGray2))
                     }.padding()
                 }
-                DatePicker("", selection: self.$data.dateNow, displayedComponents: .date)
+                DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
                     .labelsHidden()
                     .environment(\.locale, Locale.init(identifier: "es"))
                     .padding(.bottom)
@@ -53,14 +52,14 @@ struct PickerView: View {
             }
             .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
             .background(Color("BackgroundCell"))
-            .cornerRadius(15)
+            .cornerRadius(10)
   
     }
 }
 
 struct PickerView_Previews: PreviewProvider {
     static var previews: some View {
-        PickerView(data: RowViewModel()).previewLayout(.sizeThatFits)
+        PickerView(viewModel: RowViewModel()).previewLayout(.sizeThatFits)
 
     }
 }

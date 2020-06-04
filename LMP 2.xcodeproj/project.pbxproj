@@ -10,7 +10,6 @@
 		1419834C2485C24200F4DC1D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834B2485C24200F4DC1D /* ActivityIndicatorView.swift */; };
 		1419834E2485CA7400F4DC1D /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834D2485CA7400F4DC1D /* StatisticsView.swift */; };
 		141983502485CC7100F4DC1D /* statisticsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834F2485CC7100F4DC1D /* statisticsData.swift */; };
-		1419835624871B5600F4DC1D /* SelectorStanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419835524871B5600F4DC1D /* SelectorStanding.swift */; };
 		1442A6CA246F829A0047CE0E /* ScoreBoardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1442A6C9246F829A0047CE0E /* ScoreBoardData.swift */; };
 		148508A32474F4F10085D292 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148508A22474F4F10085D292 /* PickerView.swift */; };
 		14E05B162460AA92008F2836 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E05B152460AA92008F2836 /* AppDelegate.swift */; };
@@ -49,7 +48,6 @@
 		1419834B2485C24200F4DC1D /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		1419834D2485CA7400F4DC1D /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		1419834F2485CC7100F4DC1D /* statisticsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = statisticsData.swift; sourceTree = "<group>"; };
-		1419835524871B5600F4DC1D /* SelectorStanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorStanding.swift; sourceTree = "<group>"; };
 		1442A6C9246F829A0047CE0E /* ScoreBoardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoardData.swift; sourceTree = "<group>"; };
 		148508A22474F4F10085D292 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		14E05B122460AA92008F2836 /* LMP 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LMP 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,7 +112,6 @@
 			children = (
 				14E05B452460B4A7008F2836 /* ScoreBoardView.swift */,
 				14EA9B262477575100AE32AF /* StandingView.swift */,
-				1419835524871B5600F4DC1D /* SelectorStanding.swift */,
 				148508A22474F4F10085D292 /* PickerView.swift */,
 				1419834B2485C24200F4DC1D /* ActivityIndicatorView.swift */,
 				1419834D2485CA7400F4DC1D /* StatisticsView.swift */,
@@ -329,7 +326,6 @@
 				14F1EF8C247F16BD0058B974 /* View+typeerasure.swift in Sources */,
 				148508A32474F4F10085D292 /* PickerView.swift in Sources */,
 				14EA9B2524774F7700AE32AF /* StandingsData.swift in Sources */,
-				1419835624871B5600F4DC1D /* SelectorStanding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

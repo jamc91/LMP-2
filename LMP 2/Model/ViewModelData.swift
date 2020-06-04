@@ -17,11 +17,16 @@ class RowViewModel: ObservableObject {
     @Published var date = ""
     @Published var showPickerView = false
     @Published var dateNow = Date()
-    @Published var showSelector = false
-    @Published var standingIs = "Regular"
-    @Published var standingType = 0
-    
 
+
+    func loadContent() {
+        self.parseData()
+        self.parseStandings()
+        self.parseStatisticsRegular()
+        self.parseStatisticsPlayoffs()
+        
+    }
+    
     func parseData() {
         
         let formatter = DateFormatter()
@@ -34,15 +39,14 @@ class RowViewModel: ObservableObject {
             
             do {
                 
-                let fetched = try JSONDecoder().decode(ResultList.self, from: data)
+                let games = try JSONDecoder().decode(ResultList.self, from: data)
                 
                 DispatchQueue.main.async {
                     
-                    self.Results = fetched.response
+                    self.Results = games.response
                     
-                }
-                
-            }
+                 }
+               }
                 
             catch {
                 
@@ -60,11 +64,11 @@ class RowViewModel: ObservableObject {
             
             do {
                 
-                let stand = try JSONDecoder().decode(resultsStandings.self, from: data)
+                let standings = try JSONDecoder().decode(resultsStandings.self, from: data)
                         
                 DispatchQueue.main.async {
                     
-                    self.standingList = stand.response
+                    self.standingList = standings.response
                     
                 }
                 
@@ -117,9 +121,8 @@ class RowViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     
                     self.statisticsListPlayoffs.append(contentsOf: stat.response)
-                        
+                    
                 }
-                
             }
                 
             catch {
@@ -131,7 +134,5 @@ class RowViewModel: ObservableObject {
     }
     
 }
-
-
 
 

@@ -17,31 +17,29 @@ struct ContentView: View {
 
     }
     
-    @ObservedObject var results = RowViewModel()
+    @ObservedObject var viewModel = RowViewModel()
 
-    
     var body: some View {
-        
         ZStack {
             NavigationView {
                     List {
                         Section(header: HeaderSection(sectionName: "ScoreBoard")) {
                             
-                                ScoreBoardView(scoreBoardData: results)
+                                ScoreBoardView(scoreBoardData: viewModel)
                             
                         }
                         Section(header: HeaderSection(sectionName: "Standings")) {
                             
-                                StandingView(standingData: self.results)
+                                StandingView(standingData: self.viewModel)
                         }
                         Section(header: HeaderSection(sectionName: "Lideres de bateo")) {
-                            StatisticsView(statisticsData: self.results)
+                            StatisticsView(statisticsData: self.viewModel)
                             
                         }
                     }
                     .navigationBarTitle("Resumen")
                     .navigationBarItems(trailing: Button(action: {
-                            self.results.showPickerView.toggle()
+                            self.viewModel.showPickerView.toggle()
                         }){
                             Image(systemName: "ellipsis.circle.fill")
                                 .font(.system(size: 30))
@@ -50,40 +48,22 @@ struct ContentView: View {
                     })
                         .listStyle(GroupedListStyle())
                         .environment(\.horizontalSizeClass, .compact)
-                        .onAppear(perform: self.results.parseStandings)
-                        .onAppear(perform: self.results.parseData)
-                        .onAppear(perform: self.results.parseStatisticsRegular)
-                        .onAppear(perform: self.results.parseStatisticsPlayoffs)
+                        .onAppear(perform: self.viewModel.loadContent)
             }
             VStack {
                 Spacer()
                 
-                PickerView(data: results).offset(y: self.results.showPickerView ? 0 : UIScreen.main.bounds.height)
-                
-                
+                PickerView(viewModel: viewModel)
+                    .offset(y: self.viewModel.showPickerView ? 0 : UIScreen.main.bounds.height)
                 
             }
-            .background((self.results.showPickerView ? Color.black.opacity(0.5) : Color.clear)
+            .background((self.viewModel.showPickerView ? Color.black.opacity(0.5) : Color.clear)
             .edgesIgnoringSafeArea(.all)
             .onTapGesture {
-                self.results.showPickerView = false
+                self.viewModel.showPickerView = false
             })
                 .edgesIgnoringSafeArea(.bottom)
                 .animation(.spring())
-                .zIndex(1)
-            VStack {
-                Spacer()
-                selectorStandingView(standingData: results).offset(y: self.results.showSelector ? 0 : UIScreen.main.bounds.height)
-                
-            }
-            .background((self.results.showSelector ? Color.black.opacity(0.5) : Color.clear)
-            .edgesIgnoringSafeArea(.all)
-            .onTapGesture {
-                self.results.showSelector = false
-            })
-                .edgesIgnoringSafeArea(.bottom)
-                .animation(.spring())
-            .zIndex(2)
         }
     }
 }
