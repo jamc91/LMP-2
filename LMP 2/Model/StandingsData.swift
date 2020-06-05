@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 struct resultsStandings: Decodable, Hashable {
    var response: Standings
    
@@ -41,7 +43,7 @@ struct First: Decodable, Hashable {
     var percent: String
     var gb: String
     var pts: String
-    
+
 }
 
 struct Second: Decodable, Hashable {
@@ -144,5 +146,4 @@ struct Final: Decodable, Hashable {
     var home_games_played: String
     
 }
-
 

@@ -17,38 +17,39 @@ struct ContentView: View {
 
     }
     
-    @ObservedObject var viewModel = RowViewModel()
+    @ObservedObject var viewModel = ViewModel()
 
     var body: some View {
         ZStack {
             NavigationView {
-                    List {
-                        Section(header: HeaderSection(sectionName: "ScoreBoard")) {
-                            
-                                ScoreBoardView(scoreBoardData: viewModel)
-                            
-                        }
-                        Section(header: HeaderSection(sectionName: "Standings")) {
-                            
-                                StandingView(standingData: self.viewModel)
-                        }
-                        Section(header: HeaderSection(sectionName: "Lideres de bateo")) {
-                            StatisticsView(statisticsData: self.viewModel)
-                            
-                        }
+                List {
+                    Section(header: HeaderSection(sectionName: "ScoreBoard")) {
+                        
+                        ScoreBoardView(scoreBoardData: viewModel)
+                        
                     }
-                    .navigationBarTitle("Resumen")
-                    .navigationBarItems(trailing: Button(action: {
-                            self.viewModel.showPickerView.toggle()
-                        }){
-                            Image(systemName: "ellipsis.circle.fill")
-                                .font(.system(size: 30))
-                                .foregroundColor(.primary)
-                                .padding(.leading)
-                    })
-                        .listStyle(GroupedListStyle())
-                        .environment(\.horizontalSizeClass, .compact)
-                        .onAppear(perform: self.viewModel.loadContent)
+                    Section(header: HeaderSection(sectionName: "Standings")) {
+                        
+                        StandingView(standingData: self.viewModel)
+                    }
+                    Section(header: HeaderSection(sectionName: "Lideres de bateo")) {
+                        
+                        StatisticsView(viewModel: self.viewModel)
+                        
+                    }
+                }
+                .navigationBarTitle("Resumen")
+                .navigationBarItems(trailing: Button(action: {
+                    self.viewModel.showPickerView.toggle()
+                }){
+                    Image(systemName: "ellipsis.circle.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(.primary)
+                        .padding(.leading)
+                })
+                    .listStyle(GroupedListStyle())
+                    .environment(\.horizontalSizeClass, .compact)
+                    .onAppear(perform: self.viewModel.loadContent)
             }
             VStack {
                 Spacer()

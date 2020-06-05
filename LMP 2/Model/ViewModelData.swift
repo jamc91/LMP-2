@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RowViewModel: ObservableObject {
+class ViewModel: ObservableObject {
     
     @Published var Results = [Response]()
     @Published var standingList = Standings()

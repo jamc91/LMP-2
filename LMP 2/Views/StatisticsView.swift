@@ -10,28 +10,28 @@ import SwiftUI
 
 struct StatisticsView: View {
     
-    @ObservedObject var statisticsData = RowViewModel()
-    @State private var pickerSelection = 0
-    @State private var pickerCategorie = 0
-    
+    @ObservedObject var viewModel = ViewModel()
+    @State private var pickerTopValue = 0
+    @State private var pickerBottomValue = 0
     
     var body: some View {
         
         VStack {
-            Picker(selection: $pickerCategorie, label: Text("")) {
+            Picker(selection: $pickerTopValue, label: Text("")) {
                 Text("Regular").tag(0)
                 Text("Playoffs").tag(1)
             }.pickerStyle(SegmentedPickerStyle())
-            Picker(selection: $pickerSelection, label: Text("")) {
+            Picker(selection: $pickerBottomValue, label: Text("")) {
                 Text("AVG").tag(0)
                 Text("R").tag(1)
                 Text("HR").tag(2)
                 Text("RBI").tag(3)
                 Text("SB").tag(4)
             }.pickerStyle(SegmentedPickerStyle())
+             .padding(.bottom)
             
             
-            typeStastistic(categorie: pickerCategorie, type: pickerSelection)
+            typeStastistic(top: pickerTopValue, bottom: pickerBottomValue)
             
         }
         .padding()
@@ -39,14 +39,12 @@ struct StatisticsView: View {
         .cornerRadius(10)
     }
     
- 
-    
-    func typeStastistic(categorie: Int, type: Int) -> some View {
+    func typeStastistic(top: Int, bottom: Int) -> some View {
         
-        if categorie == 0 {
-        switch type {
+        if top == 0 {
+        switch bottom {
         case 0:
-            return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
+            return ForEach(viewModel.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.avg.localizedStandardCompare(b.avg) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -55,7 +53,7 @@ struct StatisticsView: View {
             }.eraseToAnyView()
             
             case 1:
-                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.r.localizedStandardCompare(b.r) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -63,7 +61,7 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
             case 2:
-                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                         return a.hr.localizedStandardCompare(b.hr) == .orderedDescending
                     }), id: \.milb_id) { item in
                                     
@@ -71,7 +69,7 @@ struct StatisticsView: View {
                         
                 }.eraseToAnyView()
             case 3:
-                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.rbi.localizedStandardCompare(b.rbi) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -79,7 +77,7 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
             case 4:
-                return ForEach(statisticsData.statisticsListRegular.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListRegular.sorted(by: { (a, b) -> Bool in
                     return a.sb.localizedStandardCompare(b.sb) == .orderedDescending
                 }), id: \.milb_id) { item in
                                 
@@ -87,16 +85,16 @@ struct StatisticsView: View {
                     
             }.eraseToAnyView()
         default:
-            return ForEach(statisticsData.statisticsListRegular, id: \.milb_id) { item in
+            return ForEach(viewModel.statisticsListRegular, id: \.milb_id) { item in
                                 
                 leaderView(leaderData: item)
                 
             }.eraseToAnyView()
             }
         } else {
-            switch type {
+            switch bottom {
             case 0:
-                return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
                     return a.avg.localizedStandardCompare(b.avg) == .orderedDescending
                 }), id: \.milb_id) { item in
                     
@@ -104,7 +102,7 @@ struct StatisticsView: View {
                     
                 }.eraseToAnyView()
             case 1:
-                return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
                     return a.r.localizedStandardCompare(b.r) == .orderedDescending
                 }), id: \.milb_id) { item in
                     
@@ -112,7 +110,7 @@ struct StatisticsView: View {
                     
                 }.eraseToAnyView()
             case 2:
-                return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (s1, s2) -> Bool in
+                return ForEach(viewModel.statisticsListPlayoffs.sorted(by: { (s1, s2) -> Bool in
                     return s1.hr.localizedStandardCompare(s2.hr) == .orderedDescending
                 }), id: \.milb_id) { item in
                     
@@ -120,7 +118,7 @@ struct StatisticsView: View {
                     
                 }.eraseToAnyView()
             case 3:
-                return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
                     return a.rbi.localizedStandardCompare(b.rbi) == .orderedDescending
                 }), id: \.milb_id) { item in
                     
@@ -128,7 +126,7 @@ struct StatisticsView: View {
                     
                 }.eraseToAnyView()
             case 4:
-                return ForEach(statisticsData.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
+                return ForEach(viewModel.statisticsListPlayoffs.sorted(by: { (a, b) -> Bool in
                     return a.sb.localizedStandardCompare(b.sb) == .orderedDescending
                 }), id: \.milb_id) { item in
                     
@@ -136,7 +134,7 @@ struct StatisticsView: View {
                     
                 }.eraseToAnyView()
             default:
-                return ForEach(statisticsData.statisticsListPlayoffs, id: \.milb_id) { item in
+                return ForEach(viewModel.statisticsListPlayoffs, id: \.milb_id) { item in
                     
                     leaderPlayoffsView(leaderData: item)
                     
@@ -167,11 +165,9 @@ struct leaderView: View {
                     .frame(width: 35, height: 35)
                 VStack (alignment: .leading) {
                     Text(leaderData.name)
-                        .font(.system(.headline))
-                        .foregroundColor(.primary)
+                        .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                     Text(leaderData.team)
-                        .font(.system(.body))
-                        .foregroundColor(.secondary)
+                        .modifier(textModifier(font: .footnote, fontColor: .secondary, fontDesing: .default))
                 }
                 Spacer()
                 Text(leaderData.avg)
@@ -196,47 +192,13 @@ struct leaderPlayoffsView: View {
                     .frame(width: 35, height: 35)
                 VStack (alignment: .leading) {
                     Text(leaderData.name)
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundColor(.primary)
+                        .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                     Text(leaderData.team)
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundColor(.secondary)
+                        .modifier(textModifier(font: .footnote, fontColor: .secondary, fontDesing: .default))
                 }
                 Spacer()
                 Text(leaderData.avg)
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundColor(.primary)
-                
-            }
-            Divider()
-        }
-    }
-}
-
-struct leaderView2: View {
-    
-    @State var name = ""
-    @State var team = ""
-    @State var value = ""
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Image(systemName: "person.crop.circle")
-                    .resizable()
-                    .frame(width: 35, height: 35)
-                VStack (alignment: .leading) {
-                    Text(name)
-                        .font(.system(.headline))
-                        .foregroundColor(.primary)
-                    Text(team)
-                        .font(.system(.body))
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-                Text(value)
-                    .font(.system(.subheadline, design: .rounded))
-                    .foregroundColor(.primary)
+                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
                 
             }
             Divider()

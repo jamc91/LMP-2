@@ -10,44 +10,32 @@ import SwiftUI
 
 struct PickerView: View {
     
-    @ObservedObject var viewModel: RowViewModel
+    @ObservedObject var viewModel: ViewModel
    
     var body: some View {
             VStack {
                 HStack {
-                    Button(action: {
+                    Button("Cancelar") {
                         
                         self.viewModel.showPickerView = false
                        
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 25))
-                            .foregroundColor(Color(.systemGray2))
-                    }
-                    .padding()
+                    }.padding()
                     Spacer()
                     Text("Cambiar fecha")
-                        .font(.system(.headline, design: .rounded))
-                        .bold()
-                        .foregroundColor(.primary)
+                        .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                     Spacer()
-                    Button(action: {
+                    Button("Aceptar") {
                         let formatter = DateFormatter()
                         formatter.dateFormat = "YYYY/MM/dd"
                         self.viewModel.date = formatter.string(from: self.viewModel.dateNow)
                         self.viewModel.showPickerView = false
                         self.viewModel.parseData()
 
-                    }) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 25))
-                            .foregroundColor(Color(.systemGray2))
                     }.padding()
                 }
                 DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
                     .labelsHidden()
                     .environment(\.locale, Locale.init(identifier: "es"))
-                    .padding(.bottom)
                 
             }
             .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
@@ -59,7 +47,7 @@ struct PickerView: View {
 
 struct PickerView_Previews: PreviewProvider {
     static var previews: some View {
-        PickerView(viewModel: RowViewModel()).previewLayout(.sizeThatFits)
+        PickerView(viewModel: ViewModel()).previewLayout(.sizeThatFits)
 
     }
 }

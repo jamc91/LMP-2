@@ -10,26 +10,26 @@ import SwiftUI
 
 struct StandingView: View {
     
-    @ObservedObject var standingData = RowViewModel()
-    @State private var statusTopPicker = 0
-    @State private var statusBottomPicker = 0
-     
+    @ObservedObject var standingData = ViewModel()
+    @State private var topPickerValue = 0
+    @State private var bottomPickerValue = 0
     
+     
     var body: some View {
-        VStack (alignment: .center) {
-            Picker(selection: $statusBottomPicker, label: Text("")) {
+        VStack {
+            Picker(selection: $topPickerValue, label: Text("")) {
                 Text("Regular").tag(0)
                 Text("Playoffs").tag(1)
-                
             }.pickerStyle(SegmentedPickerStyle())
-            Picker(selection: $statusTopPicker, label: Text("")) {
-                if self.statusBottomPicker == 0 {
+            Picker(selection: $bottomPickerValue, label: Text("")) {
+                if self.topPickerValue == 0 {
                     Text("1ra Vuelta").tag(0)
                     Text("2da Vuelta").tag(1)
                     Text("General").tag(2)
                     Text("Puntos").tag(3)
                 }
-                else {
+                else
+                {
                     Text("Playoffs").tag(0)
                     Text("Semifinal").tag(1)
                     Text("Final").tag(2)
@@ -37,8 +37,11 @@ struct StandingView: View {
             }.pickerStyle(SegmentedPickerStyle())
              .padding(.bottom)
             
-            headerStatus(status: self.statusTopPicker, type: self.statusBottomPicker)
-            standingType(type: self.statusTopPicker, status: self.statusBottomPicker)
+            VStack {
+                showHeaderView(bottom: self.bottomPickerValue, top: self.topPickerValue)
+                Divider()
+            }
+            standingType(type: self.bottomPickerValue, status: self.topPickerValue)
             
         }
         .padding()
@@ -108,7 +111,7 @@ struct StandingView: View {
 struct StandingView_Previews: PreviewProvider {
     static var previews: some View {
 
-            StandingView(standingData: RowViewModel())
+            StandingView(standingData: ViewModel())
             
     }
 }
@@ -116,6 +119,7 @@ struct StandingView_Previews: PreviewProvider {
 struct StandingRegularView: View {
     
     var team_name, name, wins, losses, percent, gb, pts: String?
+    
     
     var body: some View {
         
@@ -125,8 +129,7 @@ struct StandingRegularView: View {
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(name!)
-                    .font(.caption)
-                    .multilineTextAlignment(.leading)
+                    .modifier(modifierText(font: .caption))
                 Spacer()
                 Text(wins!)
                     .modifier(modifierText(frameSize: 20, font: .caption))
@@ -156,8 +159,7 @@ struct StandingPointsView: View {
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(name!)
-                    .font(.caption)
-                .bold()
+                    .modifier(modifierText(font: .caption))
                 Spacer()
                 Text(first!)
                     .modifier(modifierText(frameSize: 30, font: .caption))
@@ -182,8 +184,7 @@ struct StandingPlayoffsView: View {
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(away_team_name!)
-                    .font(.caption)
-                .bold()
+                    .modifier(modifierText(font: .caption))
                 Spacer()
                 Text(away_wins!)
                     .modifier(modifierText(frameSize: 20, font: .caption))
@@ -199,8 +200,7 @@ struct StandingPlayoffsView: View {
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(home_team_name!)
-                    .font(.caption)
-                .bold()
+                    .modifier(modifierText(font: .caption))
                 Spacer()
                 Text(home_wins!)
                     .modifier(modifierText(frameSize: 20, font: .caption))
@@ -216,83 +216,61 @@ struct StandingPlayoffsView: View {
     }
 }
 
-struct headerView: View {
-    
-    @Binding var type: Int
-    @Binding var status: Int
-    
-    var body: some View {
-        
-           headerStatus(status: status, type: type)
-        }
-    }
-    func headerStatus(status: Int, type: Int) -> some View {
-        if type == 0 {
-            switch status {
-            case 3:
-                return VStack {
-                    
-                    HStack (spacing: 5) {
-                        Text("Equipos")
-                            .font(.subheadline)
-                        Spacer()
-                        Text("1V")
-                            .modifier(modifierText(frameSize: 30))
-                        Text("2V")
-                            .modifier(modifierText(frameSize: 30))
-                        Text("Total")
-                            .modifier(modifierText(frameSize: 40))
-                    }
-                    Divider()
-                }
-                .eraseToAnyView()
-            default:
-                return VStack {
-                    HStack (spacing: 5){
-                        Text("Equipos")
-                            .font(.subheadline)
-                        Spacer()
-                        Text("G")
-                            .modifier(modifierText(frameSize: 20))
-                        Text("P")
-                            .modifier(modifierText(frameSize: 20))
-                        Text("%")
-                            .modifier(modifierText(frameSize: 30))
-                        Text("JV")
-                            .modifier(modifierText(frameSize: 30))
-                        Text("PTS")
-                            .modifier(modifierText(frameSize: 30))
-
-                    }
-                    Divider()
-                }
+func showHeaderView(bottom: Int, top: Int) -> some View {
+    if top == 0 {
+        switch bottom {
+        case 3:
+            return HStack (spacing: 5) {
+                Text("Equipos")
+                    .font(.subheadline)
+                Spacer()
+                Text("1V")
+                    .modifier(modifierText(frameSize: 30))
+                Text("2V")
+                    .modifier(modifierText(frameSize: 30))
+                Text("Total")
+                    .modifier(modifierText(frameSize: 40))
+            }
+            .eraseToAnyView()
+        default:
+            return HStack (spacing: 5){
+                Text("Equipos")
+                    .font(.subheadline)
+                Spacer()
+                Text("G")
+                    .modifier(modifierText(frameSize: 20))
+                Text("P")
+                    .modifier(modifierText(frameSize: 20))
+                Text("%")
+                    .modifier(modifierText(frameSize: 30))
+                Text("JV")
+                    .modifier(modifierText(frameSize: 30))
+                Text("PTS")
+                    .modifier(modifierText(frameSize: 30))
+            }
             .eraseToAnyView()
         }
-        } else {
-          return VStack {
-                HStack (spacing: 5){
-                    Text("Equipos")
-                        .font(.subheadline)
-                    Spacer()
-                    Text("G")
-                        .modifier(modifierText(frameSize: 20))
-                    Text("P")
-                        .modifier(modifierText(frameSize: 20))
-                    Text("%")
-                        .modifier(modifierText(frameSize: 30))
-                    Text("JV")
-                       .modifier(modifierText(frameSize: 30))
-                    
-                }
-                Divider()
-            }
-        .eraseToAnyView()
+    } else {
+        return HStack (spacing: 5){
+            Text("Equipos")
+                .font(.subheadline)
+            Spacer()
+            Text("G")
+                .modifier(modifierText(frameSize: 20))
+            Text("P")
+                .modifier(modifierText(frameSize: 20))
+            Text("%")
+                .modifier(modifierText(frameSize: 30))
+            Text("JV")
+                .modifier(modifierText(frameSize: 30))
         }
+        .eraseToAnyView()
+    }
 }
 
 struct modifierText: ViewModifier {
     
-    @State var frameSize: CGFloat
+    @State var frameSize: CGFloat?
     @State var font: Font = .subheadline
     
     func body(content: Content) -> some View {
@@ -300,124 +278,5 @@ struct modifierText: ViewModifier {
         .font(font)
         .frame(width: frameSize)
         .multilineTextAlignment(.leading)
-        
     }
 }
-
-
-
-
-
-/*struct HeaderRegularView: View {
-    
-    var body: some View {
-        
-        VStack {
-            HStack (spacing: 5){
-                Text("Equipos")
-                    .font(.subheadline)
-                    .bold()
-                
-                Spacer()
-                Text("G")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
-                Text("P")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
-                Text("%")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-                Text("JV")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-                Text("PTS")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-                    .font(.subheadline)
-
-            }
-            Divider()
-        }
-    }
-}
-
-struct HeaderPointsView: View {
-    
-    var body: some View {
-        
-        VStack {
-            
-            HStack (spacing: 5) {
-                Text("Equipos")
-                    .font(.subheadline)
-                    .bold()
-                Spacer()
-                Text("1V")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-                Text("2V")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-                Text("Total")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 40)
-                    .multilineTextAlignment(.leading)
-            }
-            Divider()
-        }
-    }
-}
-
-struct HeaderPlayoffsView: View {
-    
-    var body: some View {
-        
-        VStack {
-            HStack (spacing: 5){
-                Text("Equipos")
-                    .font(.subheadline)
-                    .bold()
-                
-                Spacer()
-                Text("G")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
-                Text("P")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 20)
-                    .multilineTextAlignment(.leading)
-                Text("%")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-                Text("JV")
-                    .font(.subheadline)
-                    .bold()
-                    .frame(width: 30)
-                    .multilineTextAlignment(.leading)
-
-            }
-            Divider()
-        }
-    }
-}*/

@@ -10,13 +10,13 @@ import SwiftUI
 
 struct ScoreBoardView: View {
     
-    @ObservedObject var scoreBoardData = RowViewModel()
+    @ObservedObject var scoreBoardData = ViewModel()
     
     var body: some View {
         
         ForEach(scoreBoardData.Results, id: \.id) { item in
             
-            ScoreBoardAllView(game: item)
+            scoreBoardView(game: item)
                     
         }
     }
@@ -25,8 +25,12 @@ struct ScoreBoardView: View {
 struct ScoreBoardView_Previews: PreviewProvider {
     static var previews: some View {
         
-        
-            ScoreBoardView(scoreBoardData: RowViewModel())
+        Group {
+            ScoreBoardView(scoreBoardData: ViewModel())
+            scoreBoardView(game: Response(gameStatus: 0, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
+            scoreBoardView(game: Response(gameStatus: 1, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
+            scoreBoardView(game: Response(gameStatus: 2, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
+        }
         
     }
 }
@@ -52,32 +56,6 @@ struct headerScoreView: View {
         }
     }
     
-    func nameCompleted(names: String) -> String {
-        switch names {
-        case "NAV":
-            return "Navojoa"
-        case "OBR":
-            return "Obregón"
-        case "HER":
-            return "Hermosillo"
-        case "CUL":
-            return "Culiacán"
-        case "MOC":
-            return "Los Mochis"
-        case "MAZ":
-            return "Mazatlán"
-        case "GSV":
-            return "Guasave"
-        case "MXC":
-            return "Mexicali"
-        case "JAL":
-            return "Jalisco"
-        case "MTY":
-            return "Monterrey"
-        default:
-            return "N/A"
-        }
-    }
     func gameStatus(status: Int) -> some View {
         switch status {
         case 0:
@@ -302,7 +280,7 @@ struct footerScoreView: View {
     }
 }
 
-struct ScoreBoardAllView: View {
+struct scoreBoardView: View {
     
     var game: Response
     
@@ -323,7 +301,7 @@ struct ScoreBoardAllView: View {
                     Text("No hay juegos.")
                         .foregroundColor(Color(.systemGray))
                     
-                }.padding(.horizontal)
+                }
                 Spacer()
             }
             .eraseToAnyView()
@@ -345,3 +323,45 @@ struct ScoreBoardAllView: View {
         }
     }
 }
+
+
+struct textModifier: ViewModifier {
+    
+    @State var font: Font = .headline
+    @State var fontColor: Color = .primary
+    @State var fontDesing: Font.Design = .rounded
+    
+    func body(content: Content) -> some View {
+        return content
+            .font(font)
+            .foregroundColor(fontColor)
+            
+    }
+}
+
+/*func nameCompleted(names: String) -> String {
+    switch names {
+    case "NAV":
+        return "Navojoa"
+    case "OBR":
+        return "Obregón"
+    case "HER":
+        return "Hermosillo"
+    case "CUL":
+        return "Culiacán"
+    case "MOC":
+        return "Los Mochis"
+    case "MAZ":
+        return "Mazatlán"
+    case "GSV":
+        return "Guasave"
+    case "MXC":
+        return "Mexicali"
+    case "JAL":
+        return "Jalisco"
+    case "MTY":
+        return "Monterrey"
+    default:
+        return "N/A"
+    }
+}*/
