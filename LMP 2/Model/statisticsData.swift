@@ -47,7 +47,7 @@ struct leadersRegular: Decodable {
 }
 
 
-struct statisticsPlayoffs: Decodable {
+/*struct statisticsPlayoffs: Decodable {
     
     var response: [leadersPlayoffs]
     
@@ -83,6 +83,24 @@ struct leadersPlayoffs: Decodable {
     var slg: String
     var ops: String
         
+}*/
+
+enum mode: String {
+    case batting = "batting"
+    case pitching = "pitching"
+    case fielding = "fielding"
 }
 
+enum type: String {
+    case regular = "regular"
+    case playoffs = "playoffs"
+}
 
+enum column: String {
+    
+    case avg = "avg"
+    case r = "r"
+    case hr = "hr"
+    case rbi = "rbi"
+    case sb = "sb"
+}

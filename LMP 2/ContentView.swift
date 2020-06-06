@@ -18,6 +18,7 @@ struct ContentView: View {
     }
     
     @ObservedObject var viewModel = ViewModel()
+    
 
     var body: some View {
         ZStack {
@@ -31,6 +32,7 @@ struct ContentView: View {
                     Section(header: HeaderSection(sectionName: "Standings")) {
                         
                         StandingView(standingData: self.viewModel)
+                        
                     }
                     Section(header: HeaderSection(sectionName: "Lideres de bateo")) {
                         

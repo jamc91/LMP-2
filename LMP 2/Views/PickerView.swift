@@ -41,7 +41,6 @@ struct PickerView: View {
             .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
             .background(Color("BackgroundCell"))
             .cornerRadius(10)
-  
     }
 }
 

@@ -13,20 +13,19 @@ class ViewModel: ObservableObject {
     @Published var Results = [Response]()
     @Published var standingList = Standings()
     @Published var statisticsListRegular = [leadersRegular]()
-    @Published var statisticsListPlayoffs = [leadersPlayoffs]()
     @Published var date = ""
     @Published var showPickerView = false
     @Published var dateNow = Date()
+    
+
 
 
     func loadContent() {
         self.parseData()
         self.parseStandings()
-        self.parseStatisticsRegular()
-        self.parseStatisticsPlayoffs()
-        
+        self.parseStatisticsRegular(mode: "batting", type: "regular", column: "avg")
     }
-    
+
     func parseData() {
         
         let formatter = DateFormatter()
@@ -82,9 +81,20 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
-    func parseStatisticsRegular() {
+    func parseStatisticsRegular(mode: String, type: String, column: String) {
         
-        let url = URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=batting&type=regular&format=table-stats-batting&limit=300")
+        
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "api.lmp.mx"
+        components.path = "/3.0.0/leaders"
+        components.queryItems = [
+        URLQueryItem(name: "mode", value: mode),
+        URLQueryItem(name: "type", value: type),
+        URLQueryItem(name: "column", value: column)
+        ]
+        let url = components.url
+    
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             guard let data = data else { return }
             
@@ -94,7 +104,7 @@ class ViewModel: ObservableObject {
                         
                 DispatchQueue.main.async {
                     
-                    self.statisticsListRegular.append(contentsOf: stat.response)
+                    self.statisticsListRegular = stat.response
                 
                 }
                 
@@ -108,7 +118,7 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
-    func parseStatisticsPlayoffs() {
+ /*   func parseStatisticsPlayoffs() {
         
         let url = URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=batting&type=playoffs&format=table-stats-batting&limit=300")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
@@ -131,7 +141,7 @@ class ViewModel: ObservableObject {
                 
             }
         }.resume()
-    }
+    }*/
     
 }
 

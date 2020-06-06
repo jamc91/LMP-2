@@ -16,7 +16,7 @@ struct StandingView: View {
     
      
     var body: some View {
-        VStack {
+        VStack (alignment: .center) {
             Picker(selection: $topPickerValue, label: Text("")) {
                 Text("Regular").tag(0)
                 Text("Playoffs").tag(1)
@@ -38,7 +38,7 @@ struct StandingView: View {
              .padding(.bottom)
             
             VStack {
-                showHeaderView(bottom: self.bottomPickerValue, top: self.topPickerValue)
+                showHeaderView(bottom: self.bottomPickerValue, type: self.topPickerValue)
                 Divider()
             }
             standingType(type: self.bottomPickerValue, status: self.topPickerValue)
@@ -216,8 +216,8 @@ struct StandingPlayoffsView: View {
     }
 }
 
-func showHeaderView(bottom: Int, top: Int) -> some View {
-    if top == 0 {
+func showHeaderView(bottom: Int, type: Int) -> some View {
+    if type == 0 {
         switch bottom {
         case 3:
             return HStack (spacing: 5) {
