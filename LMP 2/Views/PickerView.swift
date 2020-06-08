@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PickerView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var viewModel = ViewModel()
    
     var body: some View {
             VStack {
@@ -19,7 +19,9 @@ struct PickerView: View {
                         
                         self.viewModel.showPickerView = false
                        
-                    }.padding()
+                    }
+                    .frame(width: 70, height: 20, alignment: .center)
+                    .padding()
                     Spacer()
                     Text("Cambiar fecha")
                         .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
@@ -31,9 +33,11 @@ struct PickerView: View {
                         self.viewModel.showPickerView = false
                         self.viewModel.parseData()
 
-                    }.padding()
+                    }
+                    .frame(width: 70, height: 10, alignment: .center)
+                    .padding()
                 }
-                DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
+                DatePicker("Cambiar fecha", selection: self.$viewModel.dateNow, displayedComponents: .date)
                     .labelsHidden()
                     .environment(\.locale, Locale.init(identifier: "es"))
                 

@@ -27,6 +27,7 @@ struct ScoreBoardView_Previews: PreviewProvider {
         
         Group {
             ScoreBoardView(scoreBoardData: ViewModel())
+            scoreBoardView(game: Response(gameStatus: 0, gameTime: "No Hay Juegos", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
             scoreBoardView(game: Response(gameStatus: 0, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
             scoreBoardView(game: Response(gameStatus: 1, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
             scoreBoardView(game: Response(gameStatus: 2, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
@@ -288,6 +289,7 @@ struct scoreBoardView: View {
         VStack {
             scoreBoardView(status: game.gameStatus, time: game.gameTime)
         }
+      //  .frame(minHeight: 20, maxHeight: 400, alignment: .center)
         .padding()
         .background(Color("BackgroundCell"))
         .cornerRadius(10)
@@ -324,7 +326,6 @@ struct scoreBoardView: View {
     }
 }
 
-
 struct textModifier: ViewModifier {
     
     @State var font: Font = .headline
@@ -339,29 +340,3 @@ struct textModifier: ViewModifier {
     }
 }
 
-/*func nameCompleted(names: String) -> String {
-    switch names {
-    case "NAV":
-        return "Navojoa"
-    case "OBR":
-        return "Obregón"
-    case "HER":
-        return "Hermosillo"
-    case "CUL":
-        return "Culiacán"
-    case "MOC":
-        return "Los Mochis"
-    case "MAZ":
-        return "Mazatlán"
-    case "GSV":
-        return "Guasave"
-    case "MXC":
-        return "Mexicali"
-    case "JAL":
-        return "Jalisco"
-    case "MTY":
-        return "Monterrey"
-    default:
-        return "N/A"
-    }
-}*/

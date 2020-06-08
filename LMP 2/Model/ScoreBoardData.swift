@@ -14,7 +14,7 @@ struct ResultList: Codable {
     
 }
 
-struct Response: Codable, Identifiable {
+struct Response: Codable, Identifiable, Hashable {
     
     var id = UUID()
     var gameStatus: Int

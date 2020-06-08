@@ -12,18 +12,20 @@ class ViewModel: ObservableObject {
     
     @Published var Results = [Response]()
     @Published var standingList = Standings()
-    @Published var statisticsListRegular = [leadersRegular]()
+    @Published var statisticsListBatting = [leadersBatting]()
+    @Published var statisticsListPitching = [leadersPitching]()
     @Published var date = ""
-    @Published var showPickerView = false
     @Published var dateNow = Date()
+    @Published var showPickerView = false
     
-
-
-
+    
+    
     func loadContent() {
         self.parseData()
         self.parseStandings()
-        self.parseStatisticsRegular(mode: "batting", type: "regular", column: "avg")
+        self.parseLeadersBatting(mode: "batting", type: "regular")
+        self.parseLeadersPitching(mode: "pitching", type: "regular")
+        
     }
 
     func parseData() {
@@ -32,7 +34,7 @@ class ViewModel: ObservableObject {
         formatter.dateFormat = "YYYY/MM/dd"
         self.date = formatter.string(from: self.dateNow)
         
-        let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(self.date)")
+        let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(date)")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             guard let data = data else { return }
             
@@ -68,11 +70,8 @@ class ViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     
                     self.standingList = standings.response
-                    
                 }
-                
             }
-                
             catch {
                 
                 print(error.localizedDescription)
@@ -81,9 +80,8 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
-    func parseStatisticsRegular(mode: String, type: String, column: String) {
-        
-        
+    func parseLeadersBatting(mode: String, type: String) {
+                
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.lmp.mx"
@@ -91,21 +89,21 @@ class ViewModel: ObservableObject {
         components.queryItems = [
         URLQueryItem(name: "mode", value: mode),
         URLQueryItem(name: "type", value: type),
-        URLQueryItem(name: "column", value: column)
+        URLQueryItem(name: "limit", value: "300")
         ]
         let url = components.url
-    
+        
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             guard let data = data else { return }
             
             do {
                 
-                let stat = try JSONDecoder().decode(statisticsRegular.self, from: data)
+                let stat = try JSONDecoder().decode(statisticsBatting.self, from: data)
                         
                 DispatchQueue.main.async {
                     
-                    self.statisticsListRegular = stat.response
-                
+                    self.statisticsListBatting = stat.response
+                    
                 }
                 
             }
@@ -118,31 +116,42 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
- /*   func parseStatisticsPlayoffs() {
-        
-        let url = URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=batting&type=playoffs&format=table-stats-batting&limit=300")
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            guard let data = data else { return }
-            
-            do {
-                
-                let stat = try JSONDecoder().decode(statisticsPlayoffs.self, from: data)
-                        
-                DispatchQueue.main.async {
+        func parseLeadersPitching(mode: String, type: String) {
                     
-                    self.statisticsListPlayoffs.append(contentsOf: stat.response)
+            var components = URLComponents()
+            components.scheme = "https"
+            components.host = "api.lmp.mx"
+            components.path = "/3.0.0/leaders"
+            components.queryItems = [
+            URLQueryItem(name: "mode", value: mode),
+            URLQueryItem(name: "type", value: type),
+            URLQueryItem(name: "limit", value: "300")
+            ]
+            let url = components.url
+            
+            URLSession.shared.dataTask(with: url!) { (data, response, error) in
+                guard let data = data else { return }
+                
+                do {
+                    
+                    let stat = try JSONDecoder().decode(statisticsPitching.self, from: data)
+                            
+                    DispatchQueue.main.async {
+                        
+                        self.statisticsListPitching = stat.response
+                        
+                    }
                     
                 }
-            }
-                
-            catch {
-                
-                print(error.localizedDescription)
-                
-            }
-        }.resume()
-    }*/
-    
-}
+                    
+                catch {
+                    
+                    print(error.localizedDescription)
+                    
+                }
+            }.resume()
+        }
+    }
+
 
 

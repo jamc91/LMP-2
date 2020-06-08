@@ -8,19 +8,19 @@
 
 import Foundation
 
-struct statisticsRegular: Decodable {
+struct statisticsBatting: Decodable {
     
-    var response: [leadersRegular]
+    var response: [leadersBatting]
     
 }
 
-struct leadersRegular: Decodable {
+struct leadersBatting: Decodable, Identifiable, Hashable {
     
-    var milb_id: Int
+    var id = UUID()
     var name: String
     var team: String
     var team_name: String
-    var img: String
+    var img: URL
     var thumb: String
     var pos: String
     var avg: String
@@ -28,79 +28,37 @@ struct leadersRegular: Decodable {
     var hr: String
     var rbi: String
     var sb: String
-    var g: String
-    var ab: String
-    var bb: String
-    var ibb: String
-    var sf: String
-    var sac: String
-    var hbp: String
-    var h: String
-    var h2b: String
-    var h3b: String
-    var so: String
-    var cs: String
-    var obp: String
-    var slg: String
-    var ops: String
+
+    
+    enum CodingKeys: String, CodingKey {
+        case name, team, team_name, img, thumb, pos, avg, r, hr, rbi, sb
+    }
         
 }
 
-
-/*struct statisticsPlayoffs: Decodable {
+struct statisticsPitching: Decodable {
     
-    var response: [leadersPlayoffs]
+    var response: [leadersPitching]
     
 }
 
-struct leadersPlayoffs: Decodable {
+struct leadersPitching: Decodable, Hashable, Identifiable {
     
-    var milb_id: Int
+    var id = UUID()
+    
     var name: String
     var team: String
     var team_name: String
-    var img: String
+    var img: URL
     var thumb: String
-    var pos: String
-    var avg: String
-    var r: String
-    var hr: String
-    var rbi: String
-    var sb: String
-    var g: String
-    var ab: String
-    var bb: String
-    var ibb: String
-    var sf: String
-    var sac: String
-    var hbp: String
-    var h: String
-    var h2b: String
-    var h3b: String
+    var w: String
+    var era: String
     var so: String
-    var cs: String
-    var obp: String
-    var slg: String
-    var ops: String
-        
-}*/
-
-enum mode: String {
-    case batting = "batting"
-    case pitching = "pitching"
-    case fielding = "fielding"
-}
-
-enum type: String {
-    case regular = "regular"
-    case playoffs = "playoffs"
-}
-
-enum column: String {
+    var sv: String
+    var whip: String
     
-    case avg = "avg"
-    case r = "r"
-    case hr = "hr"
-    case rbi = "rbi"
-    case sb = "sb"
+    enum CodingKeys: String, CodingKey {
+        case name, team, team_name, img, thumb, w, era, so, sv, whip
+    }
 }
+

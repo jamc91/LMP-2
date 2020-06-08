@@ -11,18 +11,35 @@ import SwiftUI
 struct StandingView: View {
     
     @ObservedObject var standingData = ViewModel()
-    @State private var topPickerValue = 0
+    @State private var buttonText = "Regular"
     @State private var bottomPickerValue = 0
-    
+    @State private var showActionSheet = false
      
     var body: some View {
         VStack (alignment: .center) {
-            Picker(selection: $topPickerValue, label: Text("")) {
-                Text("Regular").tag(0)
-                Text("Playoffs").tag(1)
-            }.pickerStyle(SegmentedPickerStyle())
+            Button(action: {
+                self.showActionSheet = true
+            }) {
+                HStack {
+                    Text(buttonText)
+                    Image(systemName: "chevron.down")
+                }.foregroundColor(Color(.systemBlue))
+                 .padding(3)
+            }.buttonStyle(PlainButtonStyle())
+                .actionSheet(isPresented: $showActionSheet) {
+                    ActionSheet(title: Text(""), buttons: [
+                        .default(Text("Regular")){
+                            self.buttonText = "Regular"
+                            self.bottomPickerValue = 0
+                        },
+                        .default(Text("Playoffs")){
+                            self.buttonText = "Playoffs"
+                            self.bottomPickerValue = 0
+                        },
+                        .cancel()])
+            }
             Picker(selection: $bottomPickerValue, label: Text("")) {
-                if self.topPickerValue == 0 {
+                if self.buttonText == "Regular" {
                     Text("1ra Vuelta").tag(0)
                     Text("2da Vuelta").tag(1)
                     Text("General").tag(2)
@@ -38,20 +55,22 @@ struct StandingView: View {
              .padding(.bottom)
             
             VStack {
-                showHeaderView(bottom: self.bottomPickerValue, type: self.topPickerValue)
+                showHeaderView(bottom: self.bottomPickerValue, type: self.buttonText)
                 Divider()
+                standingType(type: self.bottomPickerValue, buttonValue: self.buttonText)
             }
-            standingType(type: self.bottomPickerValue, status: self.topPickerValue)
+            
             
         }
+        .frame(minHeight: 150, maxHeight: 529, alignment: .top)
         .padding()
         .background(Color("BackgroundCell"))
         .cornerRadius(10)
     }
     
-    func standingType(type: Int, status: Int) -> some View {
+    func standingType(type: Int, buttonValue: String) -> some View {
         
-        if status == 0 {
+        if buttonValue == "Regular" {
             switch type {
             case 0:
                 return ForEach(self.standingData.standingList.first, id: \.id) { item in
@@ -216,17 +235,17 @@ struct StandingPlayoffsView: View {
     }
 }
 
-func showHeaderView(bottom: Int, type: Int) -> some View {
-    if type == 0 {
+func showHeaderView(bottom: Int, type: String) -> some View {
+    if type == "Regular" {
         switch bottom {
         case 3:
             return HStack (spacing: 5) {
                 Text("Equipos")
                     .font(.subheadline)
                 Spacer()
-                Text("1V")
+                Text("1A")
                     .modifier(modifierText(frameSize: 30))
-                Text("2V")
+                Text("2A")
                     .modifier(modifierText(frameSize: 30))
                 Text("Total")
                     .modifier(modifierText(frameSize: 40))
@@ -241,9 +260,9 @@ func showHeaderView(bottom: Int, type: Int) -> some View {
                     .modifier(modifierText(frameSize: 20))
                 Text("P")
                     .modifier(modifierText(frameSize: 20))
-                Text("%")
+                Text("PCT")
                     .modifier(modifierText(frameSize: 30))
-                Text("JV")
+                Text("DIF")
                     .modifier(modifierText(frameSize: 30))
                 Text("PTS")
                     .modifier(modifierText(frameSize: 30))
@@ -259,7 +278,7 @@ func showHeaderView(bottom: Int, type: Int) -> some View {
                 .modifier(modifierText(frameSize: 20))
             Text("P")
                 .modifier(modifierText(frameSize: 20))
-            Text("%")
+            Text("PCT")
                 .modifier(modifierText(frameSize: 30))
             Text("JV")
                 .modifier(modifierText(frameSize: 30))

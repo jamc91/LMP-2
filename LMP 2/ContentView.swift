@@ -7,11 +7,12 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct ContentView: View {
     
-    init() {
-        
+   init() {
+        URLImageService.shared.cleanFileCache()
         UITableViewCell.appearance().backgroundColor = UIColor(red: 243/255, green: 242/255, blue: 248/255, alpha: 0)
         UITableView.appearance().separatorStyle = .none
 
@@ -19,43 +20,38 @@ struct ContentView: View {
     
     @ObservedObject var viewModel = ViewModel()
     
-
     var body: some View {
         ZStack {
-            NavigationView {
                 List {
-                    Section(header: HeaderSection(sectionName: "ScoreBoard")) {
+                    HeaderView(viewModel: self.viewModel)
+                    Section(header: HeaderSection(sectionName: "Marcadores")) {
                         
-                        ScoreBoardView(scoreBoardData: viewModel)
-                        
+                        ScoreBoardView(scoreBoardData: self.viewModel)
+                            
                     }
-                    Section(header: HeaderSection(sectionName: "Standings")) {
+                    Section(header: HeaderSection(sectionName: "Posiciones")) {
                         
                         StandingView(standingData: self.viewModel)
-                        
+                            
                     }
-                    Section(header: HeaderSection(sectionName: "Lideres de bateo")) {
+                    Section(header: HeaderSection(sectionName: "Líderes de bateo")) {
                         
-                        StatisticsView(viewModel: self.viewModel)
-                        
+                        LeadersBattingView(viewModel: self.viewModel)
+                            
                     }
+                    Section(header: HeaderSection(sectionName: "Líderes de Pitcheo")) {
+                        
+                        LeadersPitchingView(viewModel: self.viewModel)
+                            
+                    }
+
                 }
-                .navigationBarTitle("Resumen")
-                .navigationBarItems(trailing: Button(action: {
-                    self.viewModel.showPickerView.toggle()
-                }){
-                    Image(systemName: "ellipsis.circle.fill")
-                        .font(.system(size: 30))
-                        .foregroundColor(.primary)
-                        .padding(.leading)
-                })
-                    .listStyle(GroupedListStyle())
-                    .environment(\.horizontalSizeClass, .compact)
-                    .onAppear(perform: self.viewModel.loadContent)
-            }
+                .listStyle(GroupedListStyle())
+                .environment(\.horizontalSizeClass, .compact)
+                .onAppear(perform: self.viewModel.loadContent)
+            
             VStack {
                 Spacer()
-                
                 PickerView(viewModel: viewModel)
                     .offset(y: self.viewModel.showPickerView ? 0 : UIScreen.main.bounds.height)
                 
@@ -67,6 +63,7 @@ struct ContentView: View {
             })
                 .edgesIgnoringSafeArea(.bottom)
                 .animation(.spring())
+                
         }
     }
 }
@@ -84,5 +81,27 @@ struct HeaderSection: View {
     
     var body: some View {
         Text(sectionName).font(.system(size: 22)).bold().foregroundColor(.primary)
+    }
+}
+
+struct HeaderView: View {
+    
+    @ObservedObject var viewModel = ViewModel()
+    
+    var body: some View {
+        HStack (alignment: .bottom){
+            Text("Resumen")
+                .font(Font.largeTitle)
+                .bold()
+            Spacer()
+            Button(action: {
+                self.viewModel.showPickerView.toggle()
+            }) {
+                Image(systemName: "calendar.circle")
+                    .font(.system(size: 35))
+                    .foregroundColor(.primary)
+                    .frame(width: 35, height: 50, alignment: .center)
+            }.buttonStyle(PlainButtonStyle())
+        }
     }
 }

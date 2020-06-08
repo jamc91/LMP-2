@@ -33,7 +33,7 @@ struct Standings: Decodable, Hashable {
     }
 }
 
-struct First: Decodable, Hashable {
+struct First: Decodable, Hashable, Identifiable {
     
     var id: String
     var name: String
@@ -46,7 +46,7 @@ struct First: Decodable, Hashable {
 
 }
 
-struct Second: Decodable, Hashable {
+struct Second: Decodable, Hashable, Identifiable {
     
     var id: String
     var name: String
@@ -58,7 +58,7 @@ struct Second: Decodable, Hashable {
     var pts: String
     
 }
-struct General: Decodable, Hashable {
+struct General: Decodable, Hashable, Identifiable {
     
     var id: String
     var name: String
@@ -72,7 +72,7 @@ struct General: Decodable, Hashable {
     
 }
 
-struct Points: Decodable, Hashable {
+struct Points: Decodable, Hashable, Identifiable {
     
     var id: String
     var name: String
@@ -90,8 +90,9 @@ struct PlayOffs: Decodable, Hashable {
     var final: [Final]
 }
 
-struct Repesca: Decodable, Hashable {
+struct Repesca: Decodable, Hashable, Identifiable {
     
+    var id = UUID()
     var away_team_name: String
     var away_image: String
     var away_wins: Int
@@ -106,11 +107,16 @@ struct Repesca: Decodable, Hashable {
     var home_percent: String
     var home_runs_avg: String
     var home_games_played: String
+    
+    enum CodingKeys: String, CodingKey {
+        case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
+    }
     
 }
 
-struct Semifinal: Decodable, Hashable {
+struct Semifinal: Decodable, Hashable, Identifiable {
     
+    var id = UUID()
     var away_team_name: String
     var away_image: String
     var away_wins: Int
@@ -125,11 +131,16 @@ struct Semifinal: Decodable, Hashable {
     var home_percent: String
     var home_runs_avg: String
     var home_games_played: String
+    
+    enum CodingKeys: String, CodingKey {
+        case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
+    }
     
 }
 
-struct Final: Decodable, Hashable {
+struct Final: Decodable, Hashable, Identifiable {
     
+    var id = UUID()
     var away_team_name: String
     var away_image: String
     var away_wins: Int
@@ -144,6 +155,10 @@ struct Final: Decodable, Hashable {
     var home_percent: String
     var home_runs_avg: String
     var home_games_played: String
+    
+    enum CodingKeys: String, CodingKey {
+        case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
+    }
     
 }
 
