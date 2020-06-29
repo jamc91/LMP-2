@@ -14,10 +14,25 @@ struct ScoreBoardView: View {
     
     var body: some View {
         
-        ForEach(scoreBoardData.Results, id: \.id) { item in
-            
-            scoreBoardView(game: item)
+        if scoreBoardData.showActivityIndicator {
+            return HStack (alignment: .center) {
+                Spacer()
+                ActivityIndicator(showIndicator: $scoreBoardData.showActivityIndicator, style: .medium).foregroundColor(.secondary)
+                Text("Cargando")
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+            .padding()
+            .background(Color(.secondarySystemGroupedBackground))
+            .cornerRadius(10)
+            .eraseToAnyView()
+        } else {
+        
+          return ForEach(scoreBoardData.Results, id: \.id) { item in
+                
+                scoreBoardView(game: item)
                     
+            }.eraseToAnyView()
         }
     }
 }
@@ -29,10 +44,9 @@ struct ScoreBoardView_Previews: PreviewProvider {
             ScoreBoardView(scoreBoardData: ViewModel())
             scoreBoardView(game: Response(gameStatus: 0, gameTime: "No Hay Juegos", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
             scoreBoardView(game: Response(gameStatus: 0, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
-            scoreBoardView(game: Response(gameStatus: 1, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
-            scoreBoardView(game: Response(gameStatus: 2, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
+            scoreBoardView(game: Response(gameStatus: 1, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-1", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
+            scoreBoardView(game: Response(gameStatus: 2, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-111", balls: "balls-2", strikes: "strikes-1", outs: "outs-1", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
         }
-        
     }
 }
 
@@ -116,167 +130,53 @@ struct footerScoreView: View {
     var body: some View {
         HStack {
             HStack {
-                Image(systemName: game.inningArrow == "top" ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
+                Image(systemName: game.inningArrowStatus)
                     .font(.system(.headline))
-                Text(formatNumber(inning: game.inningCurrent))
+                Text(game.inningCurrentOrdinal)
                     .font(.system(size: 20))
             }.frame(width: 80, height: 40, alignment: .trailing)
             Spacer()
             ZStack {
-                Image(systemName: diamondStatus(diamond: game.diamond).2 ? "square.fill" : "square")
+                Image(systemName: game.diamondView[2])
                     .font(.system(size: 30, weight: .ultraLight))
                     .rotationEffect(Angle(degrees: 45))
                     .offset(x: 22, y: 10)
-                    .foregroundColor(diamondStatus( diamond: game.diamond).2 ? Color(.darkGray) : .secondary)
-                Image(systemName: diamondStatus(diamond: game.diamond).1 ? "square.fill" : "square")
+                Image(systemName: game.diamondView[1])
                     .font(.system(size: 30, weight: .ultraLight))
                     .rotationEffect(Angle(degrees: 45))
                     .offset(x: 0, y: -12)
-                    .foregroundColor(diamondStatus( diamond: game.diamond).1 ? Color(.darkGray) : .secondary)
-                Image(systemName: diamondStatus(diamond: game.diamond).0 ? "square.fill" : "square")
+                Image(systemName: game.diamondView[0])
                     .font(.system(size: 30, weight: .ultraLight))
                     .rotationEffect(Angle(degrees: 45))
                     .offset(x: -22, y: 10)
-                    .foregroundColor(diamondStatus( diamond: game.diamond).0 ? Color(.darkGray) : .secondary)
             }
             Spacer()
             VStack (alignment: .leading, spacing: 2) {
                 HStack {
                     Text("B")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    Image(systemName: ballsStatus(balls: game.balls).0 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(ballsStatus(balls: game.balls).0 ? .primary : .secondary)
-                    Image(systemName: ballsStatus(balls: game.balls).1 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(ballsStatus(balls: game.balls).1 ? .primary : .secondary)
-                    Image(systemName: ballsStatus(balls: game.balls).2 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(ballsStatus(balls: game.balls).2 ? .primary : .secondary)
+                        .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
+                    ForEach(game.ballsStatus, id: \.self) { item in
+                        Image(systemName: item)
+                            .imageScale(.small)
+                    }
                 }
                 HStack {
                     Text("S")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    Image(systemName: strikesStatus(strikes: game.strikes).0 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor( strikesStatus(strikes: game.strikes).0 ? .primary : .secondary)
-                    Image(systemName: strikesStatus(strikes: game.strikes).1 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(strikesStatus(strikes: game.strikes).1 ? .primary : .secondary)
+                        .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
+                    ForEach(game.strikesStatus, id: \.self) { item in
+                        Image(systemName: item)
+                            .imageScale(.small)
+                    }
                 }
                 HStack {
                     Text("O")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    Image(systemName: outsStatus(outs: game.outs).0 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(outsStatus(outs: game.outs).0 ? .primary : .secondary)
-                    Image(systemName: outsStatus(outs: game.outs).1 ? "circle.fill" : "circle")
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(outsStatus(outs: game.outs).1 ? .primary : .secondary)
+                        .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
+                    ForEach(game.outsStatus, id: \.self) { item in
+                        Image(systemName: item)
+                            .imageScale(.small)
+                    }
                 }.offset(x: -2, y: 0)
             }.frame(width: 80, height: 70, alignment: .leading)
-        }
-    }
-    func formatNumber(inning: String) -> String {
-        switch inning {
-        case "1":
-            return "1ra"
-        case "2":
-            return "2da"
-        case "3":
-            return "3ra"
-        case "4":
-            return "4ta"
-        case "5":
-            return "5ta"
-        case "6":
-            return "6ta"
-        case "7":
-            return "7ma"
-        case "8":
-            return "8va"
-        case "9":
-            return "9na"
-        case "10":
-            return "10ma"
-        case "11":
-            return "11ma"
-        case "12":
-            return "12ma"
-        case "13":
-            return "13ra"
-        case "14":
-            return "14ta"
-        case "15":
-            return "15ta"
-        case "16":
-            return "16ta"
-        case "17":
-            return "17ma"
-        case "18":
-            return "18va"
-        case "19":
-            return "19na"
-        default:
-            return ""
-        }
-    }
-    func diamondStatus(diamond: String) -> (Bool, Bool, Bool) {
-        switch diamond {
-        case "pos-001":
-            return (false, false, true)
-        case "pos-011":
-            return (false, true, true)
-        case "pos-111":
-            return (true, true, true)
-        case "pos-100":
-            return (true, false, false)
-        case "pos-010":
-            return (false, true, false)
-        case "pos-110":
-            return (true, true, false)
-        case "pos-101":
-            return (true, false, true)
-        default:
-            return (false, false, false)
-        }
-    }
-    func ballsStatus(balls: String) -> (Bool, Bool, Bool) {
-        switch balls {
-        case "balls-1":
-            return (true, false, false)
-        case "balls-2":
-            return (true, true, false)
-        case "balls-3":
-            return (true, true, true)
-        default:
-            return (false, false, false)
-            
-        }
-    }
-    func strikesStatus(strikes: String) -> (Bool, Bool) {
-        switch strikes {
-        case "strikes-1":
-            return (true, false)
-        case "strikes-2":
-            return (true, true)
-        default:
-            return (false, false)
-            
-        }
-    }
-    func outsStatus(outs: String) -> (Bool, Bool) {
-        switch outs {
-        case "outs-1":
-            return (true, false)
-        case "outs-2":
-            return (true, true)
-        default:
-            return (false, false)
-            
         }
     }
 }
@@ -289,9 +189,8 @@ struct scoreBoardView: View {
         VStack {
             scoreBoardView(status: game.gameStatus, time: game.gameTime)
         }
-      //  .frame(minHeight: 20, maxHeight: 400, alignment: .center)
         .padding()
-        .background(Color("BackgroundCell"))
+        .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
     }
     func scoreBoardView(status: Int, time: String) -> some View {
@@ -300,6 +199,7 @@ struct scoreBoardView: View {
             return HStack {
                 
                 VStack (alignment: .leading) {
+                    
                     Text("No hay juegos.")
                         .foregroundColor(Color(.systemGray))
                     
@@ -340,3 +240,22 @@ struct textModifier: ViewModifier {
     }
 }
 
+
+struct ActivityIndicator: UIViewRepresentable {
+    
+    @Binding var showIndicator: Bool
+    let style: UIActivityIndicatorView.Style
+    
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        return UIActivityIndicatorView(style: .medium)
+    }
+    
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+        if showIndicator {
+            uiView.startAnimating()
+        } else {
+            uiView.stopAnimating()
+        }
+    }
+    
+}

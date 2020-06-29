@@ -10,18 +10,18 @@ import SwiftUI
 
 struct StandingView: View {
     
-    @ObservedObject var standingData = ViewModel()
-    @State private var buttonText = "Regular"
+    @ObservedObject var viewModel = ViewModel()
+    @State private var buttonState = "Regular"
     @State private var bottomPickerValue = 0
     @State private var showActionSheet = false
-     
+    
     var body: some View {
         VStack (alignment: .center) {
             Button(action: {
                 self.showActionSheet = true
             }) {
                 HStack {
-                    Text(buttonText)
+                    Text(buttonState)
                     Image(systemName: "chevron.down")
                 }.foregroundColor(Color(.systemBlue))
                  .padding(3)
@@ -29,17 +29,17 @@ struct StandingView: View {
                 .actionSheet(isPresented: $showActionSheet) {
                     ActionSheet(title: Text(""), buttons: [
                         .default(Text("Regular")){
-                            self.buttonText = "Regular"
+                            self.buttonState = "Regular"
                             self.bottomPickerValue = 0
                         },
                         .default(Text("Playoffs")){
-                            self.buttonText = "Playoffs"
+                            self.buttonState = "Playoffs"
                             self.bottomPickerValue = 0
                         },
                         .cancel()])
             }
             Picker(selection: $bottomPickerValue, label: Text("")) {
-                if self.buttonText == "Regular" {
+                if self.buttonState == "Regular" {
                     Text("1ra Vuelta").tag(0)
                     Text("2da Vuelta").tag(1)
                     Text("General").tag(2)
@@ -53,49 +53,50 @@ struct StandingView: View {
                 }
             }.pickerStyle(SegmentedPickerStyle())
              .padding(.bottom)
-            
+             .animation(nil)
             VStack {
-                showHeaderView(bottom: self.bottomPickerValue, type: self.buttonText)
+                showHeaderView(bottom: self.bottomPickerValue, type: self.buttonState)
                 Divider()
-                standingType(type: self.bottomPickerValue, buttonValue: self.buttonText)
-            }
-            
+                standingType(type: bottomPickerValue, buttonValue: buttonState)
+                   
+            }.animation(nil)
+               
             
         }
-        .frame(minHeight: 150, maxHeight: 529, alignment: .top)
+        .frame(minHeight: 150, maxHeight: 549, alignment: .top)
         .padding()
-        .background(Color("BackgroundCell"))
+        .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
     }
     
-    func standingType(type: Int, buttonValue: String) -> some View {
+   func standingType(type: Int, buttonValue: String) -> some View {
         
         if buttonValue == "Regular" {
             switch type {
             case 0:
-                return ForEach(self.standingData.standingList.first, id: \.id) { item in
-                    StandingRegularView(team_name: item.team_name, name: item.name, wins: "\(item.wins)", losses: "\(item.losses)", percent: item.percent, gb: item.gb, pts: item.pts)
+                return ForEach(self.viewModel.standingList.first, id: \.id) { item in
+                    StandingRegularView(standing: item)
                 }
                 .eraseToAnyView()
                 
             case 1:
-                return ForEach(self.standingData.standingList.second, id: \.id) { item in
-                    StandingRegularView(team_name: item.team_name, name: item.name, wins: "\(item.wins)", losses: "\(item.losses)", percent: item.percent, gb: item.gb, pts: item.pts)
+                return ForEach(self.viewModel.standingList.second, id: \.id) { item in
+                    StandingRegularView(standing: item)
                 }
                 .eraseToAnyView()
             case 2:
-                return ForEach(self.standingData.standingList.general, id: \.id) { item in
-                    StandingRegularView(team_name: item.team_name, name: item.name, wins: "\(item.wins)", losses: "\(item.losses)", percent: item.percent, gb: item.gb, pts: item.pts)
+                return ForEach(self.viewModel.standingList.general, id: \.id) { item in
+                    StandingRegularView(standing: item)
                 }
                 .eraseToAnyView()
             case 3:
-                return ForEach(self.standingData.standingList.points, id: \.id) { item in
-                    StandingPointsView(team_name: item.team_name, name: item.name, first: item.first, second: item.second, total: item.total)
+                return ForEach(self.viewModel.standingList.points, id: \.id) { item in
+                    StandingPointsView(standingPoints: item)
                 }
                     .eraseToAnyView()
             default:
-                return ForEach(self.standingData.standingList.first, id: \.id) { item in
-                    StandingRegularView(team_name: item.team_name, name: item.name, wins: "\(item.wins)", losses: "\(item.losses)", percent: item.percent, pts: item.pts)
+                return ForEach(self.viewModel.standingList.first, id: \.id) { item in
+                    StandingRegularView(standing: item)
                 }
                 .eraseToAnyView()
             }
@@ -105,20 +106,20 @@ struct StandingView: View {
             switch type {
 
             case 1:
-                return ForEach(self.standingData.standingList.playoffs!.semifinal, id: \.away_team_name) { item in
-                    StandingPlayoffsView(away_team_name: item.away_team_name, away_image: item.away_image, away_wins: "\(item.away_wins)", away_losses: "\(item.away_losses)", away_percent: item.away_percent, away_games_played: item.away_games_played, home_team_name: item.home_team_name, home_image: item.home_image, home_wins: "\(item.home_wins)", home_losses: "\(item.home_losses)", home_percent: item.home_percent, home_games_played: item.home_games_played)
+                return ForEach(self.viewModel.standingList.playoffs!.semifinal, id: \.away_team_name) { item in
+                    StandingPlayoffsView(standingPlayoffs: item)
                     
                 }
                 .eraseToAnyView()
             case 2:
-                return ForEach(self.standingData.standingList.playoffs!.final, id: \.away_team_name) { item in
-                    StandingPlayoffsView(away_team_name: item.away_team_name, away_image: item.away_image, away_wins: "\(item.away_wins)", away_losses: "\(item.away_losses)", away_percent: item.away_percent, away_games_played: item.away_games_played, home_team_name: item.home_team_name, home_image: item.home_image, home_wins: "\(item.home_wins)", home_losses: "\(item.home_losses)", home_percent: item.home_percent, home_games_played: item.home_games_played)
+                return ForEach(self.viewModel.standingList.playoffs!.final, id: \.away_team_name) { item in
+                    StandingPlayoffsView(standingPlayoffs: item)
                     
                 }
                 .eraseToAnyView()
             default:
-                return ForEach(self.standingData.standingList.playoffs!.repesca, id: \.away_team_name) { item in
-                    StandingPlayoffsView(away_team_name: item.away_team_name, away_image: item.away_image, away_wins: "\(item.away_wins)", away_losses: "\(item.away_losses)", away_percent: item.away_percent, away_games_played: item.away_games_played, home_team_name: item.home_team_name, home_image: item.home_image, home_wins: "\(item.home_wins)", home_losses: "\(item.home_losses)", home_percent: item.home_percent, home_games_played: item.home_games_played)
+                return ForEach(self.viewModel.standingList.playoffs!.repesca, id: \.away_team_name) { item in
+                    StandingPlayoffsView(standingPlayoffs: item)
                     
                 }
                 .eraseToAnyView()
@@ -130,36 +131,33 @@ struct StandingView: View {
 struct StandingView_Previews: PreviewProvider {
     static var previews: some View {
 
-            StandingView(standingData: ViewModel())
+            StandingView()
             
     }
 }
 
 struct StandingRegularView: View {
     
-    var team_name, name, wins, losses, percent, gb, pts: String?
-    
-    
+    var standing: First
+        
     var body: some View {
         
         VStack {
             HStack (spacing: 5) {
-                Image(team_name!)
+                Image(standing.team_name)
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
-                Text(name!)
-                    .modifier(modifierText(font: .caption))
+                Text(standing.name)
+                    .modifier(modifierText(font: .subheadline))
                 Spacer()
-                Text(wins!)
-                    .modifier(modifierText(frameSize: 20, font: .caption))
-                Text(losses!)
-                    .modifier(modifierText(frameSize: 20, font: .caption))
-                Text(percent!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
-                Text(gb!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
-                Text(pts!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
+                Text("\(standing.wins)")
+                    .modifier(modifierText(frameSize: 25, font: .subheadline))
+                Text("\(standing.losses)")
+                    .modifier(modifierText(frameSize: 25, font: .subheadline))
+                Text(standing.percent)
+                    .modifier(modifierText(frameSize: 35, font: .subheadline))
+                Text(standing.gb)
+                    .modifier(modifierText(frameSize: 35, font: .subheadline))
                 
             }
             Divider()
@@ -169,23 +167,23 @@ struct StandingRegularView: View {
 
 struct StandingPointsView: View {
     
-    var team_name, name, first, second, total: String?
+    var standingPoints: Points
     
     var body: some View {
         VStack {
             HStack (spacing: 5) {
-                Image(team_name!)
+                Image(standingPoints.team_name)
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
-                Text(name!)
-                    .modifier(modifierText(font: .caption))
+                Text(standingPoints.name)
+                    .modifier(modifierText(font: .subheadline))
                 Spacer()
-                Text(first!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
-                Text(second!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
-                Text(total!)
-                    .modifier(modifierText(frameSize: 40, font: .caption))
+                Text(standingPoints.first)
+                    .modifier(modifierText(frameSize: 30, font: .subheadline))
+                Text(standingPoints.second)
+                    .modifier(modifierText(frameSize: 30, font: .subheadline))
+                Text(standingPoints.total)
+                    .modifier(modifierText(frameSize: 40, font: .subheadline))
             }
             Divider()
         }
@@ -194,41 +192,41 @@ struct StandingPointsView: View {
 
 struct StandingPlayoffsView: View {
     
-    var away_team_name, away_image, away_wins, away_losses, away_percent, away_games_played, home_team_name, home_image, home_wins, home_losses, home_percent, home_games_played: String?
+    var standingPlayoffs: Repesca
     
     var body: some View {
         VStack {
             HStack (spacing: 5) {
-                Image(away_image!)
+                Image(standingPlayoffs.away_image)
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
-                Text(away_team_name!)
-                    .modifier(modifierText(font: .caption))
+                Text(standingPlayoffs.away_team_name)
+                    .modifier(modifierText(font: .subheadline))
                 Spacer()
-                Text(away_wins!)
-                    .modifier(modifierText(frameSize: 20, font: .caption))
-                Text(away_losses!)
-                    .modifier(modifierText(frameSize: 20, font: .caption))
-                Text(away_percent!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
-                Text(away_games_played!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
+                Text("\(standingPlayoffs.away_wins)")
+                    .modifier(modifierText(frameSize: 20, font: .subheadline))
+                Text("\(standingPlayoffs.away_losses)")
+                    .modifier(modifierText(frameSize: 20, font: .subheadline))
+                Text(standingPlayoffs.away_percent)
+                    .modifier(modifierText(frameSize: 35, font: .subheadline))
+                Text(standingPlayoffs.away_games_played)
+                    .modifier(modifierText(frameSize: 35, font: .subheadline))
             }
             HStack (spacing: 5) {
-                Image(home_image!)
+                Image(standingPlayoffs.home_image)
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
-                Text(home_team_name!)
-                    .modifier(modifierText(font: .caption))
+                Text(standingPlayoffs.home_team_name)
+                    .modifier(modifierText(font: .subheadline))
                 Spacer()
-                Text(home_wins!)
-                    .modifier(modifierText(frameSize: 20, font: .caption))
-                Text(home_losses!)
-                    .modifier(modifierText(frameSize: 20, font: .caption))
-                Text(home_percent!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
-                Text(home_games_played!)
-                    .modifier(modifierText(frameSize: 30, font: .caption))
+                Text("\(standingPlayoffs.home_wins)")
+                    .modifier(modifierText(frameSize: 20, font: .subheadline))
+                Text("\(standingPlayoffs.home_losses)")
+                    .modifier(modifierText(frameSize: 20, font: .subheadline))
+                Text(standingPlayoffs.home_percent)
+                    .modifier(modifierText(frameSize: 35, font: .subheadline))
+                Text(standingPlayoffs.home_games_played)
+                    .modifier(modifierText(frameSize: 35, font: .subheadline))
             }
             Divider()
         }
@@ -257,15 +255,13 @@ func showHeaderView(bottom: Int, type: String) -> some View {
                     .font(.subheadline)
                 Spacer()
                 Text("G")
-                    .modifier(modifierText(frameSize: 20))
+                    .modifier(modifierText(frameSize: 25))
                 Text("P")
-                    .modifier(modifierText(frameSize: 20))
+                    .modifier(modifierText(frameSize: 25))
                 Text("PCT")
-                    .modifier(modifierText(frameSize: 30))
+                    .modifier(modifierText(frameSize: 35))
                 Text("DIF")
-                    .modifier(modifierText(frameSize: 30))
-                Text("PTS")
-                    .modifier(modifierText(frameSize: 30))
+                    .modifier(modifierText(frameSize: 35))
             }
             .eraseToAnyView()
         }
@@ -279,9 +275,9 @@ func showHeaderView(bottom: Int, type: String) -> some View {
             Text("P")
                 .modifier(modifierText(frameSize: 20))
             Text("PCT")
-                .modifier(modifierText(frameSize: 30))
+                .modifier(modifierText(frameSize: 35))
             Text("JV")
-                .modifier(modifierText(frameSize: 30))
+                .modifier(modifierText(frameSize: 35))
         }
         .eraseToAnyView()
     }

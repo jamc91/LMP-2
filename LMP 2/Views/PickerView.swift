@@ -27,6 +27,7 @@ struct PickerView: View {
                         .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                     Spacer()
                     Button("Aceptar") {
+                        self.viewModel.Results = []
                         let formatter = DateFormatter()
                         formatter.dateFormat = "YYYY/MM/dd"
                         self.viewModel.date = formatter.string(from: self.viewModel.dateNow)
@@ -37,13 +38,13 @@ struct PickerView: View {
                     .frame(width: 70, height: 10, alignment: .center)
                     .padding()
                 }
-                DatePicker("Cambiar fecha", selection: self.$viewModel.dateNow, displayedComponents: .date)
+                DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
                     .labelsHidden()
                     .environment(\.locale, Locale.init(identifier: "es"))
                 
             }
             .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
-            .background(Color("BackgroundCell"))
+            .background(Color(.secondarySystemBackground))
             .cornerRadius(10)
     }
 }

@@ -12,8 +12,6 @@ import URLImage
 struct LeadersBattingView: View {
     
     @ObservedObject var viewModel = ViewModel()
-    @State private var buttonText = "Regular"
-    @State private var pickerBottomValue = 0
     @State private var showActionSheet = false
 
     var body: some View {
@@ -23,7 +21,7 @@ struct LeadersBattingView: View {
                 self.showActionSheet = true
             }) {
                 HStack {
-                    Text(buttonText)
+                    Text(viewModel.battingType.capitalized)
                     Image(systemName: "chevron.down")
                 }.foregroundColor(Color(.systemBlue))
                  .padding(3)
@@ -31,18 +29,18 @@ struct LeadersBattingView: View {
                 .actionSheet(isPresented: $showActionSheet) {
                     ActionSheet(title: Text(""), buttons: [
                         .default(Text("Regular")){
-                            self.viewModel.parseLeadersBatting(mode: "batting", type: "regular")
-                            self.buttonText = "Regular"
-                            self.pickerBottomValue = 0
+                            self.viewModel.battingType = "regular"
+                            self.viewModel.pickerBattingValue = 0
+                            self.viewModel.parseLeadersBatting(mode: "batting", type: "regular", column: "avg")
                         },
                         .default(Text("Playoffs")){
-                            self.viewModel.parseLeadersBatting(mode: "batting", type: "playoffs")
-                            self.buttonText = "Playoffs"
-                            self.pickerBottomValue = 0
+                            self.viewModel.battingType = "playoffs"
+                            self.viewModel.pickerBattingValue = 0
+                            self.viewModel.parseLeadersBatting(mode: "batting", type: "playoffs", column: "avg")
                         },
                         .cancel()])
             }
-            Picker(selection: $pickerBottomValue, label: Text("")) {
+            Picker(selection: $viewModel.pickerBattingValue, label: Text("")) {
                 Text("AVG").tag(0)
                 Text("R").tag(1)
                 Text("HR").tag(2)
@@ -50,27 +48,13 @@ struct LeadersBattingView: View {
                 Text("SB").tag(4)
             }.pickerStyle(SegmentedPickerStyle())
              .padding(.bottom)
-            ForEach(self.viewModel.statisticsListBatting.sorted(by: { (s1, s2) -> Bool in
-                switch pickerBottomValue {
-                case 1:
-                    return s1.r.localizedStandardCompare(s2.r) == .orderedDescending
-                case 2:
-                    return s1.hr.localizedStandardCompare(s2.hr) == .orderedDescending
-                case 3:
-                    return s1.rbi.localizedStandardCompare(s2.rbi) == .orderedDescending
-                case 4:
-                    return s1.sb.localizedStandardCompare(s2.sb) == .orderedDescending
-                default:
-                    return s1.avg.localizedStandardCompare(s2.avg) == .orderedDescending
-                }
-                
-            })) { item in
-                battingView(leader: item, bottomValue: self.$pickerBottomValue)
+            ForEach(self.viewModel.statisticsListBatting) { item in
+                battingView(leader: item, bottomValue: self.$viewModel.pickerBattingValue)
             }
         }
         .frame(height: 640, alignment: .top)
         .padding()
-        .background(Color("BackgroundCell"))
+        .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
     }
     
@@ -86,21 +70,21 @@ struct LeadersBatting_Previews: PreviewProvider {
 
 struct battingView: View {
     
-    
     var leader: leadersBatting
     @Binding var bottomValue: Int
     
     var body: some View {
         VStack {
             HStack {
-                URLImage(leader.img,  expireAfter: Date(timeIntervalSinceNow: 31_556_926.0),processors: [ Resize(size: CGSize(width: 35, height: 35), scale: UIScreen.main.scale) ], placeholder: Image(systemName: "person.crop.circle"),
-                content:  {
+                URLImage(leader.thumb,
+                         placeholder: Image(systemName: "person.crop.circle"),
+                         content: {
                     $0.image
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .clipShape(Circle())
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(Circle())                    
                 })
-                .frame(width: 35, height: 35)
+                .frame(width: 35, height: 35, alignment: .center)
                 VStack (alignment: .leading) {
                     Text(leader.name)
                         .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
@@ -108,31 +92,10 @@ struct battingView: View {
                         .modifier(textModifier(font: .footnote, fontColor: .secondary, fontDesing: .default))
                 }
                 Spacer()
-                changeValue(bottomValue: bottomValue)
-                
+                Text(leader.getValue(picker: bottomValue))
+                     .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
             }
             Divider()
         }
     }
-    func changeValue(bottomValue: Int) -> some View {
-        switch bottomValue {
-        case 1:
-            return Text(leader.r)
-                .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
-        case 2:
-            return Text(leader.hr)
-                .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
-        case 3:
-            return Text(leader.rbi)
-                .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
-        case 4:
-            return Text(leader.sb)
-                .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
-        default:
-            return Text(leader.avg)
-                .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
-        }
-    }
 }
-
-

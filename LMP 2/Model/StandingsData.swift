@@ -7,19 +7,17 @@
 //
 
 import Foundation
-
-
+import SwiftUI
 
 struct resultsStandings: Decodable, Hashable {
+    
    var response: Standings
    
 }
 
 struct Standings: Decodable, Hashable {
     
-   var first: [First]
-   var second: [Second]
-   var general: [General]
+   var first, second, general: [First]
    var points: [Points]
    var playoffs: PlayOffs?
     
@@ -46,32 +44,6 @@ struct First: Decodable, Hashable, Identifiable {
 
 }
 
-struct Second: Decodable, Hashable, Identifiable {
-    
-    var id: String
-    var name: String
-    var team_name: String
-    var wins: Int
-    var losses: Int
-    var percent: String
-    var gb: String
-    var pts: String
-    
-}
-struct General: Decodable, Hashable, Identifiable {
-    
-    var id: String
-    var name: String
-    var team_name: String
-    var wins: Int
-    var losses: Int
-    var percent: String
-    var gb: String
-    var pts: String
-    
-    
-}
-
 struct Points: Decodable, Hashable, Identifiable {
     
     var id: String
@@ -85,9 +57,8 @@ struct Points: Decodable, Hashable, Identifiable {
 
 struct PlayOffs: Decodable, Hashable {
     
-    var repesca: [Repesca]
-    var semifinal: [Semifinal]
-    var final: [Final]
+    var repesca, semifinal, final: [Repesca]
+    
 }
 
 struct Repesca: Decodable, Hashable, Identifiable {
@@ -114,7 +85,7 @@ struct Repesca: Decodable, Hashable, Identifiable {
     
 }
 
-struct Semifinal: Decodable, Hashable, Identifiable {
+/*struct Semifinal: Decodable, Hashable, Identifiable {
     
     var id = UUID()
     var away_team_name: String
@@ -160,5 +131,5 @@ struct Final: Decodable, Hashable, Identifiable {
         case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
     }
     
-}
+}*/
 

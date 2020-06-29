@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 class ViewModel: ObservableObject {
     
@@ -17,23 +18,42 @@ class ViewModel: ObservableObject {
     @Published var date = ""
     @Published var dateNow = Date()
     @Published var showPickerView = false
-    
+    @Published var battingType = "regular"
+    @Published var pitchingType = "regular"
+    @Published var showActivityIndicator = false
+    @Published var pickerBattingValue: Int = 0 {
+        didSet {
+            statisticsListBatting = []
+            if let element = leadersBatting.battingCategories(rawValue: pickerBattingValue) {
+                parseLeadersBatting(mode: "batting", type: battingType, column: "\(element)")
+                
+            }
+        }
+    }
+    @Published var pickerPitchingValue: Int = 0 {
+        didSet {
+           statisticsListPitching = []
+            if let element = leadersPitching.pitchingCategories(rawValue: pickerPitchingValue) {
+                parseLeadersPitching(mode: "pitching", type: pitchingType, column: "\(element)")
+            }
+        }
+    }
     
     
     func loadContent() {
         self.parseData()
         self.parseStandings()
-        self.parseLeadersBatting(mode: "batting", type: "regular")
-        self.parseLeadersPitching(mode: "pitching", type: "regular")
+        self.parseLeadersBatting(mode: "batting", type: "regular", column: "avg")
+        self.parseLeadersPitching(mode: "pitching", type: "regular", column: "era")
         
     }
 
     func parseData() {
-        
+        showActivityIndicator = true
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY/MM/dd"
         self.date = formatter.string(from: self.dateNow)
-        
+        print("hola")
         let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(date)")
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             guard let data = data else { return }
@@ -45,7 +65,7 @@ class ViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     
                     self.Results = games.response
-                    
+                    self.showActivityIndicator = false
                  }
                }
                 
@@ -70,6 +90,7 @@ class ViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     
                     self.standingList = standings.response
+                    
                 }
             }
             catch {
@@ -80,7 +101,7 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
-    func parseLeadersBatting(mode: String, type: String) {
+    func parseLeadersBatting(mode: String, type: String, column: String) {
                 
         var components = URLComponents()
         components.scheme = "https"
@@ -89,10 +110,11 @@ class ViewModel: ObservableObject {
         components.queryItems = [
         URLQueryItem(name: "mode", value: mode),
         URLQueryItem(name: "type", value: type),
-        URLQueryItem(name: "limit", value: "300")
+        URLQueryItem(name: "column", value: column)
         ]
         let url = components.url
         
+        print(url!)
         URLSession.shared.dataTask(with: url!) { (data, response, error) in
             guard let data = data else { return }
             
@@ -116,7 +138,7 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
-        func parseLeadersPitching(mode: String, type: String) {
+    func parseLeadersPitching(mode: String, type: String, column: String) {
                     
             var components = URLComponents()
             components.scheme = "https"
@@ -125,10 +147,10 @@ class ViewModel: ObservableObject {
             components.queryItems = [
             URLQueryItem(name: "mode", value: mode),
             URLQueryItem(name: "type", value: type),
-            URLQueryItem(name: "limit", value: "300")
+            URLQueryItem(name: "column", value: column)
             ]
             let url = components.url
-            
+            print(url!)
             URLSession.shared.dataTask(with: url!) { (data, response, error) in
                 guard let data = data else { return }
                 
@@ -152,6 +174,3 @@ class ViewModel: ObservableObject {
             }.resume()
         }
     }
-
-
-

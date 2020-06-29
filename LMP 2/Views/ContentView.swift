@@ -11,44 +11,47 @@ import URLImage
 
 struct ContentView: View {
     
-   init() {
+    init() {
         URLImageService.shared.cleanFileCache()
         UITableViewCell.appearance().backgroundColor = UIColor(red: 243/255, green: 242/255, blue: 248/255, alpha: 0)
         UITableView.appearance().separatorStyle = .none
-
+        
     }
     
     @ObservedObject var viewModel = ViewModel()
     
+    
     var body: some View {
         ZStack {
-                List {
-                    HeaderView(viewModel: self.viewModel)
+            List {
+                VStack (alignment: .leading, spacing: 10) {
+                    HeaderView(viewModel: viewModel)
                     Section(header: HeaderSection(sectionName: "Marcadores")) {
                         
-                        ScoreBoardView(scoreBoardData: self.viewModel)
+                        ScoreBoardView(scoreBoardData: viewModel)
                             
                     }
                     Section(header: HeaderSection(sectionName: "Posiciones")) {
                         
-                        StandingView(standingData: self.viewModel)
+                        StandingView(viewModel: viewModel)
                             
                     }
                     Section(header: HeaderSection(sectionName: "Líderes de bateo")) {
                         
-                        LeadersBattingView(viewModel: self.viewModel)
-                            
+                        LeadersBattingView(viewModel: viewModel)
+                        
                     }
                     Section(header: HeaderSection(sectionName: "Líderes de Pitcheo")) {
                         
-                        LeadersPitchingView(viewModel: self.viewModel)
-                            
+                        LeadersPitchingView(viewModel: viewModel)
+                        
                     }
-
-                }
-                .listStyle(GroupedListStyle())
-                .environment(\.horizontalSizeClass, .compact)
-                .onAppear(perform: self.viewModel.loadContent)
+                }.animation(.spring())
+            }.animation(nil)
+            .listStyle(GroupedListStyle())
+            .environment(\.horizontalSizeClass, .compact)
+            .onAppear(perform: self.viewModel.loadContent)
+            
             
             VStack {
                 Spacer()
@@ -61,9 +64,9 @@ struct ContentView: View {
             .onTapGesture {
                 self.viewModel.showPickerView = false
             })
-                .edgesIgnoringSafeArea(.bottom)
+                .edgesIgnoringSafeArea(.all)
                 .animation(.spring())
-                
+            
         }
     }
 }
@@ -80,7 +83,11 @@ struct HeaderSection: View {
     var sectionName = ""
     
     var body: some View {
-        Text(sectionName).font(.system(size: 22)).bold().foregroundColor(.primary)
+        
+        HStack {
+            Text(sectionName).font(.system(size: 22)).bold().foregroundColor(.primary)
+        }.padding(.top)
+        
     }
 }
 
@@ -97,7 +104,7 @@ struct HeaderView: View {
             Button(action: {
                 self.viewModel.showPickerView.toggle()
             }) {
-                Image(systemName: "calendar.circle")
+                Image(systemName: "calendar.circle.fill")
                     .font(.system(size: 35))
                     .foregroundColor(.primary)
                     .frame(width: 35, height: 50, alignment: .center)

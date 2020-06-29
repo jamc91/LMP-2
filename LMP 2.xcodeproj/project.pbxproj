@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1419834C2485C24200F4DC1D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834B2485C24200F4DC1D /* ActivityIndicatorView.swift */; };
 		1419834E2485CA7400F4DC1D /* LeadersBattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */; };
 		141983502485CC7100F4DC1D /* statisticsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834F2485CC7100F4DC1D /* statisticsData.swift */; };
 		14198378248CB3CE00F4DC1D /* LeadersPitchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */; };
@@ -47,7 +46,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1419834B2485C24200F4DC1D /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadersBattingView.swift; sourceTree = "<group>"; };
 		1419834F2485CC7100F4DC1D /* statisticsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = statisticsData.swift; sourceTree = "<group>"; };
 		14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadersPitchingView.swift; sourceTree = "<group>"; };
@@ -114,10 +112,10 @@
 		149F27C7247E273F003D8307 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				14E05B192460AA92008F2836 /* ContentView.swift */,
 				14E05B452460B4A7008F2836 /* ScoreBoardView.swift */,
 				14EA9B262477575100AE32AF /* StandingView.swift */,
 				148508A22474F4F10085D292 /* PickerView.swift */,
-				1419834B2485C24200F4DC1D /* ActivityIndicatorView.swift */,
 				1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */,
 				14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */,
 				14F1EF8B247F16BD0058B974 /* View+typeerasure.swift */,
@@ -150,7 +148,6 @@
 			children = (
 				14E05B152460AA92008F2836 /* AppDelegate.swift */,
 				14E05B172460AA92008F2836 /* SceneDelegate.swift */,
-				14E05B192460AA92008F2836 /* ContentView.swift */,
 				149F27C7247E273F003D8307 /* Views */,
 				149F27C6247E2683003D8307 /* Model */,
 				14E05B1B2460AA93008F2836 /* Assets.xcassets */,
@@ -333,7 +330,6 @@
 				14E05B1A2460AA92008F2836 /* ContentView.swift in Sources */,
 				1442A6CA246F829A0047CE0E /* ScoreBoardData.swift in Sources */,
 				1419834E2485CA7400F4DC1D /* LeadersBattingView.swift in Sources */,
-				1419834C2485C24200F4DC1D /* ActivityIndicatorView.swift in Sources */,
 				14EA9B272477575100AE32AF /* StandingView.swift in Sources */,
 				14F1EF8C247F16BD0058B974 /* View+typeerasure.swift in Sources */,
 				148508A32474F4F10085D292 /* PickerView.swift in Sources */,
