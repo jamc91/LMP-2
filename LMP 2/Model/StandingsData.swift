@@ -17,9 +17,9 @@ struct resultsStandings: Decodable, Hashable {
 
 struct Standings: Decodable, Hashable {
     
-   var first, second, general: [First]
-   var points: [Points]
-   var playoffs: PlayOffs?
+   var first, second, general : [StandingRegular]
+   var points                 : [StandingPoints]
+   var playoffs               : Playoffs?
     
     init() {
         
@@ -31,105 +31,55 @@ struct Standings: Decodable, Hashable {
     }
 }
 
-struct First: Decodable, Hashable, Identifiable {
+struct StandingRegular: Decodable, Hashable, Identifiable {
     
-    var id: String
-    var name: String
-    var team_name: String
-    var wins: Int
-    var losses: Int
-    var percent: String
-    var gb: String
-    var pts: String
+    var id        : String
+    var name      : String
+    var team_name : String
+    var wins      : Int
+    var losses    : Int
+    var percent   : String
+    var gb        : String
+    var pts       : String
 
 }
 
-struct Points: Decodable, Hashable, Identifiable {
+struct StandingPoints: Decodable, Hashable, Identifiable {
     
-    var id: String
-    var name: String
-    var team_name: String
-    var percent: String
-    var first: String
-    var second: String
-    var total: String
+    var id        : String
+    var name      : String
+    var team_name : String
+    var percent   : String
+    var first     : String
+    var second    : String
+    var total     : String
 }
 
-struct PlayOffs: Decodable, Hashable {
+struct Playoffs: Decodable, Hashable {
     
-    var repesca, semifinal, final: [Repesca]
+    var repesca, semifinal, final: [StandingPlayoffs]
     
 }
 
-struct Repesca: Decodable, Hashable, Identifiable {
+struct StandingPlayoffs: Decodable, Hashable, Identifiable {
     
-    var id = UUID()
-    var away_team_name: String
-    var away_image: String
-    var away_wins: Int
-    var away_losses: Int
-    var away_percent: String
-    var away_runs_avg: String
-    var away_games_played: String
-    var home_team_name: String
-    var home_image: String
-    var home_wins: Int
-    var home_losses: Int
-    var home_percent: String
-    var home_runs_avg: String
-    var home_games_played: String
+    var id                = UUID()
+    var away_team_name    : String
+    var away_image        : String
+    var away_wins         : Int
+    var away_losses       : Int
+    var away_percent      : String
+    var away_runs_avg     : String
+    var away_games_played : String
+    var home_team_name    : String
+    var home_image        : String
+    var home_wins         : Int
+    var home_losses       : Int
+    var home_percent      : String
+    var home_runs_avg     : String
+    var home_games_played : String
     
     enum CodingKeys: String, CodingKey {
         case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
     }
-    
 }
-
-/*struct Semifinal: Decodable, Hashable, Identifiable {
-    
-    var id = UUID()
-    var away_team_name: String
-    var away_image: String
-    var away_wins: Int
-    var away_losses: Int
-    var away_percent: String
-    var away_runs_avg: String
-    var away_games_played: String
-    var home_team_name: String
-    var home_image: String
-    var home_wins: Int
-    var home_losses: Int
-    var home_percent: String
-    var home_runs_avg: String
-    var home_games_played: String
-    
-    enum CodingKeys: String, CodingKey {
-        case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
-    }
-    
-}
-
-struct Final: Decodable, Hashable, Identifiable {
-    
-    var id = UUID()
-    var away_team_name: String
-    var away_image: String
-    var away_wins: Int
-    var away_losses: Int
-    var away_percent: String
-    var away_runs_avg: String
-    var away_games_played: String
-    var home_team_name: String
-    var home_image: String
-    var home_wins: Int
-    var home_losses: Int
-    var home_percent: String
-    var home_runs_avg: String
-    var home_games_played: String
-    
-    enum CodingKeys: String, CodingKey {
-        case away_team_name,away_image, away_wins, away_losses, away_percent, away_runs_avg, away_games_played, home_team_name,home_image, home_wins, home_losses, home_percent, home_runs_avg, home_games_played
-    }
-    
-}*/
-

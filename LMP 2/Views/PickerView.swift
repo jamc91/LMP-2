@@ -13,7 +13,7 @@ struct PickerView: View {
     @ObservedObject var viewModel = ViewModel()
    
     var body: some View {
-            VStack {
+        VStack (spacing: 0) {
                 HStack {
                     Button("Cancelar") {
                         
@@ -27,21 +27,21 @@ struct PickerView: View {
                         .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                     Spacer()
                     Button("Aceptar") {
-                        self.viewModel.Results = []
-                        let formatter = DateFormatter()
-                        formatter.dateFormat = "YYYY/MM/dd"
-                        self.viewModel.date = formatter.string(from: self.viewModel.dateNow)
+                        self.viewModel.games.removeAll()
                         self.viewModel.showPickerView = false
-                        self.viewModel.parseData()
-
+                        self.viewModel.fetchGames()
                     }
-                    .frame(width: 70, height: 10, alignment: .center)
+                    .frame(width: 70, height: 20, alignment: .center)
                     .padding()
                 }
-                DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
+                Button(action: {
+                    self.viewModel.dateNow = Date()
+                }) {
+                    Text("Hoy")
+                }.padding(.top)
+                DatePicker("", selection: self.$viewModel.dateNow,in: ...Date(), displayedComponents: .date)
                     .labelsHidden()
                     .environment(\.locale, Locale.init(identifier: "es"))
-                
             }
             .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
             .background(Color(.secondarySystemBackground))

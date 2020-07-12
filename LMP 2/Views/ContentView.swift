@@ -11,24 +11,26 @@ import URLImage
 
 struct ContentView: View {
     
-    init() {
-        URLImageService.shared.cleanFileCache()
-        UITableViewCell.appearance().backgroundColor = UIColor(red: 243/255, green: 242/255, blue: 248/255, alpha: 0)
-        UITableView.appearance().separatorStyle = .none
-        
-    }
-    
     @ObservedObject var viewModel = ViewModel()
     
     
     var body: some View {
-        ZStack {
+        if viewModel.showMainActivityIndicator {
+            return HStack (alignment: .center) {
+                ActivityIndicator(showIndicator: $viewModel.showMainActivityIndicator, style: .medium)
+                .onAppear(perform: self.viewModel.loadContent)
+                Text("Cargando")
+                    .foregroundColor(.secondary)
+            }
+        .eraseToAnyView()
+        } else {
+        return ZStack {
             List {
                 VStack (alignment: .leading, spacing: 10) {
                     HeaderView(viewModel: viewModel)
                     Section(header: HeaderSection(sectionName: "Marcadores")) {
                         
-                        ScoreBoardView(scoreBoardData: viewModel)
+                        ScoreBoardView(viewModel: viewModel)
                             
                     }
                     Section(header: HeaderSection(sectionName: "Posiciones")) {
@@ -47,17 +49,15 @@ struct ContentView: View {
                         
                     }
                 }.animation(.spring())
-            }.animation(nil)
+            }
+            .animation(nil)
             .listStyle(GroupedListStyle())
-            .environment(\.horizontalSizeClass, .compact)
-            .onAppear(perform: self.viewModel.loadContent)
             
             
             VStack {
                 Spacer()
                 PickerView(viewModel: viewModel)
                     .offset(y: self.viewModel.showPickerView ? 0 : UIScreen.main.bounds.height)
-                
             }
             .background((self.viewModel.showPickerView ? Color.black.opacity(0.5) : Color.clear)
             .edgesIgnoringSafeArea(.all)
@@ -66,7 +66,8 @@ struct ContentView: View {
             })
                 .edgesIgnoringSafeArea(.all)
                 .animation(.spring())
-            
+        }
+        .eraseToAnyView()
         }
     }
 }
@@ -87,7 +88,6 @@ struct HeaderSection: View {
         HStack {
             Text(sectionName).font(.system(size: 22)).bold().foregroundColor(.primary)
         }.padding(.top)
-        
     }
 }
 

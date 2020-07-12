@@ -7,160 +7,133 @@
 //
 
 import Foundation
-import Combine
+import URLImage
 
 class ViewModel: ObservableObject {
     
-    @Published var Results = [Response]()
+    @Published var games = [ScoreBoard]()
     @Published var standingList = Standings()
-    @Published var statisticsListBatting = [leadersBatting]()
-    @Published var statisticsListPitching = [leadersPitching]()
-    @Published var date = ""
+    @Published var leadersOfBattingList = [leadersBatting]()
+    @Published var leadersOfPitchingList = [leadersPitching]()
     @Published var dateNow = Date()
     @Published var showPickerView = false
-    @Published var battingType = "regular"
-    @Published var pitchingType = "regular"
     @Published var showActivityIndicator = false
-    @Published var pickerBattingValue: Int = 0 {
+    @Published var showMainActivityIndicator = true
+    @Published var requestLeadersOfBattingValue: (season   : leadersBatting.Season,
+                                                  category : leadersBatting.battingCategory) = (.regular, .avg) {
         didSet {
-            statisticsListBatting = []
-            if let element = leadersBatting.battingCategories(rawValue: pickerBattingValue) {
-                parseLeadersBatting(mode: "batting", type: battingType, column: "\(element)")
-                
-            }
+            leadersOfBattingList.removeAll()
+            fetchLeadersOfBatting(season: requestLeadersOfBattingValue.season.rawValue,
+                                  column: requestLeadersOfBattingValue.category.rawValue)
         }
     }
-    @Published var pickerPitchingValue: Int = 0 {
+    @Published var requestLeadersOfPitchingValue: (season   : leadersPitching.Season,
+                                                   category : leadersPitching.pitchingCategory) = (.regular, .era) {
         didSet {
-           statisticsListPitching = []
-            if let element = leadersPitching.pitchingCategories(rawValue: pickerPitchingValue) {
-                parseLeadersPitching(mode: "pitching", type: pitchingType, column: "\(element)")
-            }
+            leadersOfPitchingList.removeAll()
+            fetchLeadersOfPitching(season: requestLeadersOfPitchingValue.season.rawValue,
+                                   column: requestLeadersOfPitchingValue.category.rawValue)
         }
     }
-    
     
     func loadContent() {
-        self.parseData()
-        self.parseStandings()
-        self.parseLeadersBatting(mode: "batting", type: "regular", column: "avg")
-        self.parseLeadersPitching(mode: "pitching", type: "regular", column: "era")
-        
+        URLImageService.shared.cleanFileCache()
+        self.fetchGames()
+        self.fetchStandings()
+        self.fetchLeadersOfBatting()
+        self.fetchLeadersOfPitching()
+    
     }
-
-    func parseData() {
+        
+    func fetchGames() {
+        
         showActivityIndicator = true
+        var date = ""
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY/MM/dd"
-        self.date = formatter.string(from: self.dateNow)
-        print("hola")
-        let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(date)")
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            guard let data = data else { return }
-            
-            do {
-                
-                let games = try JSONDecoder().decode(ResultList.self, from: data)
-                
-                DispatchQueue.main.async {
-                    
-                    self.Results = games.response
-                    self.showActivityIndicator = false
-                 }
-               }
-                
-            catch {
-                
-                print(error.localizedDescription)
-                
-            }
-        }.resume()
-    }
-    
-    func parseStandings() {
+        date = formatter.string(from: self.dateNow)
         
-        let url = URL(string: "https://api.lmp.mx/3.0.0/standing")
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            guard let data = data else { return }
-            
-            do {
+        if let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(date)") {
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
                 
-                let standings = try JSONDecoder().decode(resultsStandings.self, from: data)
-                        
-                DispatchQueue.main.async {
+                guard let data = data else {
+                    fatalError("Error fetch games!")
+                }
+                
+                do {
                     
-                    self.standingList = standings.response
+                    let games = try JSONDecoder().decode(ResultList.self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.games = games.response
+                        self.showActivityIndicator = false
+                    }
+                }
+                    
+                catch {
+                    
+                    print(error.localizedDescription)
                     
                 }
-            }
-            catch {
-                
-                print(error.localizedDescription)
-                
-            }
-        }.resume()
+            }.resume()
+        }
     }
     
-    func parseLeadersBatting(mode: String, type: String, column: String) {
+    func fetchStandings() {
+        
+        if let url = URL(string: "https://api.lmp.mx/3.0.0/standing") {
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data else {
+                    fatalError("Error fetch standings!")
+                }
+                
+                do {
+                    
+                    let standings = try JSONDecoder().decode(resultsStandings.self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.standingList = standings.response
+                        
+                        self.showMainActivityIndicator = false
+                        
+                    }
+                }
+                catch {
+                    
+                    print(error.localizedDescription)
+                    
+                }
+            }.resume()
+        }
+    }
+    
+    func fetchLeadersOfBatting(season: String = "regular", column: String = "avg") {
                 
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.lmp.mx"
         components.path = "/3.0.0/leaders"
         components.queryItems = [
-        URLQueryItem(name: "mode", value: mode),
-        URLQueryItem(name: "type", value: type),
+        URLQueryItem(name: "mode", value: "batting"),
+        URLQueryItem(name: "type", value: season),
         URLQueryItem(name: "column", value: column)
         ]
-        let url = components.url
-        
-        print(url!)
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            guard let data = data else { return }
+        if let url = components.url {
             
-            do {
-                
-                let stat = try JSONDecoder().decode(statisticsBatting.self, from: data)
-                        
-                DispatchQueue.main.async {
-                    
-                    self.statisticsListBatting = stat.response
-                    
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data else {
+                    fatalError("Error fetch leaders of batting!")
                 }
-                
-            }
-                
-            catch {
-                
-                print(error.localizedDescription)
-                
-            }
-        }.resume()
-    }
-    
-    func parseLeadersPitching(mode: String, type: String, column: String) {
-                    
-            var components = URLComponents()
-            components.scheme = "https"
-            components.host = "api.lmp.mx"
-            components.path = "/3.0.0/leaders"
-            components.queryItems = [
-            URLQueryItem(name: "mode", value: mode),
-            URLQueryItem(name: "type", value: type),
-            URLQueryItem(name: "column", value: column)
-            ]
-            let url = components.url
-            print(url!)
-            URLSession.shared.dataTask(with: url!) { (data, response, error) in
-                guard let data = data else { return }
                 
                 do {
                     
-                    let stat = try JSONDecoder().decode(statisticsPitching.self, from: data)
-                            
+                    let leadersOfBatting = try JSONDecoder().decode(statisticsBatting.self, from: data)
+                    
                     DispatchQueue.main.async {
                         
-                        self.statisticsListPitching = stat.response
+                        self.leadersOfBattingList = leadersOfBatting.response
                         
                     }
                     
@@ -174,3 +147,41 @@ class ViewModel: ObservableObject {
             }.resume()
         }
     }
+    func fetchLeadersOfPitching(season: String = "regular", column: String = "era") {
+                    
+            var components = URLComponents()
+            components.scheme = "https"
+            components.host = "api.lmp.mx"
+            components.path = "/3.0.0/leaders"
+            components.queryItems = [
+            URLQueryItem(name: "mode", value: "pitching"),
+            URLQueryItem(name: "type", value: season),
+            URLQueryItem(name: "column", value: column)
+            ]
+        if let url = components.url {
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data else {
+                    fatalError("Error fetch leaders of pitching!")
+                }
+                
+                do {
+                    
+                    let leadersOfPitching = try JSONDecoder().decode(statisticsPitching.self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.leadersOfPitchingList = leadersOfPitching.response
+                        
+                    }
+                    
+                }
+                    
+                catch {
+                    
+                    print(error.localizedDescription)
+                    
+                }
+            }.resume()
+        }
+    }
+}

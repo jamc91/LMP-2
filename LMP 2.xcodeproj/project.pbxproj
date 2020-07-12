@@ -49,6 +49,7 @@
 		1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadersBattingView.swift; sourceTree = "<group>"; };
 		1419834F2485CC7100F4DC1D /* statisticsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = statisticsData.swift; sourceTree = "<group>"; };
 		14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadersPitchingView.swift; sourceTree = "<group>"; };
+		141A465024AABCCA00F31D7E /* LMP 2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "LMP 2.entitlements"; sourceTree = "<group>"; };
 		1442A6C9246F829A0047CE0E /* ScoreBoardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoardData.swift; sourceTree = "<group>"; };
 		148508A22474F4F10085D292 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		14E05B122460AA92008F2836 /* LMP 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LMP 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,8 +103,8 @@
 			isa = PBXGroup;
 			children = (
 				14E729EB247DA05F004A814D /* ViewModelData.swift */,
-				14EA9B2424774F7700AE32AF /* StandingsData.swift */,
 				1442A6C9246F829A0047CE0E /* ScoreBoardData.swift */,
+				14EA9B2424774F7700AE32AF /* StandingsData.swift */,
 				1419834F2485CC7100F4DC1D /* statisticsData.swift */,
 			);
 			path = Model;
@@ -146,6 +147,7 @@
 		14E05B142460AA92008F2836 /* LMP 2 */ = {
 			isa = PBXGroup;
 			children = (
+				141A465024AABCCA00F31D7E /* LMP 2.entitlements */,
 				14E05B152460AA92008F2836 /* AppDelegate.swift */,
 				14E05B172460AA92008F2836 /* SceneDelegate.swift */,
 				149F27C7247E273F003D8307 /* Views */,
@@ -498,6 +500,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "LMP 2/LMP 2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"LMP 2/Preview Content\"";
 				DEVELOPMENT_TEAM = EWVYY5R697;
@@ -509,8 +512,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Jesus-Medina.LMP-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -518,6 +522,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "LMP 2/LMP 2.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"LMP 2/Preview Content\"";
 				DEVELOPMENT_TEAM = EWVYY5R697;
@@ -529,8 +534,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Jesus-Medina.LMP-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

@@ -16,41 +16,51 @@ struct statisticsBatting: Decodable {
 
 struct leadersBatting: Decodable, Identifiable, Hashable {
     
-    var id = UUID()
-    var name: String
-    var team: String
-    var team_name: String
-    var img: URL
-    var thumb: URL
-    var pos: String
-    var avg: String
-    var r: String
-    var hr: String
-    var rbi: String
-    var sb: String
+    var id        = UUID()
+    var name      : String
+    var team      : String
+    var team_name : String
+    var img       : URL
+    var thumb     : URL
+    var pos       : String
+    var avg       : String
+    var r         : String
+    var hr        : String
+    var rbi       : String
+    var sb        : String
     
     enum CodingKeys: String, CodingKey {
         case name, team, team_name, img, thumb, pos, avg, r, hr, rbi, sb
     }
     
-    enum battingCategories: Int, CaseIterable {
-        case avg = 0
-        case r = 1
-        case hr = 2
-        case rbi = 3
-        case sb = 4
+    enum battingCategory: String, CaseIterable, Identifiable {
+        
+        case avg
+        case r
+        case hr
+        case rbi
+        case sb
+        
+        var id: String { self.rawValue }
     }
     
-    func getValue(picker: Int) -> String {
+    enum Season: String, CaseIterable, Identifiable {
+        case regular
+        case playoffs
+        
+        var id: String { self.rawValue }
+    }
+    
+    func getValue(picker: battingCategory) -> String {
         
         switch picker {
-        case 1:
+        case .r:
             return r
-        case 2:
+        case .hr:
             return hr
-        case 3:
+        case .rbi:
             return rbi
-        case 4:
+        case .sb:
             return sb
         default:
             return avg
@@ -70,44 +80,53 @@ struct leadersPitching: Decodable, Hashable, Identifiable {
     
     var id = UUID()
     
-    var name: String
-    var team: String
-    var team_name: String
-    var img: URL
-    var thumb: URL
-    var era: String
-    var w: String
-    var so: String
-    var sv: String
-    var whip: String
+    var name      : String
+    var team      : String
+    var team_name : String
+    var img       : URL
+    var thumb     : URL
+    var era       : String
+    var w         : String
+    var so        : String
+    var sv        : String
+    var whip      : String
     
     enum CodingKeys: String, CodingKey {
         case name, team, team_name, img, thumb, w, era, so, sv, whip
     }
     
-    enum pitchingCategories: Int {
-        case era = 0
-        case w = 1
-        case so = 2
-        case sv = 3
-        case whip = 4
+    enum pitchingCategory: String, CaseIterable, Identifiable {
+        case era
+        case w
+        case so
+        case sv
+        case whip
+        
+        var id: String { self.rawValue }
+        
     }
     
-    func getValue(picker: Int) -> String {
+    enum Season: String, CaseIterable, Identifiable {
+        case regular
+        case playoffs
+        
+        var id: String { self.rawValue }
+    }
+    
+    func getValue(picker: pitchingCategory) -> String {
         
         switch picker {
-        case 1:
+        case .w:
             return w
-        case 2:
+        case .so:
             return so
-        case 3:
+        case .sv:
             return sv
-        case 4:
+        case .whip:
             return whip
         default:
             return era
         }
     }
-    
 }
 

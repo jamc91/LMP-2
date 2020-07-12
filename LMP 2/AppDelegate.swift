@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        UITableViewCell.appearance().backgroundColor = UIColor.clear
+        UITableView.appearance().separatorStyle = .none
+        
         return true
     }
 

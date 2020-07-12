@@ -20,7 +20,7 @@ struct LeadersPitchingView: View {
                 self.showActionSheet.toggle()
             }) {
                 HStack {
-                    Text(viewModel.pitchingType.capitalized)
+                    Text(viewModel.requestLeadersOfPitchingValue.season.rawValue.capitalized)
                     Image(systemName: "chevron.down")
                 }
                 .foregroundColor(Color(.systemBlue))
@@ -29,27 +29,23 @@ struct LeadersPitchingView: View {
              .actionSheet(isPresented: $showActionSheet) {
                      ActionSheet(title: Text(""), buttons: [
                          .default(Text("Regular")){
-                            self.viewModel.pitchingType = "regular"
-                            self.viewModel.pickerPitchingValue = 0
-                            self.viewModel.parseLeadersPitching(mode: "pitching", type: "regular", column: "era")
+                            self.viewModel.requestLeadersOfPitchingValue.season = .regular
                          },
                          .default(Text("Playoffs")){
-                            self.viewModel.pitchingType = "playoffs"
-                            self.viewModel.pickerPitchingValue = 0
-                            self.viewModel.parseLeadersPitching(mode: "pitching", type: "playoffs", column: "era")
+                            self.viewModel.requestLeadersOfPitchingValue.season = .playoffs
                          },
                          .cancel()])
              }
-            Picker(selection: $viewModel.pickerPitchingValue, label: Text("")) {
-                Text("ERA").tag(0)
-                Text("W").tag(1)
-                Text("SO").tag(2)
-                Text("SV").tag(3)
-                Text("WHIP").tag(4)
+            Picker(selection: $viewModel.requestLeadersOfPitchingValue.category, label: Text("")) {
+                Text("ERA").tag(leadersPitching.pitchingCategory.era)
+                Text("W").tag(leadersPitching.pitchingCategory.w)
+                Text("SO").tag(leadersPitching.pitchingCategory.so)
+                Text("SV").tag(leadersPitching.pitchingCategory.sv)
+                Text("WHIP").tag(leadersPitching.pitchingCategory.whip)
             }.pickerStyle(SegmentedPickerStyle())
              .padding(.bottom)
-            ForEach(self.viewModel.statisticsListPitching) { item in
-                pitchingView(leader: item, bottomValue: self.$viewModel.pickerPitchingValue)
+            ForEach(self.viewModel.leadersOfPitchingList) { item in
+                pitchingView(leader: item, bottomValue: self.$viewModel.requestLeadersOfPitchingValue.category)
             }
         }
         .frame(height: 640, alignment: .top)
@@ -68,7 +64,7 @@ struct LeadersPitching_Previews: PreviewProvider {
 struct pitchingView: View {
     
     var leader: leadersPitching
-    @Binding var bottomValue: Int
+    @Binding var bottomValue: leadersPitching.pitchingCategory
     
     var body: some View {
         VStack {

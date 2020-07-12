@@ -13,7 +13,7 @@ struct LeadersBattingView: View {
     
     @ObservedObject var viewModel = ViewModel()
     @State private var showActionSheet = false
-
+    
     var body: some View {
         
         VStack {
@@ -21,35 +21,32 @@ struct LeadersBattingView: View {
                 self.showActionSheet = true
             }) {
                 HStack {
-                    Text(viewModel.battingType.capitalized)
+                    Text(viewModel.requestLeadersOfBattingValue.season.rawValue.capitalized)
                     Image(systemName: "chevron.down")
                 }.foregroundColor(Color(.systemBlue))
-                 .padding(3)
-                }.buttonStyle(PlainButtonStyle())
-                .actionSheet(isPresented: $showActionSheet) {
+                    .padding(3)
+            }.buttonStyle(PlainButtonStyle())
+             .actionSheet(isPresented: $showActionSheet) {
                     ActionSheet(title: Text(""), buttons: [
                         .default(Text("Regular")){
-                            self.viewModel.battingType = "regular"
-                            self.viewModel.pickerBattingValue = 0
-                            self.viewModel.parseLeadersBatting(mode: "batting", type: "regular", column: "avg")
+                            self.viewModel.requestLeadersOfBattingValue.season = .regular
                         },
                         .default(Text("Playoffs")){
-                            self.viewModel.battingType = "playoffs"
-                            self.viewModel.pickerBattingValue = 0
-                            self.viewModel.parseLeadersBatting(mode: "batting", type: "playoffs", column: "avg")
+                            self.viewModel.requestLeadersOfBattingValue.season = .playoffs
                         },
                         .cancel()])
             }
-            Picker(selection: $viewModel.pickerBattingValue, label: Text("")) {
-                Text("AVG").tag(0)
-                Text("R").tag(1)
-                Text("HR").tag(2)
-                Text("RBI").tag(3)
-                Text("SB").tag(4)
+            Picker(selection: $viewModel.requestLeadersOfBattingValue.category, label: Text("")) {
+                Text("AVG").tag(leadersBatting.battingCategory.avg)
+                Text("R").tag(leadersBatting.battingCategory.r)
+                Text("HR").tag(leadersBatting.battingCategory.hr)
+                Text("RBI").tag(leadersBatting.battingCategory.rbi)
+                Text("SB").tag(leadersBatting.battingCategory.sb)
             }.pickerStyle(SegmentedPickerStyle())
              .padding(.bottom)
-            ForEach(self.viewModel.statisticsListBatting) { item in
-                battingView(leader: item, bottomValue: self.$viewModel.pickerBattingValue)
+
+            ForEach(self.viewModel.leadersOfBattingList) { item in
+                battingView(leader: item, bottomValue: self.$viewModel.requestLeadersOfBattingValue.category)
             }
         }
         .frame(height: 640, alignment: .top)
@@ -57,7 +54,6 @@ struct LeadersBattingView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
     }
-    
 }
 
 struct LeadersBatting_Previews: PreviewProvider {
@@ -71,7 +67,7 @@ struct LeadersBatting_Previews: PreviewProvider {
 struct battingView: View {
     
     var leader: leadersBatting
-    @Binding var bottomValue: Int
+    @Binding var bottomValue: leadersBatting.battingCategory
     
     var body: some View {
         VStack {
@@ -79,12 +75,12 @@ struct battingView: View {
                 URLImage(leader.thumb,
                          placeholder: Image(systemName: "person.crop.circle"),
                          content: {
-                    $0.image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .clipShape(Circle())                    
+                            $0.image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .clipShape(Circle())
                 })
-                .frame(width: 35, height: 35, alignment: .center)
+                    .frame(width: 35, height: 35, alignment: .center)
                 VStack (alignment: .leading) {
                     Text(leader.name)
                         .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
@@ -93,7 +89,7 @@ struct battingView: View {
                 }
                 Spacer()
                 Text(leader.getValue(picker: bottomValue))
-                     .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
+                    .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
             }
             Divider()
         }

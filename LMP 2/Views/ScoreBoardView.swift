@@ -10,14 +10,14 @@ import SwiftUI
 
 struct ScoreBoardView: View {
     
-    @ObservedObject var scoreBoardData = ViewModel()
+    @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
         
-        if scoreBoardData.showActivityIndicator {
+        if viewModel.showActivityIndicator {
             return HStack (alignment: .center) {
                 Spacer()
-                ActivityIndicator(showIndicator: $scoreBoardData.showActivityIndicator, style: .medium).foregroundColor(.secondary)
+                ActivityIndicator(showIndicator: $viewModel.showActivityIndicator, style: .medium).foregroundColor(.secondary)
                 Text("Cargando")
                     .foregroundColor(.secondary)
                 Spacer()
@@ -28,7 +28,7 @@ struct ScoreBoardView: View {
             .eraseToAnyView()
         } else {
         
-          return ForEach(scoreBoardData.Results, id: \.id) { item in
+          return ForEach(viewModel.games, id: \.id) { item in
                 
                 scoreBoardView(game: item)
                     
@@ -41,18 +41,14 @@ struct ScoreBoardView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            ScoreBoardView(scoreBoardData: ViewModel())
-            scoreBoardView(game: Response(gameStatus: 0, gameTime: "No Hay Juegos", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
-            scoreBoardView(game: Response(gameStatus: 0, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-0", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
-            scoreBoardView(game: Response(gameStatus: 1, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-001", balls: "balls-0", strikes: "strikes-1", outs: "outs-1", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
-            scoreBoardView(game: Response(gameStatus: 2, gameTime: "19:05 PM", awayTeam: "JAL", awayRuns: 2, homeTeam: "CUL", homeRuns: 7, diamond: "pos-111", balls: "balls-2", strikes: "strikes-1", outs: "outs-1", inningArrow: "top", inningCurrent: "9")).previewLayout(.sizeThatFits)
+            ScoreBoardView(viewModel: ViewModel())
+            scoreBoardView(game: ScoreBoard(gameStatus: 0, gameTime: "10:34", awayTeam: "NAV", awayRuns: 2, homeTeam: "OBR", homeRuns: 4, diamond: "pos-001", balls: "balls-2", strikes: "strikes-1", outs: "outs-1", inningArrow: "top"))
         }
     }
 }
-
 struct headerScoreView: View {
     
-    var game: Response
+    var game: ScoreBoard
     
     var body: some View {
         
@@ -125,7 +121,7 @@ struct headerScoreView: View {
 }
 struct footerScoreView: View {
     
-    var game: Response
+    var game: ScoreBoard
     
     var body: some View {
         HStack {
@@ -183,7 +179,7 @@ struct footerScoreView: View {
 
 struct scoreBoardView: View {
     
-    var game: Response
+    var game: ScoreBoard
     
     var body: some View {
         VStack {
@@ -257,5 +253,4 @@ struct ActivityIndicator: UIViewRepresentable {
             uiView.stopAnimating()
         }
     }
-    
 }
