@@ -25,7 +25,6 @@
 		14E729EC247DA05F004A814D /* ViewModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E729EB247DA05F004A814D /* ViewModelData.swift */; };
 		14EA9B2524774F7700AE32AF /* StandingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EA9B2424774F7700AE32AF /* StandingsData.swift */; };
 		14EA9B272477575100AE32AF /* StandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EA9B262477575100AE32AF /* StandingView.swift */; };
-		14F1EF8C247F16BD0058B974 /* View+typeerasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F1EF8B247F16BD0058B974 /* View+typeerasure.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,7 +69,6 @@
 		14E729EB247DA05F004A814D /* ViewModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelData.swift; sourceTree = "<group>"; };
 		14EA9B2424774F7700AE32AF /* StandingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsData.swift; sourceTree = "<group>"; };
 		14EA9B262477575100AE32AF /* StandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingView.swift; sourceTree = "<group>"; };
-		14F1EF8B247F16BD0058B974 /* View+typeerasure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+typeerasure.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +117,6 @@
 				148508A22474F4F10085D292 /* PickerView.swift */,
 				1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */,
 				14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */,
-				14F1EF8B247F16BD0058B974 /* View+typeerasure.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -333,7 +330,6 @@
 				1442A6CA246F829A0047CE0E /* ScoreBoardData.swift in Sources */,
 				1419834E2485CA7400F4DC1D /* LeadersBattingView.swift in Sources */,
 				14EA9B272477575100AE32AF /* StandingView.swift in Sources */,
-				14F1EF8C247F16BD0058B974 /* View+typeerasure.swift in Sources */,
 				148508A32474F4F10085D292 /* PickerView.swift in Sources */,
 				14EA9B2524774F7700AE32AF /* StandingsData.swift in Sources */,
 			);

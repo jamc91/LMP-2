@@ -11,107 +11,71 @@ import SwiftUI
 struct StandingView: View {
     
     @ObservedObject var viewModel = ViewModel()
-    @State private var buttonState = "Regular"
-    @State private var pickerValue = 0
-    @State private var showActionSheet = false
+    @State private var showingActionSheet = false
+    @State private var season: Standings.SeasonState = .regular
+    @State private var standingValue: Standings.StandingState = .first
     
     var body: some View {
         VStack (alignment: .center) {
-            VStack {
-                Button(action: {
-                    self.showActionSheet = true
-                }) {
-                    HStack {
-                        Text(buttonState)
-                        Image(systemName: "chevron.down")
-                    }.foregroundColor(Color(.systemBlue))
-                        .padding(3)
-                }.buttonStyle(PlainButtonStyle())
-                    .actionSheet(isPresented: $showActionSheet) {
-                        ActionSheet(title: Text(""), buttons: [
-                            .default(Text("Regular")){
-                                self.buttonState = "Regular"
-                                self.pickerValue = 0
-                            },
-                            .default(Text("Playoffs")){
-                                self.buttonState = "Playoffs"
-                                self.pickerValue = 0
-                            },
-                            .cancel()])
+            
+            TopView(seasonState: $season, pickerState: $standingValue, showingActionSheet: $showingActionSheet)
+            
+            Group {
+                if season == .regular {
+                    if standingValue == .first {
+                        HeaderRegularView()
+                        Divider()
+                        ForEach(self.viewModel.standingList.first, id: \.id) { standing in
+                            StandingRegularView(standing: standing)
+                        }
+                    } else if standingValue == .second {
+                        HeaderRegularView()
+                        Divider()
+                        ForEach(viewModel.standingList.second, id: \.id) { standing in
+                            StandingRegularView(standing: standing)
+                        }
+                    } else if standingValue == .general {
+                        HeaderRegularView()
+                        Divider()
+                        ForEach(viewModel.standingList.general, id: \.id) { standing in
+                            StandingRegularView(standing: standing)
+                        }
+                    } else if standingValue == .points {
+                        HeaderPointsView()
+                        Divider()
+                        ForEach(viewModel.standingList.points) { standing in
+                            StandingPointsView(standingPoints: standing)
+                        }
+                    }
+                } else {
+                    if standingValue == .playoffs {
+                        HeaderPlayoffsView()
+                        Divider()
+                        ForEach(viewModel.standingList.playoffs!.repesca, id: \.id) { standing in
+                            StandingPlayoffsView(standingPlayoffs: standing)
+                        }
+                    } else if standingValue == .semifinal {
+                        HeaderPlayoffsView()
+                        Divider()
+                        ForEach(viewModel.standingList.playoffs!.semifinal) { standing in
+                            StandingPlayoffsView(standingPlayoffs: standing)
+                        }
+                    } else if standingValue == .final {
+                        HeaderPlayoffsView()
+                        Divider()
+                        ForEach(viewModel.standingList.playoffs!.final, id: \.id) { standing in
+                            StandingPlayoffsView(standingPlayoffs: standing)
+                        }
+                    }
                 }
             }
-            StandingPickerView(pickerValue: $pickerValue, buttonState: $buttonState)
-            VStack {
-                showHeaderView(bottom: self.pickerValue, type: self.buttonState)
-                Divider()
-                standingType(type: pickerValue, buttonValue: buttonState)
-            }.animation(nil)
-            
-            
+            .animation(nil)
         }
-        .frame(minHeight: 150, maxHeight: .infinity, alignment: .top)
-        .padding()
+        .frame(minHeight: 150, maxHeight: .infinity, alignment: .center)
+        .padding(.horizontal)
+        .padding(.top)
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
-    }
-    
-    func standingType(type: Int, buttonValue: String) -> some View {
-        
-        if buttonValue == "Regular" {
-            switch type {
-            case 0:
-                return ForEach(self.viewModel.standingList.first, id: \.id) { item in
-                    StandingRegularView(standing: item)
-                }
-                .eraseToAnyView()
-                
-            case 1:
-                return ForEach(self.viewModel.standingList.second, id: \.id) { item in
-                    StandingRegularView(standing: item)
-                }
-                .eraseToAnyView()
-            case 2:
-                return ForEach(self.viewModel.standingList.general, id: \.id) { item in
-                    StandingRegularView(standing: item)
-                }
-                .eraseToAnyView()
-            case 3:
-                return ForEach(self.viewModel.standingList.points, id: \.id) { item in
-                    StandingPointsView(standingPoints: item)
-                }
-                .eraseToAnyView()
-            default:
-                return ForEach(self.viewModel.standingList.first, id: \.id) { item in
-                    StandingRegularView(standing: item)
-                }
-                .eraseToAnyView()
-            }
-        }
-        else {
-            
-            switch type {
-                
-            case 1:
-                return ForEach(self.viewModel.standingList.playoffs!.semifinal, id: \.id) { item in
-                    StandingPlayoffsView(standingPlayoffs: item)
-                    
-                }
-                .eraseToAnyView()
-                
-            case 2:
-                return ForEach(self.viewModel.standingList.playoffs!.final, id: \.id) { item in
-                    StandingPlayoffsView(standingPlayoffs: item)
-                    
-                }
-                .eraseToAnyView()
-            default:
-                return ForEach(self.viewModel.standingList.playoffs!.repesca, id: \.id) { item in
-                    StandingPlayoffsView(standingPlayoffs: item)
-                    
-                }
-                .eraseToAnyView()
-            }
-        }
     }
 }
 
@@ -119,6 +83,56 @@ struct StandingView_Previews: PreviewProvider {
     static var previews: some View {
         
         StandingView()
+    }
+}
+
+struct TopView: View {
+    
+    @Binding var seasonState: Standings.SeasonState
+    @Binding var pickerState: Standings.StandingState
+    @Binding var showingActionSheet: Bool
+    
+    var body: some View {
+        
+        VStack {
+            Button(action: {
+                self.showingActionSheet = true
+            }) {
+                HStack {
+                    Text(seasonState.rawValue.capitalized)
+                    Image(systemName: "chevron.down")
+                }.foregroundColor(Color(.systemBlue))
+                    .padding(3)
+            }.buttonStyle(PlainButtonStyle())
+                .actionSheet(isPresented: $showingActionSheet) {
+                    ActionSheet(title: Text(""), buttons: [
+                        .default(Text("Regular")){
+                            self.seasonState = .regular
+                            self.pickerState = .first
+                        },
+                        .default(Text("Playoffs")){
+                            self.seasonState = .playoffs
+                            self.pickerState = .playoffs
+                        },
+                        .cancel()])
+            }
+        
+        Picker(selection: $pickerState, label: Text("")) {
+            if self.seasonState == .regular {
+                Text("1ra Vuelta").tag(Standings.StandingState.first)
+                Text("2da Vuelta").tag(Standings.StandingState.second)
+                Text("General").tag(Standings.StandingState.general)
+                Text("Puntos").tag(Standings.StandingState.points)
+            }
+            else {
+                Text("Playoffs").tag(Standings.StandingState.playoffs)
+                Text("Semifinal").tag(Standings.StandingState.semifinal)
+                Text("Final").tag(Standings.StandingState.final)
+            }
+        }.pickerStyle(SegmentedPickerStyle())
+         .padding(.bottom)
+         .animation(nil)
+        }
     }
 }
 
@@ -219,40 +233,49 @@ struct StandingPlayoffsView: View {
     }
 }
 
-func showHeaderView(bottom: Int, type: String) -> some View {
-    if type == "Regular" {
-        switch bottom {
-        case 3:
-            return HStack (spacing: 5) {
-                Text("Equipos")
-                    .font(.subheadline)
-                Spacer()
-                Text("1A")
-                    .modifier(modifierText(frameSize: 30))
-                Text("2A")
-                    .modifier(modifierText(frameSize: 30))
-                Text("Total")
-                    .modifier(modifierText(frameSize: 40))
-            }
-            .eraseToAnyView()
-        default:
-            return HStack (spacing: 5){
-                Text("Equipos")
-                    .font(.subheadline)
-                Spacer()
-                Text("G")
-                    .modifier(modifierText(frameSize: 25))
-                Text("P")
-                    .modifier(modifierText(frameSize: 25))
-                Text("PCT")
-                    .modifier(modifierText(frameSize: 35))
-                Text("DIF")
-                    .modifier(modifierText(frameSize: 35))
-            }
-            .eraseToAnyView()
+struct HeaderRegularView: View {
+    
+    var body: some View {
+        
+        HStack (spacing: 5){
+            Text("Equipos")
+                .font(.subheadline)
+            Spacer()
+            Text("G")
+                .modifier(modifierText(frameSize: 25))
+            Text("P")
+                .modifier(modifierText(frameSize: 25))
+            Text("PCT")
+                .modifier(modifierText(frameSize: 35))
+            Text("DIF")
+                .modifier(modifierText(frameSize: 35))
         }
-    } else {
-        return HStack (spacing: 5){
+    }
+}
+
+struct HeaderPointsView: View {
+    
+    var body: some View {
+        
+        HStack (spacing: 5){
+            Text("Equipos")
+                .font(.subheadline)
+            Spacer()
+            Text("1A")
+                .modifier(modifierText(frameSize: 30))
+            Text("2A")
+                .modifier(modifierText(frameSize: 30))
+            Text("Total")
+                .modifier(modifierText(frameSize: 40))
+        }
+    }
+}
+
+struct HeaderPlayoffsView: View {
+    
+    var body: some View {
+        
+        HStack (spacing: 5){
             Text("Equipos")
                 .font(.subheadline)
             Spacer()
@@ -265,7 +288,6 @@ func showHeaderView(bottom: Int, type: String) -> some View {
             Text("JV")
                 .modifier(modifierText(frameSize: 35, font: .subheadline))
         }
-        .eraseToAnyView()
     }
 }
 
@@ -282,27 +304,4 @@ struct modifierText: ViewModifier {
     }
 }
 
-struct StandingPickerView: View {
-    
-    @Binding var pickerValue: Int
-    @Binding var buttonState: String
-    
-    var body: some View {
-        
-        Picker(selection: $pickerValue, label: Text("")) {
-            if self.buttonState == "Regular" {
-                Text("1ra Vuelta").tag(0)
-                Text("2da Vuelta").tag(1)
-                Text("General").tag(2)
-                Text("Puntos").tag(3)
-            }
-            else {
-                Text("Playoffs").tag(0)
-                Text("Semifinal").tag(1)
-                Text("Final").tag(2)
-            }
-        }.pickerStyle(SegmentedPickerStyle())
-         .padding(.bottom)
-         .animation(nil)
-    }
-}
+

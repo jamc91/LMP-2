@@ -15,16 +15,17 @@ struct ContentView: View {
     
     
     var body: some View {
+        Group {
         if viewModel.showMainActivityIndicator {
-            return HStack (alignment: .center) {
+             HStack (alignment: .center) {
                 ActivityIndicator(showIndicator: $viewModel.showMainActivityIndicator, style: .medium)
                 .onAppear(perform: self.viewModel.loadContent)
                 Text("Cargando")
                     .foregroundColor(.secondary)
             }
-        .eraseToAnyView()
+        
         } else {
-        return ZStack {
+         ZStack {
             List {
                 VStack (alignment: .leading, spacing: 10) {
                     HeaderView(viewModel: viewModel)
@@ -67,7 +68,8 @@ struct ContentView: View {
                 .edgesIgnoringSafeArea(.all)
                 .animation(.spring())
         }
-        .eraseToAnyView()
+        
+           }
         }
     }
 }

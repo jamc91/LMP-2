@@ -29,6 +29,21 @@ struct Standings: Decodable, Hashable {
         self.points = []
 
     }
+    
+    enum SeasonState: String, CaseIterable, Identifiable {
+        
+        case regular, playoffs
+        
+        var id: String { self.rawValue }
+    }
+    
+    enum StandingState: String, CaseIterable, Identifiable {
+        
+        case first, second, general, points, playoffs, semifinal, final
+        
+        var id: String { self.rawValue }
+    }
+    
 }
 
 struct StandingRegular: Decodable, Hashable, Identifiable {
