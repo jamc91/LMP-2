@@ -60,7 +60,7 @@ class ViewModel: ObservableObject {
         formatter.dateFormat = "MM/d/YYYY"
         date = formatter.string(from: self.dateNow)
         
-        if let url = URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&sportId=1&date=\(date)&sortBy=gameDate&hydrate=game(content(summary,media(epg))),linescore(runners),flags,team,review") {
+        if let url = URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&sportId=1&date=\(date)&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions") {
             URLSession.shared.dataTask(with: url) { (data, response, error) in
                 
                 guard let data = data else {
@@ -71,11 +71,11 @@ class ViewModel: ObservableObject {
                     
                     let games = try JSONDecoder().decode(resultsMLB.self, from: data)
                     
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                         
                         self.gamesMLB = games.dates
                         self.showActivityIndicator = false
-                    }
+                    })
                 }
                     
                 catch {

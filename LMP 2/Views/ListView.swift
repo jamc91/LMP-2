@@ -13,19 +13,19 @@ struct ListView: View {
     @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
+        NavigationView {
         List {
-            VStack (alignment: .leading, spacing: 10) {
-                HeaderView(viewModel: viewModel)
+            VStack {
                 Section(header: HeaderSection(sectionName: "Marcadores")) {
                     
-                    ScoreBoardView(viewModel: viewModel)
+                    EquatableView(content: ScoreBoardView(viewModel: viewModel))
                     
                 }
-                Section(header: HeaderSection(sectionName: "Posiciones")) {
+            /*    Section(header: HeaderSection(sectionName: "Posiciones")) {
                     
                     StandingView(viewModel: viewModel)
                         
-                }
+                }*/
                 Section(header: HeaderSection(sectionName: "Líderes de bateo")) {
                     
                     LeadersBattingView(viewModel: viewModel)
@@ -36,9 +36,22 @@ struct ListView: View {
                     LeadersPitchingView(viewModel: viewModel)
                     
                 }
-            }.animation(.spring())
+            }
+            .animation(.spring())
+            .listRowBackground(Color(.systemGroupedBackground))
         }
         .listStyle(GroupedListStyle())
+        .navigationBarTitle("Resumen")
+        .navigationBarItems(trailing: Button(action: {
+            self.viewModel.timer.invalidate()
+            self.viewModel.showPickerView.toggle()
+        }) {
+            Image(systemName: "calendar.circle.fill")
+                .font(.system(size: 35))
+                .foregroundColor(.primary)
+                .frame(width: 35, height: 50, alignment: .center)
+        }.buttonStyle(PlainButtonStyle()))
+        }
     }
 }
 
@@ -50,12 +63,13 @@ struct ListView_Previews: PreviewProvider {
 
 struct HeaderSection: View {
     
-    var sectionName = ""
+    var sectionName: String
     
     var body: some View {
         
         HStack {
             Text(sectionName).font(.system(size: 22)).bold().foregroundColor(.primary)
+            Spacer()
         }.padding(.top)
     }
 }

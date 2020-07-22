@@ -29,8 +29,8 @@ struct PickerView: View {
                             .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                         Spacer()
                         Button("Aceptar") {
-                            self.viewModel.showActivityIndicator = true
                             self.viewModel.games.removeAll()
+                            self.viewModel.showActivityIndicator = true
                             self.viewModel.showPickerView = false
                             self.viewModel.fetchGames()
                             self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { _ in
@@ -45,7 +45,7 @@ struct PickerView: View {
                     }) {
                         Text("Hoy")
                     }.padding(.top)
-                    DatePicker("", selection: self.$viewModel.dateNow,in: ...Date(), displayedComponents: .date)
+                    DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
                         .labelsHidden()
                         .environment(\.locale, Locale.init(identifier: "es"))
                 }

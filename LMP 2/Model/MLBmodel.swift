@@ -12,12 +12,17 @@ struct resultsMLB: Codable {
     var dates: [Dates]
 }
 
-struct Dates: Codable, Identifiable {
+struct Dates: Codable, Identifiable, Equatable {
+    
     var id = UUID()
     var games: [Games]
     
     enum CodingKeys: String, CodingKey {
         case games
+    }
+    
+    static func == (lhs: Dates, rhs: Dates) -> Bool {
+        return lhs.id == lhs.id
     }
 }
 
@@ -34,14 +39,16 @@ struct Games: Codable, Identifiable {
     }
     
     var time: String {
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        formatter.timeZone = TimeZone.current
-        formatter.locale = Locale.current
+        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         if let hour = formatter.date(from: gameDate) {
         formatter.dateFormat = "h:mm a"
         let dateString = formatter.string(from: hour)
         return dateString
+            
         }
         return ""
     }
@@ -63,6 +70,7 @@ struct Teams: Codable {
 struct TeamData: Codable {
     var leagueRecord: LeagueRecord
     var score: Int?
+    var probablePitcher: ProbablePitcher?
     var team: Team
 }
 
@@ -76,6 +84,19 @@ struct Team: Codable {
     var name: String
     var abbreviation: String
     var teamName: String
+}
+
+struct ProbablePitcher: Codable {
+    var id: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+    }
+    
+    var imageURL: URL {
+        let url = URL(string: "https://content.mlb.com/images/headshots/current/60x60/\(id)@2x.png")!
+        return url
+    }
 }
 
 //MARK: - Linescore

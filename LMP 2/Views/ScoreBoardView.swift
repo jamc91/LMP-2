@@ -7,8 +7,9 @@
 //
 
 import SwiftUI
+import URLImage
 
-struct ScoreBoardView: View {
+struct ScoreBoardView: View, Equatable {
         
     @ObservedObject var viewModel = ViewModel()
     
@@ -34,6 +35,9 @@ struct ScoreBoardView: View {
                 }
             }
         }
+    }
+    static func == (lhs: ScoreBoardView, rhs: ScoreBoardView) -> Bool {
+        return lhs.viewModel.gamesMLB == rhs.viewModel.gamesMLB
     }
 }
 struct ScoreBoardView_Previews: PreviewProvider {
@@ -111,6 +115,7 @@ struct GamePreview: View {
     var games: Games
     
     var body: some View {
+        VStack{
         HStack {
             TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
             VStack {
@@ -122,6 +127,8 @@ struct GamePreview: View {
                     .bold()
             }
             TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
+        }
+             ProbablePitcherView(pitcher: teams)
         }
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
@@ -156,6 +163,25 @@ struct EmptyGamesView: View {
         .padding()
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
+    }
+}
+
+struct ProbablePitcherView: View {
+    
+    var pitcher: Teams
+    
+    var body: some View{
+        VStack {
+        URLImage((pitcher.away.probablePitcher?.imageURL ?? URL(string: "https://content.mlb.com/images/headshots/current/60x60/657140@2x.png"))!,
+                     placeholder: Image(systemName: "person.crop.circle"),
+                     content: {
+                        $0.image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
+            })
+            .frame(width: 60, height: 60, alignment: .center)
+        }
     }
 }
 
