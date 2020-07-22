@@ -9,13 +9,17 @@
 import Foundation
 import URLImage
 
+var url = "http://statsapi.mlb.com/api/v1/schedule?leagueId=132&sportId=17&date=11/6/2019&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions" 
+
 class ViewModel: ObservableObject {
     
     @Published var games = [ScoreBoard]()
+    @Published var gamesMLB = [Dates]()
     @Published var standingList = Standings()
     @Published var leadersOfBattingList = [leadersBatting]()
     @Published var leadersOfPitchingList = [leadersPitching]()
     @Published var dateNow = Date()
+    var timer = Timer()
     @Published var showPickerView = false
     @Published var showActivityIndicator = false
     @Published var showMainActivityIndicator = true
@@ -38,6 +42,9 @@ class ViewModel: ObservableObject {
     
     func loadContent() {
         URLImageService.shared.cleanFileCache()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+            self.fetchGames()
+        }
         self.fetchGames()
         self.fetchStandings()
         self.fetchLeadersOfBatting()
@@ -47,13 +54,13 @@ class ViewModel: ObservableObject {
         
     func fetchGames() {
         
-        showActivityIndicator = true
+        
         var date = ""
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY/MM/dd"
+        formatter.dateFormat = "MM/d/YYYY"
         date = formatter.string(from: self.dateNow)
         
-        if let url = URL(string: "https://api.lmp.mx/3.0.0/scoreboard/\(date)") {
+        if let url = URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&sportId=1&date=\(date)&sortBy=gameDate&hydrate=game(content(summary,media(epg))),linescore(runners),flags,team,review") {
             URLSession.shared.dataTask(with: url) { (data, response, error) in
                 
                 guard let data = data else {
@@ -62,11 +69,11 @@ class ViewModel: ObservableObject {
                 
                 do {
                     
-                    let games = try JSONDecoder().decode(ResultList.self, from: data)
+                    let games = try JSONDecoder().decode(resultsMLB.self, from: data)
                     
                     DispatchQueue.main.async {
                         
-                        self.games = games.response
+                        self.gamesMLB = games.dates
                         self.showActivityIndicator = false
                     }
                 }
@@ -74,7 +81,7 @@ class ViewModel: ObservableObject {
                 catch {
                     
                     print(error.localizedDescription)
-                    
+                    debugPrint(error)
                 }
             }.resume()
         }
@@ -95,7 +102,6 @@ class ViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         
                         self.standingList = standings.response
-                        
                         self.showMainActivityIndicator = false
                         
                     }

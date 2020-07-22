@@ -69,9 +69,9 @@ struct StandingView: View {
                     }
                 }
             }
-            .animation(nil)
         }
-        .frame(minHeight: 150, maxHeight: .infinity, alignment: .center)
+        .animation(nil)
+        .frame(maxWidth: .infinity, minHeight: 150, maxHeight: .infinity, alignment: .center)
         .padding(.horizontal)
         .padding(.top)
         .background(Color(.secondarySystemGroupedBackground))
@@ -83,8 +83,11 @@ struct StandingView_Previews: PreviewProvider {
     static var previews: some View {
         
         StandingView()
+        
     }
 }
+
+//MARK: - Standings View
 
 struct TopView: View {
     
@@ -141,7 +144,6 @@ struct StandingRegularView: View {
     var standing: StandingRegular
     
     var body: some View {
-        
         VStack {
             HStack (spacing: 5) {
                 Image(standing.team_name)
@@ -303,5 +305,4 @@ struct modifierText: ViewModifier {
             .multilineTextAlignment(.leading)
     }
 }
-
 

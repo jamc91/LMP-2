@@ -43,7 +43,6 @@ struct Standings: Decodable, Hashable {
         
         var id: String { self.rawValue }
     }
-    
 }
 
 struct StandingRegular: Decodable, Hashable, Identifiable {

@@ -100,14 +100,7 @@ struct ScoreBoard: Codable, Identifiable, Hashable {
             return ""
         }
     }
-    var inningArrowStatus: String {
-        switch inningArrow {
-        case "top":
-            return "arrowtriangle.up.fill"
-        default:
-            return "arrowtriangle.down.fill"
-        }
-    }
+    
     var strikesStatus: [String] {
         switch strikes {
         case "strikes-1":

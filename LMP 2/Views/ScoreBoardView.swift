@@ -9,95 +9,125 @@
 import SwiftUI
 
 struct ScoreBoardView: View {
-    
+        
     @ObservedObject var viewModel = ViewModel()
-
+    
     var body: some View {
         Group {
             if viewModel.showActivityIndicator {
                 LoadingView(isLoading: $viewModel.showActivityIndicator)
+            } else if viewModel.gamesMLB.isEmpty {
+                EmptyGamesView()
             } else {
-                ForEach(viewModel.games) { game in
-                    if game.gameStatus == 0 && game.gameTime == "No Hay Juegos" {
-                        EmptyGamesView()
-                    } else if game.gameStatus == 0 {
-                        GameComingSoonView(game: game)
-                    } else if game.gameStatus == 1 {
-                        GameInProgressView(game: game)
-                    } else if game.gameStatus == 2 {
-                        GameFinalView(game: game)
+                ForEach(viewModel.gamesMLB, id: \.id) { date in
+                    ForEach(date.games, id: \.id) { game in
+                        Group {
+                            if game.status.abstractGameState == "Live" {
+                                GameLiveView(teams: game.teams, linescore: game.linescore, status: game.status)
+                            } else if game.status.abstractGameState == "Preview" {
+                                GamePreview(teams: game.teams, status: game.status, games: game)
+                            } else if game.status.abstractGameState == "Final" {
+                                GameFinalView(teams: game.teams, status: game.status)
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
-
 struct ScoreBoardView_Previews: PreviewProvider {
     static var previews: some View {
         
-        Group {
             ScoreBoardView(viewModel: ViewModel())
-            GameComingSoonView(game: ScoreBoard(gameStatus: 0, gameTime: "7:30 PM", awayTeam: "NAV", awayRuns: 2, homeTeam: "OBR", homeRuns: 4, diamond: "pos-001", balls: "balls-2", strikes: "strikes-1", outs: "outs-1", inningArrow: "top")).previewLayout(.sizeThatFits)
-            GameInProgressView(game: ScoreBoard(gameStatus: 1, gameTime: "7:30 PM", awayTeam: "NAV", awayRuns: 2, homeTeam: "OBR", homeRuns: 4, diamond: "pos-001", balls: "balls-2", strikes: "strikes-1", outs: "outs-1", inningArrow: "top", inningCurrent: "7")).previewLayout(.sizeThatFits)
-            GameFinalView(game: ScoreBoard(gameStatus: 2, gameTime: "7:30 PM", awayTeam: "NAV", awayRuns: 2, homeTeam: "OBR", homeRuns: 4, diamond: "pos-001", balls: "balls-2", strikes: "strikes-1", outs: "outs-1", inningArrow: "top", inningCurrent: "7")).previewLayout(.sizeThatFits)
-        }
     }
 }
 
 //MARK: - Status Game Views
 
-struct GameComingSoonView: View {
-    
-    var game: ScoreBoard
-    
-    var body: some View {
-        HStack {
-            TeamView(teamName: game.awayTeam)
-            TimeView(time: game.gameTime)
-            TeamView(teamName: game.homeTeam)
-        }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-    }
-}
-
-struct GameInProgressView: View {
-    
-    var game: ScoreBoard
-    
-    var body: some View {
-        VStack (spacing: 0) {
-            HStack {
-                TeamView(teamName: game.awayTeam)
-                ScoreView(game: game)
-                TeamView(teamName: game.homeTeam)
-            }
-            HStack {
-                InningView(game: game)
-                DiamondView(game: game)
-                BSOView(game: game)
-            }
-        }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-    }
-}
-
 struct GameFinalView: View {
     
-    var game: ScoreBoard
+    var teams: Teams
+    var status: Status
+    
+    var body: some View {
+            HStack {
+                TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
+                ScoreView(teams: teams, status: status)
+                TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
+            }
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
+    }
+}
+
+struct GamePostponedView: View {
+    
+    var teams: Teams
     
     var body: some View {
         HStack {
-            TeamView(teamName: game.awayTeam)
-            ScoreView(game: game)
-            TeamView(teamName: game.homeTeam)
+            TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
+            TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
+        }
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
+        
+    }
+}
+
+struct GameLiveView: View {
+    
+    var teams: Teams
+    var linescore: Linescore?
+    var status: Status
+    
+    var body: some View {
+        
+        VStack (spacing: 0) {
+            HStack {
+                TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
+                ScoreView(teams: teams, status: status)
+                TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
+            }
+            Divider().foregroundColor(.secondary)
+            BoxScoreview(team: teams, linescore: linescore, status: status)
+            Divider().foregroundColor(.secondary)
+            HStack {
+                InningView(linescore: linescore)
+                DiamondView(linescore: linescore)
+                BSOView(linescore: linescore)
+            }
         }
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
     }
 }
+
+struct GamePreview: View {
+    
+    var teams: Teams
+    var status: Status
+    var games: Games
+    
+    var body: some View {
+        HStack {
+            TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
+            VStack {
+                Text("VS.")
+                    .font(.system(.largeTitle, design: .rounded))
+                    .bold()
+                Text(games.time)
+                    .font(.system(.headline, design: .rounded))
+                    .bold()
+            }
+            TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
+        }
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
+    }
+}
+
 
 struct LoadingView: View {
     
@@ -134,116 +164,166 @@ struct EmptyGamesView: View {
 struct TeamView: View {
     
     var teamName: String
+    var wins, losses: Int
     
     var body: some View {
         VStack {
             Image(teamName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 75, height: 75, alignment: .center)
-        }.frame(maxWidth: .infinity, minHeight: 120)
+                .frame(width: 55, height: 55, alignment: .center)
+            Text("(\(wins)-\(losses))")
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }
 
 struct ScoreView: View {
     
-    var game: ScoreBoard
+    var teams: Teams
+    var status: Status
     
     var body: some View {
         VStack {
-            Text("\(game.awayRuns)-\(game.homeRuns)")
+            Text("\(teams.away.score ?? 0)-\(teams.home.score ?? 0)")
                 .font(.system(size: 50, weight: .regular, design: .rounded))
-                .bold()
-            if game.gameStatus == 2 {
-                Text("Final")
-                    .font(.system(.caption, design: .rounded))
-                    .bold()
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    
-            }
+            Text(status.detailedState)
+                .foregroundColor(.secondary)
         }.frame(maxWidth: .infinity, minHeight: 100)
     }
 }
 
-struct TimeView: View {
+
+struct BoxScoreview: View {
     
-    var time: String
+    var team: Teams
+    var linescore: Linescore?
+    var status: Status
     
     var body: some View {
-        VStack (spacing: 0) {
-            Text("VS.")
-                .font(.system(.largeTitle, design: .rounded))
-                .bold()
-            HStack {
-                Image(systemName: "clock")
-                    .imageScale(.small)
-                    .foregroundColor(.secondary)
-                Text(time)
-                    .font(.system(.caption, design: .rounded))
-                    .bold()
-                    .foregroundColor(.secondary)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(Color(.systemGray6))
-            .cornerRadius(10)
-        }.frame(maxWidth: .infinity, minHeight: 100)
+        HStack {
+            TeamNameView(team: team, status: status)
+            Spacer()
+            InningScoreView(linescore: linescore)
+            Spacer()
+            RHEView(linescore: linescore)
+        }
+        .padding()
     }
 }
 
-struct BSOView: View {
+struct InningScoreView: View {
     
-    var game: ScoreBoard
+    var linescore: Linescore?
     
     var body: some View {
-        VStack (alignment: .leading, spacing: 2) {
-            HStack {
-                Text("B")
-                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
-                ForEach(game.ballsStatus, id: \.self) { item in
-                    Image(systemName: item)
-                        .imageScale(.small)
+        VStack (alignment: .leading) {
+            HStack (spacing: 5) {
+                ForEach(1..<10) { inning in
+                    Text("\(inning)")
+                        .foregroundColor(.secondary)
+                        .modifier(modifierText(frameSize: 15, font: .caption))
                 }
             }
-            HStack {
-                Text("S")
-                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
-                ForEach(game.strikesStatus, id: \.self) { item in
-                    Image(systemName: item)
-                        .imageScale(.small)
+            HStack (spacing: 5) {
+                ForEach(linescore?.getScore ?? [], id: \.id) { score in
+                    VStack {
+                        Text(score.away?.getRuns ?? "")
+                            .modifier(modifierText(frameSize: 15, font: .caption))
+                        Text(score.home?.getRuns ?? "")
+                            .modifier(modifierText(frameSize: 15, font: .caption))
+                    }
                 }
             }
+        }
+    }
+}
+
+struct TeamNameView: View {
+    
+    var team: Teams
+    var status: Status
+    
+    var body: some View {
+        VStack (alignment: .leading) {
+            Text(status.detailedState)
+                .modifier(modifierText(font: .caption))
             HStack {
-                Text("O")
-                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
-                ForEach(game.outsStatus, id: \.self) { item in
-                    Image(systemName: item)
-                        .imageScale(.small)
+            Text(team.away.team.teamName)
+                .modifier(modifierText(font: .caption))
+            }
+            HStack {
+            Text(team.home.team.teamName)
+                .modifier(modifierText(font: .caption))
+            }
+        }.frame(height: 40, alignment: .bottom)
+    }
+}
+
+struct RHEView: View {
+    
+    var header = ["R", "H", "E"]
+    var linescore: Linescore?
+    
+    var body: some View {
+        VStack {
+            HStack (spacing: 5) {
+                ForEach(0..<header.count) { item in
+                    Text(self.header[item]).foregroundColor(.secondary)
+                        .modifier(modifierText(frameSize: 15, font: .caption))
                 }
-            }.offset(x: -2, y: 0)
+            }
+            HStack (spacing: 5) {
+                Text("\(linescore?.teams.away.runs ?? 0)")
+                    .modifier(modifierText(frameSize: 15, font: .caption))
+                Text("\(linescore?.teams.away.hits ?? 0)")
+                    .modifier(modifierText(frameSize: 15, font: .caption))
+                Text("\(linescore?.teams.away.errors ?? 0)")
+                    .modifier(modifierText(frameSize: 15, font: .caption))
+            }
+            HStack (spacing: 5) {
+                Text("\(linescore?.teams.home.runs ?? 0)")
+                    .modifier(modifierText(frameSize: 15, font: .caption))
+                Text("\(linescore?.teams.home.hits ?? 0)")
+                    .modifier(modifierText(frameSize: 15, font: .caption))
+                Text("\(linescore?.teams.home.errors ?? 0)")
+                    .modifier(modifierText(frameSize: 15, font: .caption))
+            }
+        }
+    }
+}
+
+struct InningView: View {
+    
+    var linescore: Linescore?
+    
+    var body: some View {
+        HStack {
+            Image(systemName: linescore?.inningArrowStatus ?? "arrowtriangle.up.fill")
+                .font(.system(.headline))
+            Text(linescore?.currentInningOrdinal ?? "0")
+                .font(.system(size: 20))
         }.frame(maxWidth: .infinity, minHeight: 100)
     }
 }
 
 struct DiamondView: View {
     
-    var game: ScoreBoard
+    var linescore: Linescore?
     
     var body: some View {
         ZStack {
-            Image(systemName: game.diamondView[2])
+            Image(systemName: (linescore?.offense.diamondState[0]) ?? "square")
                 .font(.system(size: 30, weight: .ultraLight))
                 .rotationEffect(Angle(degrees: 45))
                 .offset(x: 22, y: 10)
-            Image(systemName: game.diamondView[1])
+            Image(systemName: (linescore?.offense.diamondState[1]) ?? "square")
                 .font(.system(size: 30, weight: .ultraLight))
                 .rotationEffect(Angle(degrees: 45))
                 .offset(x: 0, y: -12)
-            Image(systemName: game.diamondView[0])
+            Image(systemName: (linescore?.offense.diamondState[2]) ?? "square")
                 .font(.system(size: 30, weight: .ultraLight))
                 .rotationEffect(Angle(degrees: 45))
                 .offset(x: -22, y: 10)
@@ -251,17 +331,38 @@ struct DiamondView: View {
     }
 }
 
-struct InningView: View {
+struct BSOView: View {
     
-    var game: ScoreBoard
+    var linescore: Linescore?
     
     var body: some View {
-        HStack {
-            Image(systemName: game.inningArrowStatus)
-                .font(.system(.headline))
-            Text(game.inningCurrentOrdinal)
-                .font(.system(size: 20))
-        }.frame(maxWidth: .infinity, minHeight: 100)
+        VStack (alignment: .leading, spacing: 2) {
+            HStack {
+                Text("B")
+                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
+                ForEach(linescore?.ballsState ?? [], id: \.self) { item in
+                    Image(systemName: item)
+                        .imageScale(.small)
+                }
+            }
+            HStack {
+                Text("S")
+                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
+                ForEach(linescore?.strikesState ?? [], id: \.self) { item in
+                    Image(systemName: item)
+                        .imageScale(.small)
+                }
+            }
+            HStack {
+                Text("O")
+                    .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
+                ForEach(linescore?.outsState ?? [], id: \.self) { item in
+                    Image(systemName: item)
+                        .imageScale(.small)
+                }
+            }.offset(x: -2, y: 0)
+        }
+        .frame(maxWidth: .infinity, minHeight: 100)
     }
 }
 
@@ -297,5 +398,3 @@ struct ActivityIndicator: UIViewRepresentable {
         }
     }
 }
-
-
