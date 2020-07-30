@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import URLImage
+import SDWebImageSwiftUI
 
 struct ScoreBoardView: View, Equatable {
         
@@ -94,9 +94,9 @@ struct GameLiveView: View {
                 ScoreView(teams: teams, status: status)
                 TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
             }
-            Divider().foregroundColor(.secondary)
+            Divider().foregroundColor(.secondary).padding(.horizontal)
             BoxScoreview(team: teams, linescore: linescore, status: status)
-            Divider().foregroundColor(.secondary)
+            Divider().foregroundColor(.secondary).padding(.horizontal)
             HStack {
                 InningView(linescore: linescore)
                 DiamondView(linescore: linescore)
@@ -115,7 +115,7 @@ struct GamePreview: View {
     var games: Games
     
     var body: some View {
-        VStack{
+        VStack (spacing: 0){
         HStack {
             TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
             VStack {
@@ -128,7 +128,8 @@ struct GamePreview: View {
             }
             TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
         }
-             ProbablePitcherView(pitcher: teams)
+            Divider().padding(.horizontal).foregroundColor(.secondary)
+             ProbablePitcherView(team: teams)
         }
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
@@ -147,7 +148,6 @@ struct LoadingView: View {
                 .foregroundColor(.secondary)
             Spacer()
         }
-        .padding()
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
     }
@@ -168,19 +168,72 @@ struct EmptyGamesView: View {
 
 struct ProbablePitcherView: View {
     
-    var pitcher: Teams
+    var team: Teams
     
     var body: some View{
-        VStack {
-        URLImage((pitcher.away.probablePitcher?.imageURL ?? URL(string: "https://content.mlb.com/images/headshots/current/60x60/657140@2x.png"))!,
-                     placeholder: Image(systemName: "person.crop.circle"),
-                     content: {
-                        $0.image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(Circle())
-            })
-            .frame(width: 60, height: 60, alignment: .center)
+        VStack (alignment: .center) {
+            Text("Probable Pitcher")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+        HStack {
+            PitcherAwayView(pitcher: team.away.probablePitcher)
+            Spacer()
+            PitcherHomeView(pitcher: team.home.probablePitcher)
+        }
+        }.padding(.top, 5)
+         .padding(.bottom, 20)
+         .padding(.horizontal)
+    }
+}
+
+
+struct PitcherAwayView: View {
+    
+    var pitcher: ProbablePitcher?
+    
+    var body: some View {
+        HStack {
+            WebImage(url: pitcher?.imageURL)
+                .placeholder(Image("default-batter"))
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .background(Color(.systemGray5))
+                .clipShape(Circle())
+                .frame(width: 60, height: 60, alignment: .center)
+            VStack (alignment: .leading) {
+                Text(pitcher?.boxscoreName ?? "TBD")
+                pitcher.map({ Text("\($0.pitchHand.code)HP #\($0.primaryNumber ?? "")").font(.caption).foregroundColor(.secondary) })
+                HStack {
+                    pitcher.map({ Text("\($0.stats[3].stats.wins ?? 0)-\($0.stats[3].stats.losses ?? 0),").font(.caption).foregroundColor(.secondary) })
+                    Text(pitcher?.stats[3].stats.era ?? "--").font(.caption).foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+}
+
+struct PitcherHomeView: View {
+    
+    var pitcher: ProbablePitcher?
+    
+    var body: some View {
+        HStack {
+            VStack (alignment: .trailing) {
+                Text(pitcher?.boxscoreName ?? "TBD")
+                pitcher.map({ Text("\($0.pitchHand.code)HP #\($0.primaryNumber ?? "")").font(.caption).foregroundColor(.secondary) })
+                HStack {
+                    pitcher.map({ Text("\($0.stats[3].stats.wins ?? 0)-\($0.stats[3].stats.losses ?? 0),").font(.caption).foregroundColor(.secondary) })
+                    Text(pitcher?.stats[3].stats.era ?? "--").font(.caption).foregroundColor(.secondary)
+                }
+            }
+            WebImage(url: pitcher?.imageURL)
+                .placeholder(Image("default-batter"))
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .background(Color(.systemGray5))
+                .clipShape(Circle())
+                .frame(width: 60, height: 60, alignment: .center)
         }
     }
 }
@@ -256,10 +309,16 @@ struct InningScoreView: View {
             HStack (spacing: 5) {
                 ForEach(linescore?.getScore ?? [], id: \.id) { score in
                     VStack {
-                        Text(score.away?.getRuns ?? "")
-                            .modifier(modifierText(frameSize: 15, font: .caption))
-                        Text(score.home?.getRuns ?? "")
-                            .modifier(modifierText(frameSize: 15, font: .caption))
+                        score.away.map({
+                            Text("\($0.getRuns)")
+                                .fontWeight(($0.runs ?? 0) > 0 ? .bold : .none)
+                                .modifier(modifierText(frameSize: 15, font: .caption))
+                        })
+                        score.home.map({
+                            Text("\($0.getRuns)")
+                                .fontWeight(($0.runs ?? 0) > 0 ? .bold : .none)
+                                .modifier(modifierText(frameSize: 15, font: .caption))
+                        })
                     }
                 }
             }
@@ -303,18 +362,24 @@ struct RHEView: View {
             }
             HStack (spacing: 5) {
                 Text("\(linescore?.teams.away.runs ?? 0)")
+                    .fontWeight((linescore?.teams.away.runs ?? 0) > 0 ? .bold : .none)
                     .modifier(modifierText(frameSize: 15, font: .caption))
                 Text("\(linescore?.teams.away.hits ?? 0)")
+                    .fontWeight((linescore?.teams.away.hits ?? 0) > 0 ? .bold : .none)
                     .modifier(modifierText(frameSize: 15, font: .caption))
                 Text("\(linescore?.teams.away.errors ?? 0)")
+                    .fontWeight((linescore?.teams.away.errors ?? 0) > 0 ? .bold : .none)
                     .modifier(modifierText(frameSize: 15, font: .caption))
             }
             HStack (spacing: 5) {
                 Text("\(linescore?.teams.home.runs ?? 0)")
+                    .fontWeight((linescore?.teams.away.runs ?? 0) > 0 ? .bold : .none)
                     .modifier(modifierText(frameSize: 15, font: .caption))
                 Text("\(linescore?.teams.home.hits ?? 0)")
+                    .fontWeight((linescore?.teams.away.hits ?? 0) > 0 ? .bold : .none)
                     .modifier(modifierText(frameSize: 15, font: .caption))
                 Text("\(linescore?.teams.home.errors ?? 0)")
+                    .fontWeight((linescore?.teams.away.errors ?? 0) > 0 ? .bold : .none)
                     .modifier(modifierText(frameSize: 15, font: .caption))
             }
         }

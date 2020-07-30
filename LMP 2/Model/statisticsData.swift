@@ -14,7 +14,7 @@ struct statisticsBatting: Decodable {
     
 }
 
-struct leadersBatting: Decodable, Identifiable, Hashable {
+struct leadersBatting: Decodable, Identifiable {
     
     var id        = UUID()
     var name      : String
@@ -76,7 +76,7 @@ struct statisticsPitching: Decodable {
     
 }
 
-struct leadersPitching: Decodable, Hashable, Identifiable {
+struct leadersPitching: Decodable, Identifiable {
     
     var id = UUID()
     

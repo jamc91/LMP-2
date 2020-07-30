@@ -88,10 +88,16 @@ struct Team: Codable {
 
 struct ProbablePitcher: Codable {
     var id: Int
+    var primaryNumber: String?
+    var boxscoreName: String
+    var stats: [Stats]
+    var pitchHand: PitchHand
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case id, primaryNumber, boxscoreName, stats, pitchHand
     }
+    
+    
     
     var imageURL: URL {
         let url = URL(string: "https://content.mlb.com/images/headshots/current/60x60/\(id)@2x.png")!
@@ -99,6 +105,28 @@ struct ProbablePitcher: Codable {
     }
 }
 
+struct Stats: Codable, Identifiable {
+    var id = UUID()
+    var type: Type
+    var stats: StatsContent
+    
+    enum CodingKeys: String, CodingKey {
+        case type, stats
+    }
+}
+
+struct StatsContent: Codable {
+    var era: String?
+    var wins, losses: Int?
+}
+
+struct PitchHand: Codable {
+    var code, description: String
+}
+
+struct Type: Codable {
+    var displayName: String
+}
 //MARK: - Linescore
 struct Linescore: Codable {
     var currentInning: Int?
@@ -129,7 +157,7 @@ struct Linescore: Codable {
     
     var inningArrowStatus: String {
         switch inningState {
-        case "top":
+        case "Top":
             return "arrowtriangle.up.fill"
         default:
             return "arrowtriangle.down.fill"

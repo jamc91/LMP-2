@@ -14,43 +14,43 @@ struct ListView: View {
     
     var body: some View {
         NavigationView {
-        List {
-            VStack {
-                Section(header: HeaderSection(sectionName: "Marcadores")) {
-                    
-                    EquatableView(content: ScoreBoardView(viewModel: viewModel))
-                    
-                }
-            /*    Section(header: HeaderSection(sectionName: "Posiciones")) {
-                    
-                    StandingView(viewModel: viewModel)
+            List {
+                VStack {
+                    Section(header: HeaderSection(sectionName: "Marcadores")) {
                         
-                }*/
-                Section(header: HeaderSection(sectionName: "Líderes de bateo")) {
-                    
-                    LeadersBattingView(viewModel: viewModel)
-                    
+                        EquatableView(content: ScoreBoardView(viewModel: viewModel))
+                            
+                    }
+                    Section(header: HeaderSection(sectionName: "Posiciones")) {
+                        
+                        StandingView(viewModel: viewModel)
+                            
+                    }
+                    Section(header: HeaderSection(sectionName: "Líderes de bateo")) {
+                        
+                        LeadersBattingView(viewModel: viewModel)
+                            
+                    }
+                    Section(header: HeaderSection(sectionName: "Líderes de Pitcheo")) {
+                        
+                        LeadersPitchingView(viewModel: viewModel)
+                            
+                    }
                 }
-                Section(header: HeaderSection(sectionName: "Líderes de Pitcheo")) {
-                    
-                    LeadersPitchingView(viewModel: viewModel)
-                    
-                }
+                .listRowBackground(Color(.systemGroupedBackground))
+                .animation(.spring())
             }
-            .animation(.spring())
-            .listRowBackground(Color(.systemGroupedBackground))
-        }
-        .listStyle(GroupedListStyle())
-        .navigationBarTitle("Resumen")
-        .navigationBarItems(trailing: Button(action: {
-            self.viewModel.timer.invalidate()
-            self.viewModel.showPickerView.toggle()
-        }) {
-            Image(systemName: "calendar.circle.fill")
-                .font(.system(size: 35))
-                .foregroundColor(.primary)
-                .frame(width: 35, height: 50, alignment: .center)
-        }.buttonStyle(PlainButtonStyle()))
+            .listStyle(GroupedListStyle())
+            .navigationBarTitle("Resumen")
+            .navigationBarItems(trailing: Button(action: {
+                self.viewModel.timer.invalidate()
+                self.viewModel.showPickerView.toggle()
+            }) {
+                Image(systemName: "calendar.circle.fill")
+                    .font(.system(size: 35))
+                    .foregroundColor(.primary)
+                    .frame(width: 35, height: 50, alignment: .center)
+            }.buttonStyle(PlainButtonStyle()))
         }
     }
 }

@@ -7,15 +7,14 @@
 //
 
 import Foundation
-import SwiftUI
 
-struct resultsStandings: Decodable, Hashable {
+struct resultsStandings: Decodable {
     
    var response: Standings
    
 }
 
-struct Standings: Decodable, Hashable {
+struct Standings: Decodable {
     
    var first, second, general : [StandingRegular]
    var points                 : [StandingPoints]
@@ -45,7 +44,7 @@ struct Standings: Decodable, Hashable {
     }
 }
 
-struct StandingRegular: Decodable, Hashable, Identifiable {
+struct StandingRegular: Decodable, Identifiable {
     
     var id        : String
     var name      : String
@@ -58,7 +57,7 @@ struct StandingRegular: Decodable, Hashable, Identifiable {
 
 }
 
-struct StandingPoints: Decodable, Hashable, Identifiable {
+struct StandingPoints: Decodable, Identifiable {
     
     var id        : String
     var name      : String
@@ -69,13 +68,13 @@ struct StandingPoints: Decodable, Hashable, Identifiable {
     var total     : String
 }
 
-struct Playoffs: Decodable, Hashable {
+struct Playoffs: Decodable {
     
     var repesca, semifinal, final: [StandingPlayoffs]
     
 }
 
-struct StandingPlayoffs: Decodable, Hashable, Identifiable {
+struct StandingPlayoffs: Decodable, Identifiable {
     
     var id                = UUID()
     var away_team_name    : String

@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import URLImage
+import SDWebImageSwiftUI
 
 struct LeadersPitchingView: View {
     
@@ -69,17 +69,11 @@ struct pitchingView: View {
     var body: some View {
         VStack {
             HStack {
-            URLImage(leader.thumb,
-                     placeholder: Image(systemName: "person.crop.circle"),
-                     content: {
-                $0.image
+                WebImage(url: leader.thumb)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .clipShape(Circle())
-                
-            })
-            .frame(width: 35, height: 35, alignment: .center)
-                
+                    .frame(width: 35, height: 35, alignment: .center)
                 VStack (alignment: .leading) {
                     Text(leader.name)
                         .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))

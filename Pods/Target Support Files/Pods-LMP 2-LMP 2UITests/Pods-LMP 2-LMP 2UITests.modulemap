@@ -1,0 +1,6 @@
+framework module Pods_LMP_2_LMP_2UITests {
+  umbrella header "Pods-LMP 2-LMP 2UITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

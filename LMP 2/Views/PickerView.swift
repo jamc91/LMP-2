@@ -29,8 +29,7 @@ struct PickerView: View {
                             .modifier(textModifier(font: .body, fontColor: .primary, fontDesing: .default))
                         Spacer()
                         Button("Aceptar") {
-                            self.viewModel.games.removeAll()
-                            self.viewModel.showActivityIndicator = true
+                            self.viewModel.gamesMLB.removeAll()
                             self.viewModel.showPickerView = false
                             self.viewModel.fetchGames()
                             self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { _ in

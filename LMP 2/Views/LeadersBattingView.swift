@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import URLImage
+import SDWebImageSwiftUI
 
 struct LeadersBattingView: View {
     
@@ -26,7 +26,7 @@ struct LeadersBattingView: View {
                 }.foregroundColor(Color(.systemBlue))
                     .padding(3)
             }.buttonStyle(PlainButtonStyle())
-             .actionSheet(isPresented: $showActionSheet) {
+                .actionSheet(isPresented: $showActionSheet) {
                     ActionSheet(title: Text(""), buttons: [
                         .default(Text("Regular")){
                             self.viewModel.requestLeadersOfBattingValue.season = .regular
@@ -43,8 +43,8 @@ struct LeadersBattingView: View {
                 Text("RBI").tag(leadersBatting.battingCategory.rbi)
                 Text("SB").tag(leadersBatting.battingCategory.sb)
             }.pickerStyle(SegmentedPickerStyle())
-             .padding(.bottom)
-
+                .padding(.bottom)
+            
             ForEach(self.viewModel.leadersOfBattingList) { item in
                 battingView(leader: item, bottomValue: self.$viewModel.requestLeadersOfBattingValue.category)
             }
@@ -72,14 +72,10 @@ struct battingView: View {
     var body: some View {
         VStack {
             HStack {
-                URLImage(leader.thumb,
-                         placeholder: Image(systemName: "person.crop.circle"),
-                         content: {
-                            $0.image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .clipShape(Circle())
-                })
+                WebImage(url: leader.thumb)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(Circle())
                     .frame(width: 35, height: 35, alignment: .center)
                 VStack (alignment: .leading) {
                     Text(leader.name)
