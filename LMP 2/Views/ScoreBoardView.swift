@@ -9,19 +9,28 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct ScoreBoardView: View, Equatable {
+struct ScoreBoardView: View {
         
     @ObservedObject var viewModel = ViewModel()
+    @State private var isVisible = false
     
     var body: some View {
+        ZStack {
+            Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
+            ScrollView (showsIndicators: false){
+                VStack (spacing: 10) {
+                    TopHeaderView(viewModel: viewModel, title: "Scores", showButton: true)
         Group {
             if viewModel.showActivityIndicator {
-                LoadingView(isLoading: $viewModel.showActivityIndicator)
+                LoadingView()
+                    .modifier(AnimationEmptyCell(viewModel: viewModel, isVisible: $isVisible))
+                
             } else if viewModel.gamesMLB.isEmpty {
                 EmptyGamesView()
+                    .modifier(AnimationEmptyCell(viewModel: viewModel, isVisible: $isVisible))
             } else {
                 ForEach(viewModel.gamesMLB, id: \.id) { date in
-                    ForEach(date.games, id: \.id) { game in
+                    ForEach(date.games.sorted { $0.status.valueOrder < $1.status.valueOrder } , id: \.id) { game in
                         Group {
                             if game.status.abstractGameState == "Live" {
                                 GameLiveView(teams: game.teams, linescore: game.linescore, status: game.status)
@@ -31,13 +40,20 @@ struct ScoreBoardView: View, Equatable {
                                 GameFinalView(teams: game.teams, status: game.status)
                             }
                         }
+                        .background(Color(.secondarySystemGroupedBackground))
+                        .cornerRadius(10)
+                        .modifier(AnimationCell(viewModel: viewModel, isVisible: $isVisible))
                     }
                 }
             }
         }
-    }
-    static func == (lhs: ScoreBoardView, rhs: ScoreBoardView) -> Bool {
-        return lhs.viewModel.gamesMLB == rhs.viewModel.gamesMLB
+                }
+                .animation(.default)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 70)
+            }
+            .background(Color(.systemGroupedBackground))
+        }
     }
 }
 struct ScoreBoardView_Previews: PreviewProvider {
@@ -59,9 +75,7 @@ struct GameFinalView: View {
                 TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
                 ScoreView(teams: teams, status: status)
                 TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
-            }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
+        }
     }
 }
 
@@ -70,13 +84,10 @@ struct GamePostponedView: View {
     var teams: Teams
     
     var body: some View {
-        HStack {
+        HStack{
             TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
             TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
         }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-        
     }
 }
 
@@ -103,8 +114,6 @@ struct GameLiveView: View {
                 BSOView(linescore: linescore)
             }
         }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
     }
 }
 
@@ -122,7 +131,7 @@ struct GamePreview: View {
                 Text("VS.")
                     .font(.system(.largeTitle, design: .rounded))
                     .bold()
-                Text(games.time)
+                Text(games.gameDate.hourFormat())
                     .font(.system(.headline, design: .rounded))
                     .bold()
             }
@@ -131,109 +140,28 @@ struct GamePreview: View {
             Divider().padding(.horizontal).foregroundColor(.secondary)
              ProbablePitcherView(team: teams)
         }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
     }
 }
 
 
 struct LoadingView: View {
     
-    @Binding var isLoading: Bool
-    
     var body: some View {
-        HStack {
-            ActivityIndicator(showIndicator: $isLoading, style: .medium).foregroundColor(.secondary)
+        Spacer(minLength: UIScreen.main.bounds.height / 3)
+        HStack (spacing: 5) {
+            ProgressView()
             Text("Cargando")
                 .foregroundColor(.secondary)
-            Spacer()
         }
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
     }
 }
 
 struct EmptyGamesView: View {
     var body: some View {
-       HStack {
-            Text("No hay juegos")
+        Spacer(minLength: UIScreen.main.bounds.height / 3)
+        HStack (spacing: 5) {
+            Text("No hay juegos programados.")
                 .foregroundColor(.secondary)
-            Spacer()
-        }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-    }
-}
-
-struct ProbablePitcherView: View {
-    
-    var team: Teams
-    
-    var body: some View{
-        VStack (alignment: .center) {
-            Text("Probable Pitcher")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            
-        HStack {
-            PitcherAwayView(pitcher: team.away.probablePitcher)
-            Spacer()
-            PitcherHomeView(pitcher: team.home.probablePitcher)
-        }
-        }.padding(.top, 5)
-         .padding(.bottom, 20)
-         .padding(.horizontal)
-    }
-}
-
-
-struct PitcherAwayView: View {
-    
-    var pitcher: ProbablePitcher?
-    
-    var body: some View {
-        HStack {
-            WebImage(url: pitcher?.imageURL)
-                .placeholder(Image("default-batter"))
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .background(Color(.systemGray5))
-                .clipShape(Circle())
-                .frame(width: 60, height: 60, alignment: .center)
-            VStack (alignment: .leading) {
-                Text(pitcher?.boxscoreName ?? "TBD")
-                pitcher.map({ Text("\($0.pitchHand.code)HP #\($0.primaryNumber ?? "")").font(.caption).foregroundColor(.secondary) })
-                HStack {
-                    pitcher.map({ Text("\($0.stats[3].stats.wins ?? 0)-\($0.stats[3].stats.losses ?? 0),").font(.caption).foregroundColor(.secondary) })
-                    Text(pitcher?.stats[3].stats.era ?? "--").font(.caption).foregroundColor(.secondary)
-                }
-            }
-        }
-    }
-}
-
-struct PitcherHomeView: View {
-    
-    var pitcher: ProbablePitcher?
-    
-    var body: some View {
-        HStack {
-            VStack (alignment: .trailing) {
-                Text(pitcher?.boxscoreName ?? "TBD")
-                pitcher.map({ Text("\($0.pitchHand.code)HP #\($0.primaryNumber ?? "")").font(.caption).foregroundColor(.secondary) })
-                HStack {
-                    pitcher.map({ Text("\($0.stats[3].stats.wins ?? 0)-\($0.stats[3].stats.losses ?? 0),").font(.caption).foregroundColor(.secondary) })
-                    Text(pitcher?.stats[3].stats.era ?? "--").font(.caption).foregroundColor(.secondary)
-                }
-            }
-            WebImage(url: pitcher?.imageURL)
-                .placeholder(Image("default-batter"))
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .background(Color(.systemGray5))
-                .clipShape(Circle())
-                .frame(width: 60, height: 60, alignment: .center)
         }
     }
 }
@@ -283,7 +211,7 @@ struct BoxScoreview: View {
     
     var body: some View {
         HStack {
-            TeamNameView(team: team, status: status)
+            TeamNameView(team: team)
             Spacer()
             InningScoreView(linescore: linescore)
             Spacer()
@@ -313,6 +241,8 @@ struct InningScoreView: View {
                             Text("\($0.getRuns)")
                                 .fontWeight(($0.runs ?? 0) > 0 ? .bold : .none)
                                 .modifier(modifierText(frameSize: 15, font: .caption))
+                            
+                            .cornerRadius(7.5)
                         })
                         score.home.map({
                             Text("\($0.getRuns)")
@@ -329,20 +259,14 @@ struct InningScoreView: View {
 struct TeamNameView: View {
     
     var team: Teams
-    var status: Status
     
     var body: some View {
         VStack (alignment: .leading) {
-            Text(status.detailedState)
-                .modifier(modifierText(font: .caption))
-            HStack {
-            Text(team.away.team.teamName)
-                .modifier(modifierText(font: .caption))
-            }
-            HStack {
-            Text(team.home.team.teamName)
-                .modifier(modifierText(font: .caption))
-            }
+            Group {
+                Spacer()
+                Text(team.away.team.teamName)
+                Text(team.home.team.teamName)
+            }.modifier(modifierText(font: .caption))
         }.frame(height: 40, alignment: .bottom)
     }
 }
@@ -433,7 +357,7 @@ struct BSOView: View {
                     .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
                 ForEach(linescore?.ballsState ?? [], id: \.self) { item in
                     Image(systemName: item)
-                        .imageScale(.small)
+                        .font(.system(size: 12))
                 }
             }
             HStack {
@@ -441,7 +365,7 @@ struct BSOView: View {
                     .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
                 ForEach(linescore?.strikesState ?? [], id: \.self) { item in
                     Image(systemName: item)
-                        .imageScale(.small)
+                        .font(.system(size: 12))
                 }
             }
             HStack {
@@ -449,11 +373,95 @@ struct BSOView: View {
                     .modifier(textModifier(font: .headline, fontColor: .primary, fontDesing: .default))
                 ForEach(linescore?.outsState ?? [], id: \.self) { item in
                     Image(systemName: item)
-                        .imageScale(.small)
+                        .font(.system(size: 12))
                 }
             }.offset(x: -2, y: 0)
         }
         .frame(maxWidth: .infinity, minHeight: 100)
+    }
+}
+
+struct ProbablePitcherView: View {
+    
+    var team: Teams
+    
+    var body: some View{
+        VStack (alignment: .center) {
+            Text("Probable Pitcher")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+        HStack {
+            PitcherAwayView(pitcher: team.away)
+            Spacer()
+            PitcherHomeView(pitcher: team.home)
+        }
+        }.padding(.top, 5)
+         .padding(.bottom, 20)
+         .padding(.horizontal)
+    }
+}
+
+
+struct PitcherAwayView: View {
+    
+    var pitcher: TeamData
+    
+    var body: some View {
+        HStack {
+            WebImage(url: pitcher.getProbablePicher().imageURL)
+                .placeholder(Image("default-batter"))
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .background(Color(.systemGray5))
+                .clipShape(Circle())
+                .frame(width: 50, height: 50, alignment: .center)
+            ProbablePitcherStatsView(pitcher: pitcher, alignment: .leading)
+                .redacted(reason: pitcher.getProbablePicher().boxscoreName == "unknown" ? .placeholder : .init())
+        }
+    }
+}
+
+struct PitcherHomeView: View {
+    
+    var pitcher: TeamData
+    
+    var body: some View {
+        HStack {
+            
+            ProbablePitcherStatsView(pitcher: pitcher, alignment: .trailing)
+                .redacted(reason: pitcher.getProbablePicher().boxscoreName == "unknown" ? .placeholder : .init())
+            WebImage(url: pitcher.getProbablePicher().imageURL)
+                .placeholder(Image("default-batter"))
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .background(Color(.systemGray5))
+                .clipShape(Circle())
+                .frame(width: 50, height: 50, alignment: .center)
+        }
+    }
+}
+
+struct ProbablePitcherStatsView: View {
+    
+    var pitcher: TeamData
+    var alignment: HorizontalAlignment
+    
+    var body: some View {
+        VStack (alignment: alignment) {
+            Text(pitcher.getProbablePicher().boxscoreName)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .fontWeight(.bold)
+            Text("\(pitcher.getProbablePicher().pitchHand.code.appending("HP")) #\(pitcher.getProbablePicher().primaryNumber ?? "--")")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            ForEach(pitcher.getProbablePicher().getStats(), id: \.id) { stat in
+                Text("\(stat.stats.wins ?? 0)-\(stat.stats.losses ?? 0), \(stat.stats.era ?? "--") ERA")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
     }
 }
 
@@ -471,21 +479,44 @@ struct textModifier: ViewModifier {
     }
 }
 
-struct ActivityIndicator: UIViewRepresentable {
+struct AnimationEmptyCell: ViewModifier {
     
-    @Binding var showIndicator: Bool
+    @ObservedObject var viewModel = ViewModel()
+    @Binding var isVisible: Bool
     
-    let style: UIActivityIndicatorView.Style
-    
-    func makeUIView(context: Context) -> UIActivityIndicatorView {
-        return UIActivityIndicatorView(style: .medium)
+    func body(content: Content) -> some View {
+        return content
+            .opacity(self.isVisible ? 0 : 1)
+            .offset(x: 0, y: self.isVisible ? 70 : 0)
+            .onAppear {
+                withAnimation(.spring()) {
+                    if self.viewModel.gamesMLB.isEmpty {
+                        self.isVisible = false
+                    } else {
+                        self.isVisible = true
+                }
+            }
+        }
     }
+}
+
+struct AnimationCell: ViewModifier {
     
-    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
-        if showIndicator {
-            uiView.startAnimating()
-        } else {
-            uiView.stopAnimating()
+    @ObservedObject var viewModel = ViewModel()
+    @Binding var isVisible: Bool
+    
+    func body(content: Content) -> some View {
+        return content
+            .opacity(self.isVisible ? 1 : 0)
+            .offset(x: 0, y: self.isVisible ? 0 : 70)
+            .onAppear {
+                withAnimation(.spring()) {
+                    if self.viewModel.gamesMLB.isEmpty {
+                        self.isVisible = false
+                    } else {
+                        self.isVisible = true
+                }
+            }
         }
     }
 }

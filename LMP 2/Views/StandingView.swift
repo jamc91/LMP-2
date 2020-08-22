@@ -16,68 +16,19 @@ struct StandingView: View {
     @State private var standingValue: Standings.StandingState = .first
     
     var body: some View {
-        VStack (alignment: .center) {
-            
-            TopView(seasonState: $season, pickerState: $standingValue, showingActionSheet: $showingActionSheet)
-            
-            Group {
-                if season == .regular {
-                    if standingValue == .first {
-                        HeaderRegularView()
-                        Divider()
-                        ForEach(self.viewModel.standingList.first, id: \.id) { standing in
-                            StandingRegularView(standing: standing)
-                        }
-                    } else if standingValue == .second {
-                        HeaderRegularView()
-                        Divider()
-                        ForEach(viewModel.standingList.second, id: \.id) { standing in
-                            StandingRegularView(standing: standing)
-                        }
-                    } else if standingValue == .general {
-                        HeaderRegularView()
-                        Divider()
-                        ForEach(viewModel.standingList.general, id: \.id) { standing in
-                            StandingRegularView(standing: standing)
-                        }
-                    } else if standingValue == .points {
-                        HeaderPointsView()
-                        Divider()
-                        ForEach(viewModel.standingList.points) { standing in
-                            StandingPointsView(standingPoints: standing)
-                        }
-                    }
-                } else {
-                    if standingValue == .playoffs {
-                        HeaderPlayoffsView()
-                        Divider()
-                        ForEach(viewModel.standingList.playoffs!.repesca, id: \.id) { standing in
-                            StandingPlayoffsView(standingPlayoffs: standing)
-                        }
-                    } else if standingValue == .semifinal {
-                        HeaderPlayoffsView()
-                        Divider()
-                        ForEach(viewModel.standingList.playoffs!.semifinal) { standing in
-                            StandingPlayoffsView(standingPlayoffs: standing)
-                        }
-                    } else if standingValue == .final {
-                        HeaderPlayoffsView()
-                        Divider()
-                        ForEach(viewModel.standingList.playoffs!.final, id: \.id) { standing in
-                            StandingPlayoffsView(standingPlayoffs: standing)
-                        }
-                    }
-                }
+        ZStack {
+            Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
+            ScrollView (showsIndicators: false) {
+                VStack (spacing: 10) {
+                    TopHeaderView(title: "Standings", showButton: false).padding(.horizontal, 20)
+                    StandingMLBView(viewModel: viewModel)
+                        .padding(.horizontal)
+                }.padding(.bottom, 70)
             }
         }
-        .animation(nil)
-        .frame(maxWidth: .infinity, minHeight: 150, maxHeight: .infinity, alignment: .center)
-        .padding(.horizontal)
-        .padding(.top)
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
     }
 }
+
 
 struct StandingView_Previews: PreviewProvider {
     static var previews: some View {
@@ -146,7 +97,7 @@ struct StandingRegularView: View {
     var body: some View {
         VStack {
             HStack (spacing: 5) {
-                Image(standing.team_name)
+                Image(standing.team_name.teamName())
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(standing.name)
@@ -174,7 +125,7 @@ struct StandingPointsView: View {
     var body: some View {
         VStack {
             HStack (spacing: 5) {
-                Image(standingPoints.team_name)
+                Image(standingPoints.team_name.teamName())
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(standingPoints.name)
@@ -199,7 +150,7 @@ struct StandingPlayoffsView: View {
     var body: some View {
         VStack {
             HStack (spacing: 5) {
-                Image(standingPlayoffs.away_image)
+                Image(standingPlayoffs.away_image.teamName())
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(standingPlayoffs.away_team_name)
@@ -215,7 +166,7 @@ struct StandingPlayoffsView: View {
                     .modifier(modifierText(frameSize: 35, font: .subheadline))
             }
             HStack (spacing: 5) {
-                Image(standingPlayoffs.home_image)
+                Image(standingPlayoffs.home_image.teamName())
                     .resizable()
                     .frame(width: 25, height: 25, alignment: .center)
                 Text(standingPlayoffs.home_team_name)

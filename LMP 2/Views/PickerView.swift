@@ -20,7 +20,14 @@ struct PickerView: View {
                         Button("Cancelar") {
                             
                             self.viewModel.showPickerView = false
-                           
+                            self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
+                              self.viewModel.loadData(url: .games(date: self.viewModel.dateNow.dateFormatter())) { (resultsMLB: resultsMLB) in
+                                  if resultsMLB.totalGamesInProgress == 0 {
+                                      self.viewModel.timer.invalidate()
+                                  }
+                                  self.viewModel.gamesMLB = resultsMLB.dates
+                              }
+                            })
                         }
                         .frame(width: 70, height: 20, alignment: .center)
                         .padding()
@@ -30,11 +37,24 @@ struct PickerView: View {
                         Spacer()
                         Button("Aceptar") {
                             self.viewModel.gamesMLB.removeAll()
+                            self.viewModel.showActivityIndicator = true
                             self.viewModel.showPickerView = false
-                            self.viewModel.fetchGames()
-                            self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { _ in
-                                self.viewModel.fetchGames()
+                            self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
+                                self.viewModel.loadData(url: .games(date: self.viewModel.dateNow.dateFormatter())) { (resultsMLB: resultsMLB) in
+                                    if resultsMLB.totalGamesInProgress == 0 {
+                                        self.viewModel.timer.invalidate()
+                                    }
+                                    self.viewModel.gamesMLB = resultsMLB.dates
+                                }
                             })
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                             self.viewModel.loadData(url: .games(date: self.viewModel.dateNow.dateFormatter())) { (resultsMLB: resultsMLB) in
+                                 if resultsMLB.totalGamesInProgress == 0 {
+                                     self.viewModel.timer.invalidate()
+                                 }
+                                 self.viewModel.gamesMLB = resultsMLB.dates
+                             }
+                            }
                         }
                         .frame(width: 70, height: 20, alignment: .center)
                         .padding()
@@ -48,6 +68,7 @@ struct PickerView: View {
                         .labelsHidden()
                         .environment(\.locale, Locale.init(identifier: "es"))
                 }
+                .datePickerStyle(WheelDatePickerStyle())
                 .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(10)

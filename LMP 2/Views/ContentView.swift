@@ -13,19 +13,18 @@ struct ContentView: View {
     @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
-        
         ZStack {
-            ListView(viewModel: viewModel).onAppear {
-                self.viewModel.loadContent()
+            Group {
+                CustomTabView(viewModel: viewModel)
+                PickerView(viewModel: viewModel)
             }
-            PickerView(viewModel: viewModel)
         }
     }
 }
 
-
 struct ContentView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ContentView()        
+        ContentView()
     }
 }

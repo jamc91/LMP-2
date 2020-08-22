@@ -7,125 +7,93 @@
 //
 
 import Foundation
-import Combine
 
 class ViewModel: ObservableObject {
-    
-    private var cancellable: [AnyCancellable] = []
-    @Published var gamesMLB = [Dates]()
+    @Published var gamesMLB = [Dates]() {
+        didSet {
+            showActivityIndicator = false
+        }
+    }
+    var timer = Timer()
     @Published var standingList = Standings()
     @Published var leadersOfBattingList = [leadersBatting]()
     @Published var leadersOfPitchingList = [leadersPitching]()
+    @Published var standingMLBALList = [Records]()
+    @Published var standingMLBNLList = [Records]()
     @Published var dateNow = Date()
-    var timer = Timer()
     @Published var showPickerView = false
-    @Published var showActivityIndicator = false
+    @Published var showActivityIndicator = true
     @Published var requestLeadersOfBattingValue: (season   : leadersBatting.Season,
         category : leadersBatting.battingCategory) = (.regular, .avg) {
         didSet {
             leadersOfBattingList.removeAll()
-            fetchLeadersOfBatting(season: requestLeadersOfBattingValue.season.rawValue,
-                                  column: requestLeadersOfBattingValue.category.rawValue)
+            loadData(url: .leaders(mode: "batting", season: requestLeadersOfBattingValue.season.rawValue, category: requestLeadersOfBattingValue.category.rawValue, order: "desc")) { (leaders: statisticsBatting) in
+                self.leadersOfBattingList = leaders.response
+            }
         }
     }
     @Published var requestLeadersOfPitchingValue: (season   : leadersPitching.Season,
         category : leadersPitching.pitchingCategory) = (.regular, .era) {
         didSet {
-            leadersOfPitchingList.removeAll()
-            fetchLeadersOfPitching(season: requestLeadersOfPitchingValue.season.rawValue,
-                                   column: requestLeadersOfPitchingValue.category.rawValue)
-        }
-    }
-    func loadContent() {
-        
-        self.fetchGames()
-        self.fetchStandings()
-        self.fetchLeadersOfBatting()
-        self.fetchLeadersOfPitching()
-        self.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { _ in
-            self.fetchGames()
+            self.leadersOfPitchingList.removeAll()
+            loadData(url: .leaders(mode: "pitching", season: requestLeadersOfPitchingValue.season.rawValue, category: requestLeadersOfPitchingValue.category.rawValue, order: "asc")) { (leaders: statisticsPitching) in
+                self.leadersOfPitchingList = leaders.response
+            }
         }
     }
     
-    func fetchGames() {
+    init() {
+        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
+            self.standingMLBALList = StandingsMLB.records
+        }
+        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
+            self.standingMLBNLList = StandingsMLB.records
+        }
+        loadData(url: .games(date: self.dateNow.dateFormatter())) { (gamesMLB: resultsMLB) in
+                self.gamesMLB = gamesMLB.dates
+            }
+        loadData(url: .standing) { (standing: resultsStandings) in
+            self.standingList = standing.response
+        }
         
-        var date = ""
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/d/YYYY"
-        date = formatter.string(from: self.dateNow)
-        print(date)
-        let urlString = URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&sportId=1&date=\(date)&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")
-        
-        guard let url = urlString else { fatalError("error url!!") }
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: resultsMLB.self, decoder: JSONDecoder())
-            .map {$0.dates}
-            .replaceError(with: gamesMLB)
-            .receive(on: RunLoop.main)
-            .assign(to: \.gamesMLB, on: self)
-            .store(in: &cancellable)
+        loadData(url: .leaders(mode: "batting", season: requestLeadersOfBattingValue.season.rawValue, category: requestLeadersOfBattingValue.category.rawValue, order: "desc")) { (leaders: statisticsBatting) in
+            self.leadersOfBattingList = leaders.response
+        }
+        loadData(url: .leaders(mode: "pitching", season: requestLeadersOfPitchingValue.season.rawValue, category: requestLeadersOfPitchingValue.category.rawValue, order: "asc")) { (leaders: statisticsPitching) in
+            
+            self.leadersOfPitchingList = leaders.response
+        }
+        timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
+           self.loadData(url: .games(date: self.dateNow.dateFormatter())) { (gamesMLB: resultsMLB) in
+                if gamesMLB.totalGamesInProgress == 0 {
+                    self.timer.invalidate()
+                }
+                self.gamesMLB = gamesMLB.dates
+            }
+        })
     }
     
-    func fetchStandings() {
+    func loadData<T: Decodable>(url: URL, completion: @escaping (T) -> ()) {
         
-        let urlString = URL(string: "https://api.lmp.mx/3.0.0/standing")
-        
-        guard let url = urlString else { fatalError("error url!!") }
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: resultsStandings.self, decoder: JSONDecoder())
-            .map {$0.response}
-            .replaceError(with: standingList)
-            .receive(on: RunLoop.main)
-            .assign(to: \.standingList, on: self)
-            .store(in: &cancellable)
-    }
-    
-    func fetchLeadersOfBatting(season: String = "regular", column: String = "avg") {
-        
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.lmp.mx"
-        components.path = "/3.0.0/leaders"
-        components.queryItems = [
-            URLQueryItem(name: "mode", value: "batting"),
-            URLQueryItem(name: "type", value: season),
-            URLQueryItem(name: "column", value: column)
-        ]
-        
-        guard let url = components.url else { fatalError("Error URL") }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: statisticsBatting.self, decoder: JSONDecoder())
-            .map { $0.response }
-            .replaceError(with: leadersOfBattingList)
-            .receive(on: RunLoop.main)
-            .assign(to: \.leadersOfBattingList, on: self)
-            .store(in: &cancellable)
-    }
-    func fetchLeadersOfPitching(season: String = "regular", column: String = "era") {
-        
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.lmp.mx"
-        components.path = "/3.0.0/leaders"
-        components.queryItems = [
-            URLQueryItem(name: "mode", value: "pitching"),
-            URLQueryItem(name: "type", value: season),
-            URLQueryItem(name: "column", value: column)
-        ]
-        
-        guard let url = components.url else { fatalError("Error URL") }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: statisticsPitching.self, decoder: JSONDecoder())
-            .map { $0.response }
-            .replaceError(with: leadersOfPitchingList)
-            .receive(on: RunLoop.main)
-            .assign(to: \.leadersOfPitchingList, on: self)
-            .store(in: &cancellable)
+        URLSession.shared.dataTask(with: url) { (data, respone, error) in
+            
+            guard let data = data else { return }
+            
+            do {
+                
+                let fetchData = try JSONDecoder().decode(T.self, from: data)
+                
+                DispatchQueue.main.async {
+                    completion(fetchData)
+                }
+                
+            } catch {
+                
+                debugPrint(error)
+                
+            }
+        }.resume()
     }
 }
+
+

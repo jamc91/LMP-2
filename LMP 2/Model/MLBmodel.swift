@@ -9,20 +9,18 @@
 import Foundation
 
 struct resultsMLB: Codable {
+    var totalGamesInProgress: Int
     var dates: [Dates]
+    
 }
 
-struct Dates: Codable, Identifiable, Equatable {
+struct Dates: Codable, Identifiable {
     
     var id = UUID()
     var games: [Games]
-    
+
     enum CodingKeys: String, CodingKey {
         case games
-    }
-    
-    static func == (lhs: Dates, rhs: Dates) -> Bool {
-        return lhs.id == lhs.id
     }
 }
 
@@ -37,21 +35,6 @@ struct Games: Codable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case gamePk, gameDate, teams, status, linescore
     }
-    
-    var time: String {
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        formatter.timeZone = .current
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        if let hour = formatter.date(from: gameDate) {
-        formatter.dateFormat = "h:mm a"
-        let dateString = formatter.string(from: hour)
-        return dateString
-            
-        }
-        return ""
-    }
 }
 //MARK: - Status
 struct Status: Codable {
@@ -60,6 +43,21 @@ struct Status: Codable {
     var detailedState: String
     var statusCode: String
     var abstractGameCode: String
+    
+    enum CodingKeys: String, CodingKey {
+        case abstractGameState, codedGameState, detailedState, statusCode, abstractGameCode
+    }
+    
+    var valueOrder: Int {
+        switch abstractGameState {
+        case "Final":
+            return 2
+        case "Preview":
+            return 1
+        default:
+            return 0
+        }
+    }
 }
 
 //MARK: - Teams
@@ -72,6 +70,20 @@ struct TeamData: Codable {
     var score: Int?
     var probablePitcher: ProbablePitcher?
     var team: Team
+    
+    enum CodingKeys: String, CodingKey {
+        case leagueRecord, score, probablePitcher, team
+    }
+    
+    func getProbablePicher() -> ProbablePitcher {
+        if let probablePitcher = self.probablePitcher {
+            return probablePitcher
+        } else {
+            let probablePitcherPlaceholder = ProbablePitcher(id: 1, primaryNumber: "", boxscoreName: "unknown", stats: [Stats(type: Type(displayName: "statsSingleSeason"), group: GroupStat(displayName: "pitching"), stats: StatsContent(era: "--", wins: 0, losses: 0))], pitchHand: PitchHand(code: "-", description: "none"))
+            return probablePitcherPlaceholder
+        }
+    }
+    
 }
 
 struct LeagueRecord: Codable {
@@ -90,14 +102,25 @@ struct ProbablePitcher: Codable {
     var id: Int
     var primaryNumber: String?
     var boxscoreName: String
-    var stats: [Stats]
+    var stats: [Stats]?
     var pitchHand: PitchHand
     
     enum CodingKeys: String, CodingKey {
         case id, primaryNumber, boxscoreName, stats, pitchHand
     }
     
-    
+    func getStats() -> [Stats] {
+        var getStatsArray = [Stats]()
+        guard let statsArray = self.stats else {
+            fatalError()
+        }
+        for stat in statsArray {
+            if stat.group.displayName.contains("pitching") && stat.type.displayName.contains("statsSingleSeason") {
+                getStatsArray.append(stat)
+            }
+        }
+        return getStatsArray
+    }
     
     var imageURL: URL {
         let url = URL(string: "https://content.mlb.com/images/headshots/current/60x60/\(id)@2x.png")!
@@ -108,10 +131,11 @@ struct ProbablePitcher: Codable {
 struct Stats: Codable, Identifiable {
     var id = UUID()
     var type: Type
+    var group: GroupStat
     var stats: StatsContent
     
     enum CodingKeys: String, CodingKey {
-        case type, stats
+        case type, group, stats
     }
 }
 
@@ -125,6 +149,10 @@ struct PitchHand: Codable {
 }
 
 struct Type: Codable {
+    var displayName: String
+}
+
+struct GroupStat: Codable {
     var displayName: String
 }
 //MARK: - Linescore
@@ -291,3 +319,4 @@ struct InfoBase: Codable {
     var fullName: String?
     var link: String?
 }
+

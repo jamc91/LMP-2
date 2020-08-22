@@ -19,7 +19,7 @@ struct Standings: Decodable {
    var first, second, general : [StandingRegular]
    var points                 : [StandingPoints]
    var playoffs               : Playoffs?
-    
+   
     init() {
         
         self.first = []
@@ -27,6 +27,10 @@ struct Standings: Decodable {
         self.general = []
         self.points = []
 
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case first, second, general, points, playoffs
     }
     
     enum SeasonState: String, CaseIterable, Identifiable {

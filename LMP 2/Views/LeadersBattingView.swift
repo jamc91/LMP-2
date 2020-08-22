@@ -15,7 +15,11 @@ struct LeadersBattingView: View {
     @State private var showActionSheet = false
     
     var body: some View {
-        
+        ZStack {
+            Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
+            ScrollView (showsIndicators: false) {
+                VStack (spacing: 10) {
+                    TopHeaderView(title: "Stats", showButton: false)
         VStack {
             Button(action: {
                 self.showActionSheet = true
@@ -53,6 +57,11 @@ struct LeadersBattingView: View {
         .padding()
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)
+                }
+                .animation(.default)
+                .padding(.horizontal, 20)
+            }.background(Color(.systemGroupedBackground))
+        }
     }
 }
 

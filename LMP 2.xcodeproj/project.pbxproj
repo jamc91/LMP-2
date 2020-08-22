@@ -10,9 +10,14 @@
 		1419834E2485CA7400F4DC1D /* LeadersBattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */; };
 		141983502485CC7100F4DC1D /* statisticsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834F2485CC7100F4DC1D /* statisticsData.swift */; };
 		14198378248CB3CE00F4DC1D /* LeadersPitchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */; };
-		1459167724CA241C00C75DB7 /* ProbablePitcherPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1459167624CA241C00C75DB7 /* ProbablePitcherPreview.swift */; };
 		148508A32474F4F10085D292 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148508A22474F4F10085D292 /* PickerView.swift */; };
 		148C518924BFEF1C0087442A /* MLBmodel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148C518824BFEF1C0087442A /* MLBmodel.swift */; };
+		148CE2F324D3CA0900623553 /* ScrollGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148CE2F224D3CA0900623553 /* ScrollGameView.swift */; };
+		149633B824E92A76005592E3 /* TabViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149633B724E92A76005592E3 /* TabViewTest.swift */; };
+		14BBFC4524ECC17000BA1B9E /* StandingsMLBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBFC4424ECC17000BA1B9E /* StandingsMLBModel.swift */; };
+		14BBFC4724EF35C900BA1B9E /* StandingLMPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBFC4624EF35C900BA1B9E /* StandingLMPView.swift */; };
+		14BBFC4924EF6E2D00BA1B9E /* StandingsMLBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBFC4824EF6E2D00BA1B9E /* StandingsMLBView.swift */; };
+		14C768C024E757DE00AC3F6F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C768BF24E757DE00AC3F6F /* Extensions.swift */; };
 		14E05B162460AA92008F2836 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E05B152460AA92008F2836 /* AppDelegate.swift */; };
 		14E05B182460AA92008F2836 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E05B172460AA92008F2836 /* SceneDelegate.swift */; };
 		14E05B1A2460AA92008F2836 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E05B192460AA92008F2836 /* ContentView.swift */; };
@@ -25,7 +30,6 @@
 		14E729EC247DA05F004A814D /* ViewModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E729EB247DA05F004A814D /* ViewModelData.swift */; };
 		14EA9B2524774F7700AE32AF /* StandingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EA9B2424774F7700AE32AF /* StandingsData.swift */; };
 		14EA9B272477575100AE32AF /* StandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EA9B262477575100AE32AF /* StandingView.swift */; };
-		14EE4E1E24BEE77A00649C8B /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EE4E1D24BEE77A00649C8B /* ListView.swift */; };
 		4E4664FF4538E16365AE102B /* Pods_LMP_2_LMP_2UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DDF44A0D9AC80CFBF32FED4 /* Pods_LMP_2_LMP_2UITests.framework */; };
 		AB70B36F15C0A343F1A8C2FD /* Pods_LMP_2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78F31CF16BB034E2A83B1E04 /* Pods_LMP_2.framework */; };
 		EEFBAE46D6D216A673B61384 /* Pods_LMP_2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 691D06A6485429D7019A665B /* Pods_LMP_2Tests.framework */; };
@@ -53,9 +57,14 @@
 		1419834F2485CC7100F4DC1D /* statisticsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = statisticsData.swift; sourceTree = "<group>"; };
 		14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadersPitchingView.swift; sourceTree = "<group>"; };
 		141A465024AABCCA00F31D7E /* LMP 2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "LMP 2.entitlements"; sourceTree = "<group>"; };
-		1459167624CA241C00C75DB7 /* ProbablePitcherPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbablePitcherPreview.swift; sourceTree = "<group>"; };
 		148508A22474F4F10085D292 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		148C518824BFEF1C0087442A /* MLBmodel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLBmodel.swift; sourceTree = "<group>"; };
+		148CE2F224D3CA0900623553 /* ScrollGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollGameView.swift; sourceTree = "<group>"; };
+		149633B724E92A76005592E3 /* TabViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewTest.swift; sourceTree = "<group>"; };
+		14BBFC4424ECC17000BA1B9E /* StandingsMLBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsMLBModel.swift; sourceTree = "<group>"; };
+		14BBFC4624EF35C900BA1B9E /* StandingLMPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingLMPView.swift; sourceTree = "<group>"; };
+		14BBFC4824EF6E2D00BA1B9E /* StandingsMLBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsMLBView.swift; sourceTree = "<group>"; };
+		14C768BF24E757DE00AC3F6F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		14E05B122460AA92008F2836 /* LMP 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LMP 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		14E05B152460AA92008F2836 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14E05B172460AA92008F2836 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,7 +83,6 @@
 		14E729EB247DA05F004A814D /* ViewModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelData.swift; sourceTree = "<group>"; };
 		14EA9B2424774F7700AE32AF /* StandingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsData.swift; sourceTree = "<group>"; };
 		14EA9B262477575100AE32AF /* StandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingView.swift; sourceTree = "<group>"; };
-		14EE4E1D24BEE77A00649C8B /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		1A65499DDC128876C1DC37B5 /* Pods-LMP 2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LMP 2Tests.debug.xcconfig"; path = "Target Support Files/Pods-LMP 2Tests/Pods-LMP 2Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		54EEF5247C2E856880D0CC31 /* Pods-LMP 2-LMP 2UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LMP 2-LMP 2UITests.debug.xcconfig"; path = "Target Support Files/Pods-LMP 2-LMP 2UITests/Pods-LMP 2-LMP 2UITests.debug.xcconfig"; sourceTree = "<group>"; };
 		691D06A6485429D7019A665B /* Pods_LMP_2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LMP_2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +129,7 @@
 				14EA9B2424774F7700AE32AF /* StandingsData.swift */,
 				1419834F2485CC7100F4DC1D /* statisticsData.swift */,
 				148C518824BFEF1C0087442A /* MLBmodel.swift */,
+				14BBFC4424ECC17000BA1B9E /* StandingsMLBModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -129,15 +138,25 @@
 			isa = PBXGroup;
 			children = (
 				14E05B192460AA92008F2836 /* ContentView.swift */,
-				14EE4E1D24BEE77A00649C8B /* ListView.swift */,
 				14E05B452460B4A7008F2836 /* ScoreBoardView.swift */,
 				14EA9B262477575100AE32AF /* StandingView.swift */,
 				148508A22474F4F10085D292 /* PickerView.swift */,
 				1419834D2485CA7400F4DC1D /* LeadersBattingView.swift */,
 				14198377248CB3CE00F4DC1D /* LeadersPitchingView.swift */,
-				1459167624CA241C00C75DB7 /* ProbablePitcherPreview.swift */,
+				148CE2F224D3CA0900623553 /* ScrollGameView.swift */,
+				149633B724E92A76005592E3 /* TabViewTest.swift */,
+				14BBFC4624EF35C900BA1B9E /* StandingLMPView.swift */,
+				14BBFC4824EF6E2D00BA1B9E /* StandingsMLBView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		14C768BE24E757C600AC3F6F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				14C768BF24E757DE00AC3F6F /* Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		14E05B092460AA92008F2836 = {
@@ -170,6 +189,7 @@
 				14E05B172460AA92008F2836 /* SceneDelegate.swift */,
 				149F27C7247E273F003D8307 /* Views */,
 				149F27C6247E2683003D8307 /* Model */,
+				14C768BE24E757C600AC3F6F /* Extensions */,
 				14E05B1B2460AA93008F2836 /* Assets.xcassets */,
 				14E05B202460AA93008F2836 /* LaunchScreen.storyboard */,
 				14E05B232460AA93008F2836 /* Info.plist */,
@@ -295,7 +315,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Jesús Medina Camargo";
 				TargetAttributes = {
 					14E05B112460AA92008F2836 = {
@@ -467,19 +487,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				14E729EC247DA05F004A814D /* ViewModelData.swift in Sources */,
-				14EE4E1E24BEE77A00649C8B /* ListView.swift in Sources */,
 				14E05B162460AA92008F2836 /* AppDelegate.swift in Sources */,
 				14E05B182460AA92008F2836 /* SceneDelegate.swift in Sources */,
 				14E05B462460B4A7008F2836 /* ScoreBoardView.swift in Sources */,
 				148C518924BFEF1C0087442A /* MLBmodel.swift in Sources */,
 				14198378248CB3CE00F4DC1D /* LeadersPitchingView.swift in Sources */,
-				1459167724CA241C00C75DB7 /* ProbablePitcherPreview.swift in Sources */,
+				149633B824E92A76005592E3 /* TabViewTest.swift in Sources */,
 				141983502485CC7100F4DC1D /* statisticsData.swift in Sources */,
+				148CE2F324D3CA0900623553 /* ScrollGameView.swift in Sources */,
+				14BBFC4524ECC17000BA1B9E /* StandingsMLBModel.swift in Sources */,
 				14E05B1A2460AA92008F2836 /* ContentView.swift in Sources */,
 				1419834E2485CA7400F4DC1D /* LeadersBattingView.swift in Sources */,
 				14EA9B272477575100AE32AF /* StandingView.swift in Sources */,
 				148508A32474F4F10085D292 /* PickerView.swift in Sources */,
+				14BBFC4724EF35C900BA1B9E /* StandingLMPView.swift in Sources */,
 				14EA9B2524774F7700AE32AF /* StandingsData.swift in Sources */,
+				14BBFC4924EF6E2D00BA1B9E /* StandingsMLBView.swift in Sources */,
+				14C768C024E757DE00AC3F6F /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +576,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -576,7 +601,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -612,6 +637,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -630,7 +656,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
