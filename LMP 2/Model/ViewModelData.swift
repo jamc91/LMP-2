@@ -8,6 +8,32 @@
 
 import Foundation
 
+enum League: RawRepresentable, CaseIterable {
+    
+    case MLB
+    case LMP
+    
+    var rawValue: (String, String) {
+        switch self {
+        case .MLB:
+            return (leagueID: "103,104", sportID: "1")
+        case .LMP:
+            return (leagueID: "132", sportID: "17")
+        }
+    }
+    
+    init?(rawValue: (String, String)) {
+        switch rawValue {
+        case ("103,104", "1"):
+            self = .MLB
+        case ("132", "17"):
+            self = .LMP
+        default:
+            return nil
+        }
+    }
+}
+
 class ViewModel: ObservableObject {
     @Published var gamesMLB = [Dates]() {
         didSet {
@@ -20,6 +46,7 @@ class ViewModel: ObservableObject {
     @Published var leadersOfPitchingList = [leadersPitching]()
     @Published var standingMLBALList = [Records]()
     @Published var standingMLBNLList = [Records]()
+    @Published var league: League = .MLB
     @Published var dateNow = Date()
     @Published var showPickerView = false
     @Published var showActivityIndicator = true
@@ -43,13 +70,10 @@ class ViewModel: ObservableObject {
     }
     
     init() {
-        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
+        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=132&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
             self.standingMLBALList = StandingsMLB.records
         }
-        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
-            self.standingMLBNLList = StandingsMLB.records
-        }
-        loadData(url: .games(date: self.dateNow.dateFormatter())) { (gamesMLB: resultsMLB) in
+        loadData(url: .games(date: self.dateNow.dateFormatter(), league: league)) { (gamesMLB: resultsMLB) in
                 self.gamesMLB = gamesMLB.dates
             }
         loadData(url: .standing) { (standing: resultsStandings) in
@@ -64,7 +88,7 @@ class ViewModel: ObservableObject {
             self.leadersOfPitchingList = leaders.response
         }
         timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
-           self.loadData(url: .games(date: self.dateNow.dateFormatter())) { (gamesMLB: resultsMLB) in
+            self.loadData(url: .games(date: self.dateNow.dateFormatter(), league: self.league)) { (gamesMLB: resultsMLB) in
                 if gamesMLB.totalGamesInProgress == 0 {
                     self.timer.invalidate()
                 }

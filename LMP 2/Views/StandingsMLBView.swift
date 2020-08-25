@@ -16,7 +16,7 @@ struct StandingMLBView: View {
         
         VStack {
             ForEach(viewModel.standingMLBALList) { item in
-                Section(header: HeaderSectionView(title: item.division.name)) {
+                Section(header: HeaderSectionView(title: item.division?.name ?? "")) {
                     VStack {
                         HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 20), ("L", 20), ("PCT", 35), ("GB", 30), ("L10", 40), ("STRK", 40), ("RDIFF", 45)])
                         StandingMLBALView(teamData: item)
@@ -27,7 +27,7 @@ struct StandingMLBView: View {
                 }
             }
             ForEach(viewModel.standingMLBNLList) { item in
-                Section(header: HeaderSectionView(title: item.division.name)) {
+                Section(header: HeaderSectionView(title: item.division?.name ?? "")) {
                     VStack {
                         HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 20), ("L", 20), ("PCT", 35), ("GB", 30), ("L10", 40), ("STRK", 40), ("RDIFF", 45)])
                         StandingMLBALView(teamData: item)
@@ -102,7 +102,7 @@ struct StandingMLBALView: View {
                     .modifier(modifierText(frameSize: 30, font: .subheadline))
                 Text("\(team.records.splitRecords.first!.wins)-\(team.records.splitRecords.first!.losses)")
                     .modifier(modifierText(frameSize: 40, font: .subheadline))
-                Text(team.streak.streakCode)
+                Text(team.streak?.streakCode ?? "")
                     .modifier(modifierText(frameSize: 40, font: .subheadline))
                 Text("\(team.runDifferential > 0 ? "+" : "")\(team.runDifferential)")
                     .modifier(modifierText(frameSize: 45, font: .subheadline))

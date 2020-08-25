@@ -19,7 +19,7 @@ struct ScoreBoardView: View {
             Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
             ScrollView (showsIndicators: false){
                 VStack (spacing: 10) {
-                    TopHeaderView(viewModel: viewModel, title: "Scores", showButton: true)
+                    TopHeaderView(viewModel: viewModel, title: "Scoreboards", showButton: true)
         Group {
             if viewModel.showActivityIndicator {
                 LoadingView()
@@ -71,10 +71,10 @@ struct GameFinalView: View {
     var status: Status
     
     var body: some View {
-            HStack {
-                TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
-                ScoreView(teams: teams, status: status)
-                TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
+        HStack {
+            TeamView(teamName: "\(teams.away.team.id)", wins: teams.away.leagueRecord.wins, losses: teams.away.leagueRecord.losses)
+            ScoreView(teams: teams, status: status)
+            TeamView(teamName: "\(teams.home.team.id)", wins: teams.home.leagueRecord.wins, losses: teams.home.leagueRecord.losses)
         }
     }
 }
@@ -226,33 +226,23 @@ struct InningScoreView: View {
     var linescore: Linescore?
     
     var body: some View {
-        VStack (alignment: .leading) {
+        ScrollView(.horizontal, showsIndicators: true) {
             HStack (spacing: 5) {
-                ForEach(1..<10) { inning in
-                    Text("\(inning)")
-                        .foregroundColor(.secondary)
-                        .modifier(modifierText(frameSize: 15, font: .caption))
-                }
-            }
-            HStack (spacing: 5) {
-                ForEach(linescore?.getScore ?? [], id: \.id) { score in
+                ForEach(linescore?.innings ?? [], id: \.id) { score in
                     VStack {
-                        score.away.map({
-                            Text("\($0.getRuns)")
-                                .fontWeight(($0.runs ?? 0) > 0 ? .bold : .none)
-                                .modifier(modifierText(frameSize: 15, font: .caption))
-                            
-                            .cornerRadius(7.5)
-                        })
-                        score.home.map({
-                            Text("\($0.getRuns)")
-                                .fontWeight(($0.runs ?? 0) > 0 ? .bold : .none)
-                                .modifier(modifierText(frameSize: 15, font: .caption))
-                        })
+                        Text("\(score.num ?? 0)")
+                            .foregroundColor(.secondary)
+                            .modifier(modifierText(frameSize: 15, font: .caption))
+                        Text("\(score.away?.runs ?? 0)")
+                            .fontWeight((score.away?.runs ?? 0) > 0 ? .bold : .none)
+                            .modifier(modifierText(frameSize: 15, font: .caption))
+                        Text("\(score.home?.runs ?? 0)")
+                            .fontWeight((score.home?.runs ?? 0) > 0 ? .bold : .none)
+                            .modifier(modifierText(frameSize: 15, font: .caption))
                     }
                 }
             }
-        }
+        }.frame(width: 170, alignment: .center)
     }
 }
 
@@ -410,7 +400,7 @@ struct PitcherAwayView: View {
     var body: some View {
         HStack {
             WebImage(url: pitcher.getProbablePicher().imageURL)
-                .placeholder(Image("default-batter"))
+                .placeholder(Image(""))
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .background(Color(.systemGray5))
@@ -432,7 +422,7 @@ struct PitcherHomeView: View {
             ProbablePitcherStatsView(pitcher: pitcher, alignment: .trailing)
                 .redacted(reason: pitcher.getProbablePicher().boxscoreName == "unknown" ? .placeholder : .init())
             WebImage(url: pitcher.getProbablePicher().imageURL)
-                .placeholder(Image("default-batter"))
+                .placeholder(Image(""))
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .background(Color(.systemGray5))
@@ -456,7 +446,7 @@ struct ProbablePitcherStatsView: View {
             Text("\(pitcher.getProbablePicher().pitchHand.code.appending("HP")) #\(pitcher.getProbablePicher().primaryNumber ?? "--")")
                 .font(.caption)
                 .foregroundColor(.secondary)
-            ForEach(pitcher.getProbablePicher().getStats(), id: \.id) { stat in
+            ForEach(pitcher.getProbablePicher().getStats() ?? [], id: \.id) { stat in
                 Text("\(stat.stats.wins ?? 0)-\(stat.stats.losses ?? 0), \(stat.stats.era ?? "--") ERA")
                     .font(.caption)
                     .foregroundColor(.secondary)

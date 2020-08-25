@@ -15,8 +15,8 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Group {
-                CustomTabView(viewModel: viewModel)
-                PickerView(viewModel: viewModel)
+                CustomTabView(viewModel: viewModel).zIndex(0)
+                PickerView(viewModel: viewModel).zIndex(1)
             }
         }
     }

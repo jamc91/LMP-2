@@ -14,7 +14,7 @@ struct StandingResultsMLB: Codable {
 
 struct Records: Codable, Identifiable {
     var id = UUID()
-    var division: Division
+    var division: Division?
     var teamRecords: [TeamRecords]
     
     enum CodingKeys: String, CodingKey {
@@ -30,7 +30,7 @@ struct Division: Codable {
 struct TeamRecords: Codable, Identifiable {
     var id = UUID()
     var team: TeamMLB
-    var streak: Streak
+    var streak: Streak?
     var gamesBack: String
     var records: RecordsResult
     var wins: Int

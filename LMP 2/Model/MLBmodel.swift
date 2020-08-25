@@ -109,10 +109,10 @@ struct ProbablePitcher: Codable {
         case id, primaryNumber, boxscoreName, stats, pitchHand
     }
     
-    func getStats() -> [Stats] {
+    func getStats() -> [Stats]? {
         var getStatsArray = [Stats]()
         guard let statsArray = self.stats else {
-            fatalError()
+            return nil
         }
         for stat in statsArray {
             if stat.group.displayName.contains("pitching") && stat.type.displayName.contains("statsSingleSeason") {
