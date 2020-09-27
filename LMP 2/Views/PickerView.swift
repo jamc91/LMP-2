@@ -24,13 +24,14 @@ struct PickerView: View {
                     Spacer()
                     AcceptButton(viewModel: viewModel)
                 }
-                TodayButton(date: $viewModel.dateNow)
-                DatePickerView(viewModel: viewModel)
+              //  TodayButton(date: $viewModel.dateNow)
                 Picker(selection: $viewModel.league, label: Text("Picker"), content: {
                     Text("MLB").tag(League.MLB)
                     Text("LMP").tag(League.LMP)
                 }).pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal)
+                .padding(.horizontal, 30)
+                DatePickerView(viewModel: viewModel)
+                
             }
             .padding(.bottom, (UIApplication.shared.windows.last?.safeAreaInsets.bottom)! + 10)
             .background(Color(.secondarySystemBackground))
@@ -128,5 +129,6 @@ struct DatePickerView: View {
             .labelsHidden()
             .environment(\.locale, Locale.init(identifier: "es"))
             .datePickerStyle(GraphicalDatePickerStyle())
+            .frame(width: UIScreen.main.bounds.width / 1.2, alignment: .center)
     }
 }
