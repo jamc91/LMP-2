@@ -127,6 +127,6 @@ struct DatePickerView: View {
         DatePicker("", selection: self.$viewModel.dateNow, displayedComponents: .date)
             .labelsHidden()
             .environment(\.locale, Locale.init(identifier: "es"))
-            .datePickerStyle(WheelDatePickerStyle())
+            .datePickerStyle(GraphicalDatePickerStyle())
     }
 }

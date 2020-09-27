@@ -49,7 +49,7 @@ struct Standings: Decodable {
 }
 
 struct StandingRegular: Decodable, Identifiable {
-    
+        
     var id        : String
     var name      : String
     var team_name : String
@@ -58,7 +58,7 @@ struct StandingRegular: Decodable, Identifiable {
     var percent   : String
     var gb        : String
     var pts       : String
-
+   
 }
 
 struct StandingPoints: Decodable, Identifiable {

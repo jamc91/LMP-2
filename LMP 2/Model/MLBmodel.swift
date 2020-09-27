@@ -12,9 +12,18 @@ struct resultsMLB: Codable {
     var totalGamesInProgress: Int
     var dates: [Dates]
     
+    enum CodingKeys: String, CodingKey {
+        case totalGamesInProgress, dates
+    }
+    
+    static let `default` = resultsMLB(totalGamesInProgress: 0, dates: [Dates(id: UUID(), games: [Games(gamePk: 0, gameDate: "", status: Status(abstractGameState: "", codedGameState: "", detailedState: "", statusCode: "", abstractGameCode: ""), teams: Teams(away: TeamData(leagueRecord: LeagueRecord(wins: 0, losses: 0, pct: ""), score: 0, probablePitcher: ProbablePitcher(id: 0, primaryNumber: "", boxscoreName: "", stats: [Stats(id: UUID(), type: Type(displayName: ""), group: GroupStat(displayName: ""), stats: StatsContent(era: "", wins: 0, losses: 0))], pitchHand: PitchHand(code: "", description: "")), team: Team(id: 0, name: "", abbreviation: "", teamName: "")), home: TeamData(leagueRecord: LeagueRecord(wins: 0, losses: 0, pct: ""), score: 0, probablePitcher: ProbablePitcher(id: 0, primaryNumber: "", boxscoreName: "", stats: [Stats(id: UUID(), type: Type(displayName: ""), group: GroupStat(displayName: ""), stats: StatsContent(era: "", wins: 0, losses: 0))], pitchHand: PitchHand(code: "", description: "")), team: Team(id: 0, name: "", abbreviation: "", teamName: ""))))])])
 }
 
-struct Dates: Codable, Identifiable {
+struct Dates: Codable, Identifiable, Equatable {
+    static func == (lhs: Dates, rhs: Dates) -> Bool {
+        return lhs.games == rhs.games
+    }
+    
     
     var id = UUID()
     var games: [Games]
@@ -24,7 +33,11 @@ struct Dates: Codable, Identifiable {
     }
 }
 
-struct Games: Codable, Identifiable {
+struct Games: Codable, Identifiable, Equatable {
+    static func == (lhs: Games, rhs: Games) -> Bool {
+        return lhs.gamePk == rhs.gamePk
+    }
+    
     var id = UUID()
     var gamePk: Int
     var gameDate: String
@@ -161,6 +174,8 @@ struct Linescore: Codable {
     var currentInningOrdinal: String?
     var inningState: String?
     var inningHalf: String?
+    var isTopInning: Bool?
+    var scheduledInnings: Int
     var innings: [Innings]
     var teams: TeamsLinescore
     var offense: Offense
@@ -169,7 +184,18 @@ struct Linescore: Codable {
     var outs: Int?
     
     enum CodingKeys: String, CodingKey {
-        case currentInning, currentInningOrdinal, inningState, inningHalf, innings, teams, offense, balls, strikes, outs
+        case currentInning, currentInningOrdinal, inningState, inningHalf, isTopInning, scheduledInnings, innings, teams, offense, balls, strikes, outs
+    }
+    
+    var getNumberInnings: Int {
+        guard let inning = currentInning else {
+            return 9
+        }
+        if inning > scheduledInnings {
+            return inning
+        } else {
+            return 9
+        }
     }
     
     var getScore: [Innings] {

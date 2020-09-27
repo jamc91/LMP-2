@@ -11,18 +11,14 @@ import SwiftUI
 struct StandingView: View {
     
     @ObservedObject var viewModel = ViewModel()
-    @State private var showingActionSheet = false
-    @State private var season: Standings.SeasonState = .regular
-    @State private var standingValue: Standings.StandingState = .first
     
     var body: some View {
         ZStack {
             Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
             ScrollView (showsIndicators: false) {
                 VStack (spacing: 10) {
-                    TopHeaderView(title: "Standings", showButton: false).padding(.horizontal, 20)
+                    TopHeaderView(title: "Standings", showCalendarButton: false).padding(.horizontal, 20)
                     StandingMLBView(viewModel: viewModel)
-                        .padding(.horizontal)
                 }.padding(.bottom, 70)
             }
         }
@@ -40,214 +36,174 @@ struct StandingView_Previews: PreviewProvider {
 
 //MARK: - Standings View
 
-struct TopView: View {
+struct StandingLMP2View: View {
     
-    @Binding var seasonState: Standings.SeasonState
-    @Binding var pickerState: Standings.StandingState
-    @Binding var showingActionSheet: Bool
+    @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
-        
         VStack {
-            Button(action: {
-                self.showingActionSheet = true
-            }) {
-                HStack {
-                    Text(seasonState.rawValue.capitalized)
-                    Image(systemName: "chevron.down")
-                }.foregroundColor(Color(.systemBlue))
-                    .padding(3)
-            }.buttonStyle(PlainButtonStyle())
-                .actionSheet(isPresented: $showingActionSheet) {
-                    ActionSheet(title: Text(""), buttons: [
-                        .default(Text("Regular")){
-                            self.seasonState = .regular
-                            self.pickerState = .first
-                        },
-                        .default(Text("Playoffs")){
-                            self.seasonState = .playoffs
-                            self.pickerState = .playoffs
-                        },
-                        .cancel()])
+            Section(header: HeaderSectionView(title: "First")) {
+                StandingRegularSeasonView(standing: viewModel.standingList.first)
             }
-        
-        Picker(selection: $pickerState, label: Text("")) {
-            if self.seasonState == .regular {
-                Text("1ra Vuelta").tag(Standings.StandingState.first)
-                Text("2da Vuelta").tag(Standings.StandingState.second)
-                Text("General").tag(Standings.StandingState.general)
-                Text("Puntos").tag(Standings.StandingState.points)
+            Section(header: HeaderSectionView(title: "Second")) {
+                StandingRegularSeasonView(standing: viewModel.standingList.second)
             }
-            else {
-                Text("Playoffs").tag(Standings.StandingState.playoffs)
-                Text("Semifinal").tag(Standings.StandingState.semifinal)
-                Text("Final").tag(Standings.StandingState.final)
+            Section(header: HeaderSectionView(title: "General")) {
+                StandingRegularSeasonView(standing: viewModel.standingList.general)
             }
-        }.pickerStyle(SegmentedPickerStyle())
-         .padding(.bottom)
-         .animation(nil)
+            Section(header: HeaderSectionView(title: "Points")) {
+                StandingPointsView(standingPoints: viewModel.standingList.points)
+            }
+            Section(header: HeaderSectionView(title: "Playoffs")) {
+                StandingPlayoffsView(standingPlayoffs: viewModel.standingList.playoffs?.repesca ?? [])
+            }
+            Section(header: HeaderSectionView(title: "Semi Final")) {
+                StandingPlayoffsView(standingPlayoffs: viewModel.standingList.playoffs?.semifinal ?? [])
+            }
+            Section(header: HeaderSectionView(title: "Final")) {
+                StandingPlayoffsView(standingPlayoffs: viewModel.standingList.playoffs?.final ?? [])
+            }
         }
+        .padding(.horizontal, 20)
     }
 }
 
-struct StandingRegularView: View {
+struct StandingRegularSeasonView: View {
     
-    var standing: StandingRegular
+    var standing: [StandingRegular]
     
     var body: some View {
         VStack {
-            HStack (spacing: 5) {
-                Image(standing.team_name.teamName())
-                    .resizable()
-                    .frame(width: 25, height: 25, alignment: .center)
-                Text(standing.name)
-                    .modifier(modifierText(font: .subheadline))
-                Spacer()
-                Text("\(standing.wins)")
-                    .modifier(modifierText(frameSize: 25, font: .subheadline))
-                Text("\(standing.losses)")
-                    .modifier(modifierText(frameSize: 25, font: .subheadline))
-                Text(standing.percent)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
-                Text(standing.gb)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
-                
+            HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 25), ("L", 25), ("PCT", 35), ("GB", 35)])
+            ForEach(standing) { item in
+                HStack {
+                    Image(item.team_name.teamName())
+                        .resizable()
+                        .frame(width: 20, height: 20, alignment: .center)
+                    Text(item.team_name)
+                        .modifier(modifierText(font: .subheadline))
+                    Spacer()
+                    Text("\(item.wins)")
+                        .modifier(modifierText(frameSize: 25, font: .subheadline))
+                    Text("\(item.losses)")
+                        .modifier(modifierText(frameSize: 25, font: .subheadline))
+                    Text(item.percent)
+                        .modifier(modifierText(frameSize: 35, font: .subheadline))
+                    Text(item.gb)
+                        .modifier(modifierText(frameSize: 35, font: .subheadline))
+                    
+                }.padding(.horizontal, 10)
+                Divider()
             }
-            Divider()
         }
+        .padding(5)
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
     }
 }
 
 struct StandingPointsView: View {
     
-    var standingPoints: StandingPoints
+    var standingPoints: [StandingPoints]
     
     var body: some View {
         VStack {
-            HStack (spacing: 5) {
-                Image(standingPoints.team_name.teamName())
-                    .resizable()
-                    .frame(width: 25, height: 25, alignment: .center)
-                Text(standingPoints.name)
-                    .modifier(modifierText(font: .subheadline))
-                Spacer()
-                Text(standingPoints.first)
-                    .modifier(modifierText(frameSize: 30, font: .subheadline))
-                Text(standingPoints.second)
-                    .modifier(modifierText(frameSize: 30, font: .subheadline))
-                Text(standingPoints.total)
-                    .modifier(modifierText(frameSize: 40, font: .subheadline))
+            HeaderStandingMLB(items: [("TEAM", .infinity), ("1V", 30), ("2V", 30), ("TOTAL", 50)])
+            ForEach(standingPoints) { item in
+                HStack {
+                    Image(item.team_name.teamName())
+                        .resizable()
+                        .frame(width: 25, height: 25, alignment: .center)
+                    Text(item.team_name)
+                        .modifier(modifierText(font: .subheadline))
+                    Spacer()
+                    Text(item.first)
+                        .modifier(modifierText(frameSize: 30, font: .subheadline))
+                    Text(item.second)
+                        .modifier(modifierText(frameSize: 30, font: .subheadline))
+                    Text(item.total)
+                        .modifier(modifierText(frameSize: 50, font: .subheadline))
+                }.padding(.horizontal, 10)
+                Divider()
             }
-            Divider()
         }
+        .padding(5)
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
     }
 }
 
 struct StandingPlayoffsView: View {
     
-    var standingPlayoffs: StandingPlayoffs
+    var standingPlayoffs: [StandingPlayoffs]
     
     var body: some View {
         VStack {
-            HStack (spacing: 5) {
-                Image(standingPlayoffs.away_image.teamName())
-                    .resizable()
-                    .frame(width: 25, height: 25, alignment: .center)
-                Text(standingPlayoffs.away_team_name)
-                    .modifier(modifierText(font: .subheadline))
-                Spacer()
-                Text("\(standingPlayoffs.away_wins)")
-                    .modifier(modifierText(frameSize: 20, font: .subheadline))
-                Text("\(standingPlayoffs.away_losses)")
-                    .modifier(modifierText(frameSize: 20, font: .subheadline))
-                Text(standingPlayoffs.away_percent)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
-                Text(standingPlayoffs.away_games_played)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
-            }
-            HStack (spacing: 5) {
-                Image(standingPlayoffs.home_image.teamName())
-                    .resizable()
-                    .frame(width: 25, height: 25, alignment: .center)
-                Text(standingPlayoffs.home_team_name)
-                    .modifier(modifierText(font: .subheadline))
-                Spacer()
-                Text("\(standingPlayoffs.home_wins)")
-                    .modifier(modifierText(frameSize: 20, font: .subheadline))
-                Text("\(standingPlayoffs.home_losses)")
-                    .modifier(modifierText(frameSize: 20, font: .subheadline))
-                Text(standingPlayoffs.home_percent)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
-                Text(standingPlayoffs.home_games_played)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
+            HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 20), ("L", 20), ("PCT", 35), ("GB", 35)])
+            ForEach(standingPlayoffs) { item in
+                PlayoffsAwayView(team: item)
+                PlayoffsHomeView(team: item)
             }
             Divider()
         }
+        .padding(5)
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(10)
     }
 }
 
-struct HeaderRegularView: View {
+struct PlayoffsAwayView: View {
+    
+    var team: StandingPlayoffs
     
     var body: some View {
-        
-        HStack (spacing: 5){
-            Text("Equipos")
-                .font(.subheadline)
+        HStack {
+            Image(team.away_image.teamName())
+                .resizable()
+                .frame(width: 25, height: 25, alignment: .center)
+            Text(team.away_image)
+                .modifier(modifierText(font: .subheadline))
             Spacer()
-            Text("G")
-                .modifier(modifierText(frameSize: 25))
-            Text("P")
-                .modifier(modifierText(frameSize: 25))
-            Text("PCT")
-                .modifier(modifierText(frameSize: 35))
-            Text("DIF")
-                .modifier(modifierText(frameSize: 35))
-        }
-    }
-}
-
-struct HeaderPointsView: View {
-    
-    var body: some View {
-        
-        HStack (spacing: 5){
-            Text("Equipos")
-                .font(.subheadline)
-            Spacer()
-            Text("1A")
-                .modifier(modifierText(frameSize: 30))
-            Text("2A")
-                .modifier(modifierText(frameSize: 30))
-            Text("Total")
-                .modifier(modifierText(frameSize: 40))
-        }
-    }
-}
-
-struct HeaderPlayoffsView: View {
-    
-    var body: some View {
-        
-        HStack (spacing: 5){
-            Text("Equipos")
-                .font(.subheadline)
-            Spacer()
-            Text("G")
+            Text("\(team.away_wins)")
                 .modifier(modifierText(frameSize: 20, font: .subheadline))
-            Text("P")
+            Text("\(team.away_losses)")
                 .modifier(modifierText(frameSize: 20, font: .subheadline))
-            Text("PCT")
+            Text(team.away_percent)
                 .modifier(modifierText(frameSize: 35, font: .subheadline))
-            Text("JV")
+            Text(team.away_games_played)
                 .modifier(modifierText(frameSize: 35, font: .subheadline))
-        }
+        }.padding(.horizontal, 10)
+    }
+}
+
+struct PlayoffsHomeView: View {
+    
+    var team: StandingPlayoffs
+    
+    var body: some View {
+        HStack {
+            Image(team.home_image.teamName())
+                .resizable()
+                .frame(width: 25, height: 25, alignment: .center)
+            Text(team.home_image)
+                .modifier(modifierText(font: .subheadline))
+            Spacer()
+            Text("\(team.home_wins)")
+                .modifier(modifierText(frameSize: 20, font: .subheadline))
+            Text("\(team.home_losses)")
+                .modifier(modifierText(frameSize: 20, font: .subheadline))
+            Text(team.home_percent)
+                .modifier(modifierText(frameSize: 35, font: .subheadline))
+            Text(team.home_games_played)
+                .modifier(modifierText(frameSize: 35, font: .subheadline))
+        }.padding(.horizontal, 10)
     }
 }
 
 struct modifierText: ViewModifier {
     
-    @State var frameSize : CGFloat?
-    @State var font      : Font = .subheadline
+    var frameSize : CGFloat?
+    var font      : Font = .subheadline
     
     func body(content: Content) -> some View {
         return content

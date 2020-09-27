@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct TabViewTest: View {
+struct GeneralTabView: View {
     
     @ObservedObject var viewModel = ViewModel()
     
@@ -40,8 +40,6 @@ struct TabViewTest: View {
                     Text("Settings")
                 }
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
         .padding(.bottom)
         .edgesIgnoringSafeArea(.bottom)
         }
@@ -49,13 +47,7 @@ struct TabViewTest: View {
     }
 }
 
-struct TabViewTest_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomTabView()
-    }
-}
-
-struct CustomTabView: View {
+/*struct CustomTabView: View {
     
     @ObservedObject var viewModel = ViewModel()
     @State private var selectedTab = "doc.richtext.fill"
@@ -63,13 +55,18 @@ struct CustomTabView: View {
     var body: some View {
         
         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-            Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
-            TabView (selection: $selectedTab) {
-                ScoreBoardView(viewModel: viewModel).tag("doc.richtext.fill")
-                StandingView(viewModel: viewModel).tag("flag.fill")
-                LeadersBattingView(viewModel: viewModel).tag("chart.bar.xaxis")
-                SettingsView().tag("gearshape.fill")
-            }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            
+            NavigationView {
+                TabView (selection: $selectedTab) {
+                    ScoreBoardView(viewModel: viewModel).tag("doc.richtext.fill")
+                    StandingView(viewModel: viewModel).tag("flag.fill")
+                    LeadersBattingView(viewModel: viewModel).tag("chart.bar.xaxis")
+                    SettingsView().tag("gearshape.fill")
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .navigationBarHidden(true)
+                
+            }
             VStack (spacing: 0) {
                 Divider()
                 HStack {
@@ -82,8 +79,15 @@ struct CustomTabView: View {
                 }
             }
             .background(Color(.secondarySystemGroupedBackground)
-            .edgesIgnoringSafeArea(.all))
+                            .edgesIgnoringSafeArea(.all))
+            
         }.animation(.spring())
+    }
+}
+
+struct TabViewTest_Previews: PreviewProvider {
+    static var previews: some View {
+        CustomTabView()
     }
 }
 
@@ -105,7 +109,7 @@ struct TabButton: View {
                 .padding(.horizontal)
         }
     }
-}
+}*/
 
 struct SettingsView: View {
     var body: some View {

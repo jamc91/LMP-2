@@ -19,7 +19,7 @@ struct LeadersBattingView: View {
             Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
             ScrollView (showsIndicators: false) {
                 VStack (spacing: 10) {
-                    TopHeaderView(title: "Stats", showButton: false)
+                    TopHeaderView(title: "Stats", showCalendarButton: false)
         VStack {
             Button(action: {
                 self.showActionSheet = true

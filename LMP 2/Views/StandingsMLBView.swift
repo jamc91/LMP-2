@@ -37,7 +37,9 @@ struct StandingMLBView: View {
                     .cornerRadius(10)
                 }
             }
-        }.background(Color(.systemGroupedBackground))
+        }
+        .padding(.horizontal, 20)
+        .background(Color(.systemGroupedBackground))
     }
 }
 
@@ -59,19 +61,12 @@ struct HeaderStandingMLB: View {
                     Text(item.column)
                         .modifier(modifierText(frameSize: item.frame, font: .subheadline))
                         .foregroundColor(.secondary)
-                    if
-                        item.column.contains("TEAM") ||
-                        item.column.contains("AL East") ||
-                        item.column.contains("AL Central") ||
-                        item.column.contains("NL West") ||
-                        item.column.contains("NL East") ||
-                        item.column.contains("NL Central")  {
+                    if item.column.contains("TEAM")  {
                         Spacer()
                     }
                 }
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
+            .padding(5)
             Divider().padding(.horizontal, 5)
         }
     }
@@ -82,8 +77,7 @@ struct StandingMLBALView: View {
     
     var teamData: Records
     
-    var body: some View {
-        
+    var body: some View {        
         ForEach(teamData.teamRecords) { team in
             HStack {
                 Image("\(team.team.id)")
@@ -108,8 +102,7 @@ struct StandingMLBALView: View {
                     .modifier(modifierText(frameSize: 45, font: .subheadline))
                     .foregroundColor(team.runDifferential > 0 ? .green : .red)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
+            .padding(5)
         }
     }
 }

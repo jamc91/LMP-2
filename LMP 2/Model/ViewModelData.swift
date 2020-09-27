@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 enum League: RawRepresentable, CaseIterable {
     
@@ -35,6 +36,9 @@ enum League: RawRepresentable, CaseIterable {
 }
 
 class ViewModel: ObservableObject {
+    
+    private var cancellable = Set<AnyCancellable>()
+    @Published var contentMLB = ContentResults() 
     @Published var gamesMLB = [Dates]() {
         didSet {
             showActivityIndicator = false
@@ -70,12 +74,17 @@ class ViewModel: ObservableObject {
     }
     
     init() {
-        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=132&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
+        
+        fetchGames(url: .games(date: self.dateNow.dateFormatter(), league: league), placeholder: resultsMLB.default) { [self] (game: resultsMLB) in
+            self.gamesMLB = game.dates
+        }
+        
+        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
             self.standingMLBALList = StandingsMLB.records
         }
-        loadData(url: .games(date: self.dateNow.dateFormatter(), league: league)) { (gamesMLB: resultsMLB) in
+        /*loadData(url: .games(date: self.dateNow.dateFormatter(), league: league)) { (gamesMLB: resultsMLB) in
                 self.gamesMLB = gamesMLB.dates
-            }
+            }*/
         loadData(url: .standing) { (standing: resultsStandings) in
             self.standingList = standing.response
         }
@@ -90,7 +99,7 @@ class ViewModel: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
             self.loadData(url: .games(date: self.dateNow.dateFormatter(), league: self.league)) { (gamesMLB: resultsMLB) in
                 if gamesMLB.totalGamesInProgress == 0 {
-                    self.timer.invalidate()
+                  //  self.timer.invalidate()
                 }
                 self.gamesMLB = gamesMLB.dates
             }
@@ -117,6 +126,16 @@ class ViewModel: ObservableObject {
                 
             }
         }.resume()
+    }
+    
+    func fetchGames<T: Codable>(url: URL, placeholder: T, completion: @escaping (T) -> ()) {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map { $0.data }
+            .decode(type: T.self, decoder: JSONDecoder())
+            .replaceError(with: placeholder)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: completion)
+            .store(in: &cancellable)
     }
 }
 
