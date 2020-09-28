@@ -16,7 +16,7 @@ struct ContentView: View {
         ZStack {
             Group {
                 GeneralTabView(viewModel: viewModel)
-                PickerView(viewModel: viewModel)
+                DatePickerViewSelector(viewModel: viewModel)
             }
         }
     }
@@ -29,43 +29,5 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct TopHeaderView: View {
-    
-    @ObservedObject var viewModel = ViewModel()
-    var title: String
-    var showCalendarButton: Bool
-    
-    var body: some View {
-        HStack {
-            Text(title)
-                .fontWeight(.bold)
-                .font(.largeTitle)
-            Spacer()
-            if showCalendarButton {
-                Button(action: {
-                    self.viewModel.showPickerView = true
-                    self.viewModel.timer.invalidate()
-                }) {
-                    Image(systemName: "calendar.circle.fill")
-                        .font(.system(size: 35))
-                        .foregroundColor(.primary)
-                }
-            }
-        }
-        .padding(.top, 50)
-    }
-}
 
-struct HeaderSectionView: View {
-    
-    var title: String
-    
-    var body: some View {
-        HStack {
-            Text(title)
-                .fontWeight(.bold)
-                .font(.system(size: 22))
-            Spacer()
-        }.padding(.top, 15)
-    }
-}
+

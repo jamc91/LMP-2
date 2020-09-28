@@ -38,7 +38,7 @@ struct ScoreBoardView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 70)
+                .padding(.bottom, 20)
             }
         }
     }

@@ -213,3 +213,17 @@ struct modifierText: ViewModifier {
     }
 }
 
+struct HeaderSectionView: View {
+    
+    var title: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .fontWeight(.bold)
+                .font(.system(size: 22))
+            Spacer()
+        }.padding(.top, 15)
+    }
+}
+

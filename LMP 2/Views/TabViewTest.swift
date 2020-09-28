@@ -14,36 +14,65 @@ struct GeneralTabView: View {
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-        TabView {
-            ScoreBoardView(viewModel: viewModel)
-            .tabItem {
-                Image(systemName: "doc.richtext.fill")
-                    .imageScale(.large)
-                Text("ScoreBoads")
+            TabView {
+                ScoreBoardView(viewModel: viewModel)
+                    .tabItem {
+                        Image(systemName: "doc.richtext.fill")
+                            .imageScale(.large)
+                        Text("ScoreBoads")
+                    }
+                StandingView(viewModel: viewModel)
+                    .tabItem {
+                        Image(systemName: "flag.fill")
+                            .imageScale(.large)
+                        Text("Standings")
+                    }
+                LeadersBattingView(viewModel: viewModel)
+                    .tabItem {
+                        Image(systemName: "chart.bar.xaxis")
+                            .imageScale(.large)
+                        Text("Stats")
+                    }
+                SettingsView()
+                    .tabItem {
+                        Image(systemName: "gearshape.fill")
+                            .imageScale(.large)
+                        Text("Settings")
+                    }
             }
-            StandingView(viewModel: viewModel)
-            .tabItem {
-                Image(systemName: "flag.fill")
-                    .imageScale(.large)
-                Text("Standings")
-            }
-            LeadersBattingView(viewModel: viewModel)
-            .tabItem {
-                Image(systemName: "chart.bar.xaxis")
-                    .imageScale(.large)
-                Text("Stats")
-            }
-            SettingsView()
-                .tabItem {
-                    Image(systemName: "gearshape.fill")
-                        .imageScale(.large)
-                    Text("Settings")
-                }
-        }
-        .padding(.bottom)
-        .edgesIgnoringSafeArea(.bottom)
+            .padding(.bottom)
+            .edgesIgnoringSafeArea(.bottom)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .blur(radius: viewModel.showPickerView ? 10.0 : 0.0).animation(.spring(response: 0.3, dampingFraction: 1.0, blendDuration: 0.3))
+        
+    }
+}
+
+struct TopHeaderView: View {
+    
+    @ObservedObject var viewModel = ViewModel()
+    var title: String
+    var showCalendarButton: Bool
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .fontWeight(.bold)
+                .font(.largeTitle)
+            Spacer()
+            if showCalendarButton {
+                Button(action: {
+                    self.viewModel.showPickerView = true
+                    self.viewModel.timer.invalidate()
+                }) {
+                    Image(systemName: "calendar.circle.fill")
+                        .font(.system(size: 35))
+                        .foregroundColor(.primary)
+                }
+            }
+        }
+        .padding(.top, 50)
     }
 }
 
