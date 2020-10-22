@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct resultsStandings: Decodable {
+struct resultsStandings: Codable {
     
    var response: Standings
    
 }
 
-struct Standings: Decodable {
+struct Standings: Codable {
     
    var first, second, general : [StandingRegular]
    var points                 : [StandingPoints]
@@ -22,33 +22,19 @@ struct Standings: Decodable {
    
     init() {
         
-        self.first = []
-        self.second = []
-        self.general = []
-        self.points = []
+        self.first = [StandingRegular]()
+        self.second = [StandingRegular]()
+        self.general = [StandingRegular]()
+        self.points = [StandingPoints]()
 
     }
     
     enum CodingKeys: String, CodingKey {
         case first, second, general, points, playoffs
     }
-    
-    enum SeasonState: String, CaseIterable, Identifiable {
-        
-        case regular, playoffs
-        
-        var id: String { self.rawValue }
-    }
-    
-    enum StandingState: String, CaseIterable, Identifiable {
-        
-        case first, second, general, points, playoffs, semifinal, final
-        
-        var id: String { self.rawValue }
-    }
 }
 
-struct StandingRegular: Decodable, Identifiable {
+struct StandingRegular: Codable, Identifiable {
         
     var id        : String
     var name      : String
@@ -61,7 +47,7 @@ struct StandingRegular: Decodable, Identifiable {
    
 }
 
-struct StandingPoints: Decodable, Identifiable {
+struct StandingPoints: Codable, Identifiable {
     
     var id        : String
     var name      : String
@@ -72,13 +58,13 @@ struct StandingPoints: Decodable, Identifiable {
     var total     : String
 }
 
-struct Playoffs: Decodable {
+struct Playoffs: Codable {
     
     var repesca, semifinal, final: [StandingPlayoffs]
     
 }
 
-struct StandingPlayoffs: Decodable, Identifiable {
+struct StandingPlayoffs: Codable, Identifiable {
     
     var id                = UUID()
     var away_team_name    : String

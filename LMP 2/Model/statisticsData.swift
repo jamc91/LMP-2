@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct statisticsBatting: Decodable {
+struct statisticsBatting: Codable {
     
     var response: [leadersBatting]
     
 }
 
-struct leadersBatting: Decodable, Identifiable {
+struct leadersBatting: Codable, Identifiable {
     
     var id        = UUID()
     var name      : String
@@ -70,13 +70,13 @@ struct leadersBatting: Decodable, Identifiable {
     
 }
 
-struct statisticsPitching: Decodable {
+struct statisticsPitching: Codable {
     
     var response: [leadersPitching]
     
 }
 
-struct leadersPitching: Decodable, Identifiable {
+struct leadersPitching: Codable, Identifiable {
     
     var id = UUID()
     

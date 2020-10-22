@@ -18,15 +18,24 @@ extension Date {
 }
 
 extension URL {
-    static func games(date: String, league: League) -> URL {
-        URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=\(league.rawValue.0)&sportId=\(league.rawValue.1)&date=\(date)&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")!
+    static func apiURL(_ link: String) -> URL {
+        URL(string: "https://statsapi.mlb.com\(link)")!
     }
+    
+    static func gamesLink(date: String) -> URL {
+        URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132&sportId=1,17&date=\(date)&sortBy=gameStatus&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")!
+    }
+    
     static var standing: URL {
         URL(string: "https://api.lmp.mx/3.0.0/standing")!
     }
     
     static func leaders(mode: String, season: String, category: String, order: String) -> URL {
         URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=\(mode)&type=\(season)&column=\(category)&order=\(order)")!
+    }
+    
+    static func imageURL(image: Int) -> URL {
+       return URL(string: "https://content.mlb.com/images/headshots/current/60x60/\(image)@2x.png")!
     }
 }
 
@@ -61,20 +70,36 @@ extension String {
 }
 
 extension String {
-    func hourFormat() -> String {
+    func hourFormat(status: Bool) -> String {
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        formatter.timeZone = .current
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        if let hour = formatter.date(from: self) {
-            formatter.dateFormat = "h:mm a"
-            let dateString = formatter.string(from: hour)
-            return dateString
-            
+        if status {
+            return "Time TBD"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            formatter.timeZone = .current
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            if let hour = formatter.date(from: self) {
+                formatter.dateFormat = "h:mm a"
+                let dateString = formatter.string(from: hour)
+                return dateString
+                
+            }
+            return ""
         }
-        return ""
     }
 }
 
+extension KeyedDecodingContainerProtocol {
+    func decode<T: Decodable>(forKey key: Key) throws -> T {
+        return try decode(T.self, forKey: key)
+    }
+    
+    func decode<T: Decodable>(
+        forKey key: Key,
+        default defaultExpression: @autoclosure () -> T
+    ) throws -> T {
+        return try decodeIfPresent(T.self, forKey: key) ?? defaultExpression()
+    }
+}
 

@@ -10,14 +10,15 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var viewModel = ViewModel()
+    @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
         ZStack {
-            Group {
-                GeneralTabView(viewModel: viewModel)
-                DatePickerViewSelector(viewModel: viewModel)
-            }
+            GeneralTabView(viewModel: viewModel)
+                .zIndex(0)
+                .modifier(AnimationBlur(showBlur: $viewModel.showPickerView))
+            DatePickerViewSelector(viewModel: viewModel)
+                .zIndex(1)
         }
     }
 }
@@ -29,5 +30,16 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+struct AnimationBlur: ViewModifier {
+    
+    @Binding var showBlur: Bool
+    
+    func body(content: Content) -> some View {
+        return content
+            .animation(nil)
+            .blur(radius: showBlur ? 8.0 : 0.0)
+            .animation(.spring())
+    }
+}
 
 

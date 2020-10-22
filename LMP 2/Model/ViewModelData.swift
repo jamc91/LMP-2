@@ -9,33 +9,7 @@
 import Foundation
 import Combine
 
-enum League: RawRepresentable, CaseIterable {
-    
-    case MLB
-    case LMP
-    
-    var rawValue: (String, String) {
-        switch self {
-        case .MLB:
-            return (leagueID: "103,104", sportID: "1")
-        case .LMP:
-            return (leagueID: "132", sportID: "17")
-        }
-    }
-    
-    init?(rawValue: (String, String)) {
-        switch rawValue {
-        case ("103,104", "1"):
-            self = .MLB
-        case ("132", "17"):
-            self = .LMP
-        default:
-            return nil
-        }
-    }
-}
-
-class ViewModel: ObservableObject {
+final class ViewModel: ObservableObject {
     
     private var cancellable = Set<AnyCancellable>()
     @Published var contentMLB = ContentResults() 
@@ -45,13 +19,13 @@ class ViewModel: ObservableObject {
         }
     }
     var timer = Timer()
+    @Published var gamesLMP = [GamesLMP]()
+    @Published var isPresentContent = false
     @Published var standingList = Standings()
     @Published var leadersOfBattingList = [leadersBatting]()
     @Published var leadersOfPitchingList = [leadersPitching]()
-    @Published var standingMLBALList = [Records]()
-    @Published var standingMLBNLList = [Records]()
-    @Published var league: League = .MLB
-    @Published var dateNow = Date()
+    @Published var standingMLBALList = StandingResultsMLB()
+    @Published var date = Date()
     @Published var showPickerView = false
     @Published var showActivityIndicator = true
     @Published var requestLeadersOfBattingValue: (season   : leadersBatting.Season,
@@ -74,19 +48,16 @@ class ViewModel: ObservableObject {
     }
     
     init() {
-        
-        fetchGames(url: .games(date: self.dateNow.dateFormatter(), league: league), placeholder: resultsMLB.default) { [self] (game: resultsMLB) in
+        fetchData(url: .gamesLink(date: date.dateFormatter()), placeholder: ScoreboardResults.default) { (game: ScoreboardResults) in
             self.gamesMLB = game.dates
+            
+        }
+        fetchData(url: .standing, placeholder: standingList) { (standing: Standings) in
+            self.standingList = standing
         }
         
-        loadData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!) { (StandingsMLB: StandingResultsMLB) in
-            self.standingMLBALList = StandingsMLB.records
-        }
-        /*loadData(url: .games(date: self.dateNow.dateFormatter(), league: league)) { (gamesMLB: resultsMLB) in
-                self.gamesMLB = gamesMLB.dates
-            }*/
-        loadData(url: .standing) { (standing: resultsStandings) in
-            self.standingList = standing.response
+        fetchData(url: URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!, placeholder: standingMLBALList) { (standingMLB: StandingResultsMLB) in
+            self.standingMLBALList = standingMLB
         }
         
         loadData(url: .leaders(mode: "batting", season: requestLeadersOfBattingValue.season.rawValue, category: requestLeadersOfBattingValue.category.rawValue, order: "desc")) { (leaders: statisticsBatting) in
@@ -96,17 +67,10 @@ class ViewModel: ObservableObject {
             
             self.leadersOfPitchingList = leaders.response
         }
-        timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
-            self.loadData(url: .games(date: self.dateNow.dateFormatter(), league: self.league)) { (gamesMLB: resultsMLB) in
-                if gamesMLB.totalGamesInProgress == 0 {
-                  //  self.timer.invalidate()
-                }
-                self.gamesMLB = gamesMLB.dates
-            }
-        })
+        timerStatus(state: false)
     }
     
-    func loadData<T: Decodable>(url: URL, completion: @escaping (T) -> ()) {
+    func loadData<T: Codable>(url: URL, completion: @escaping (T) -> ()) {
         
         URLSession.shared.dataTask(with: url) { (data, respone, error) in
             
@@ -128,7 +92,7 @@ class ViewModel: ObservableObject {
         }.resume()
     }
     
-    func fetchGames<T: Codable>(url: URL, placeholder: T, completion: @escaping (T) -> ()) {
+    func fetchData<T: Codable>(url: URL, placeholder: T, completion: @escaping (T) -> ()) {
         URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
             .decode(type: T.self, decoder: JSONDecoder())
@@ -136,6 +100,25 @@ class ViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink(receiveValue: completion)
             .store(in: &cancellable)
+    }
+
+    func timerStatus(state: Bool) {
+        if state {
+            timer.invalidate()
+            print("Timer Invalidate")
+        } else {
+            print("Timer Enabled")
+            timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
+                self.fetchData(url: .gamesLink(date: self.date.dateFormatter() ), placeholder: ScoreboardResults.default) { (games: ScoreboardResults) in
+                    if games.totalGamesInProgress == 0 {
+                        self.timer.invalidate()
+                        print("Timer Invalidate")
+                    }
+                    self.gamesMLB = games.dates
+                    
+                }
+            })
+        }
     }
 }
 

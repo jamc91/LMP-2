@@ -10,6 +10,10 @@ import Foundation
 
 struct StandingResultsMLB: Codable {
     var records: [Records]
+    
+    init() {
+            records = [Records]()
+    }
 }
 
 struct Records: Codable, Identifiable {

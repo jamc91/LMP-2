@@ -15,18 +15,7 @@ struct StandingMLBView: View {
     var body: some View {
         
         VStack {
-            ForEach(viewModel.standingMLBALList) { item in
-                Section(header: HeaderSectionView(title: item.division?.name ?? "")) {
-                    VStack {
-                        HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 20), ("L", 20), ("PCT", 35), ("GB", 30), ("L10", 40), ("STRK", 40), ("RDIFF", 45)])
-                        StandingMLBALView(teamData: item)
-                    }
-                    .padding(5)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .cornerRadius(10)
-                }
-            }
-            ForEach(viewModel.standingMLBNLList) { item in
+            ForEach(viewModel.standingMLBALList.records) { item in
                 Section(header: HeaderSectionView(title: item.division?.name ?? "")) {
                     VStack {
                         HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 20), ("L", 20), ("PCT", 35), ("GB", 30), ("L10", 40), ("STRK", 40), ("RDIFF", 45)])

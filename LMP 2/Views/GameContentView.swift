@@ -12,22 +12,32 @@ struct GameContentView: View {
     
     @ObservedObject var viewModel = ViewModel()
     var gamePk: Int
-    @State private var date = Date()
+    
     var body: some View {
-        ScrollView {
-            
-            DatePicker("", selection: $date, displayedComponents: .date)
-                .labelsHidden()
-                .accentColor(.secondary)
-                .cornerRadius(18)
-            
-        }.navigationBarItems(leading: HeaderScoreboardView(viewModel: viewModel)
-                                .offset(x: UIScreen.main.bounds.width / 7))
-        .onAppear(perform: {
-            self.viewModel.fetchGames(url: URL(string: "https://statsapi.mlb.com/api/v1.1/game/\(gamePk)/feed/live?language=es")!, placeholder: viewModel.contentMLB) { (content: ContentResults) in
-                self.viewModel.contentMLB = content
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    viewModel.isPresentContent = false
+                }, label: {
+                    Image(systemName: "xmark.circle.fill")
+            })
+            .padding(10)
+            .foregroundColor(.gray)
+            .font(.system(size: 30))
             }
-        })
+            ScrollView {
+                HeaderScoreboardView(viewModel: viewModel)
+                HStack {
+                    TeamNameBoxscoreView(awayName: viewModel.contentMLB.gameData.teams.away.teamName, homeName: viewModel.contentMLB.gameData.teams.home.teamName)
+                    BoxscoreView(totalInnings: 1..<viewModel.contentMLB.liveData.linescore.getNumberInnings + 1, runs: viewModel.contentMLB.liveData.linescore.innings)
+                    RHETextView(awayRuns: viewModel.contentMLB.liveData.linescore.teams.away.runs, awayHits: viewModel.contentMLB.liveData.linescore.teams.away.hits, awayErrors: viewModel.contentMLB.liveData.linescore.teams.away.errors, homeRuns: viewModel.contentMLB.liveData.linescore.teams.home.runs, homeHits: viewModel.contentMLB.liveData.linescore.teams.home.hits, homeErrors: viewModel.contentMLB.liveData.linescore.teams.home.errors)
+                }
+            }
+            .navigationTitle("Boxscore")
+            .navigationBarTitleDisplayMode(.inline)
+            
+        }
     }
 }
 
@@ -45,8 +55,8 @@ struct HeaderScoreboardView: View {
         HStack {
             VStack (alignment: .leading) {
                 Group {
-                    Text(viewModel.contentMLB.gameData?.teams.away.abbreviation ?? "TBD")
-                    Text(viewModel.contentMLB.gameData?.teams.home.abbreviation ?? "TBD")
+                    Text(viewModel.contentMLB.gameData.teams.away.abbreviation)
+                    Text(viewModel.contentMLB.gameData.teams.home.abbreviation)
                 }
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -54,19 +64,19 @@ struct HeaderScoreboardView: View {
             }
             VStack (alignment: .leading) {
                 Group {
-                    Text("\(viewModel.contentMLB.liveData?.linescore?.teams.away.runs ?? 0)")
-                    Text("\(viewModel.contentMLB.liveData?.linescore?.teams.home.runs ?? 0)")
+                    Text("\(viewModel.contentMLB.liveData.linescore.teams.away.runs)")
+                    Text("\(viewModel.contentMLB.liveData.linescore.teams.home.runs)")
                 }
                 .font(.caption)
                 .foregroundColor(.secondary)
             }
-          /*  DiamondView(linescore: viewModel.contentMLB.linescore)
+            DiamondView(baseState: viewModel.contentMLB.liveData.linescore.offense.diamondState)
                 .frame(width: 50, height: 50, alignment: .center)
-                .scaleEffect(0.5)*/
+                .scaleEffect(0.5)
             VStack (alignment: .leading) {
                 Group {
-                    Text("\(viewModel.contentMLB.liveData?.linescore?.isTopInning ?? false ? "Top" : "Bot") \(viewModel.contentMLB.liveData?.linescore?.currentInningOrdinal ?? "0")")
-                    Text("\(viewModel.contentMLB.liveData?.linescore?.strikes ?? 0) \(viewModel.contentMLB.liveData?.linescore?.balls ?? 0), \(viewModel.contentMLB.liveData?.linescore?.outs ?? 0) out")
+                    Text("\(viewModel.contentMLB.liveData.linescore.isTopInning ? "Top" : "Bot") \(viewModel.contentMLB.liveData.linescore.currentInningOrdinal)")
+                    Text("\(viewModel.contentMLB.liveData.linescore.strikes) \(viewModel.contentMLB.liveData.linescore.balls), \(viewModel.contentMLB.liveData.linescore.outs) out")
                 }
                 .font(.caption)
                 .foregroundColor(.secondary)

@@ -6,7 +6,7 @@
 //  Copyright © 2020 Jesús Medina Camargo. All rights reserved.
 //
 
-import Foundation
+/*import Foundation
 
 struct resultsMLB: Codable {
     var totalGamesInProgress: Int
@@ -19,11 +19,7 @@ struct resultsMLB: Codable {
     static let `default` = resultsMLB(totalGamesInProgress: 0, dates: [Dates(id: UUID(), games: [Games(gamePk: 0, gameDate: "", status: Status(abstractGameState: "", codedGameState: "", detailedState: "", statusCode: "", abstractGameCode: ""), teams: Teams(away: TeamData(leagueRecord: LeagueRecord(wins: 0, losses: 0, pct: ""), score: 0, probablePitcher: ProbablePitcher(id: 0, primaryNumber: "", boxscoreName: "", stats: [Stats(id: UUID(), type: Type(displayName: ""), group: GroupStat(displayName: ""), stats: StatsContent(era: "", wins: 0, losses: 0))], pitchHand: PitchHand(code: "", description: "")), team: Team(id: 0, name: "", abbreviation: "", teamName: "")), home: TeamData(leagueRecord: LeagueRecord(wins: 0, losses: 0, pct: ""), score: 0, probablePitcher: ProbablePitcher(id: 0, primaryNumber: "", boxscoreName: "", stats: [Stats(id: UUID(), type: Type(displayName: ""), group: GroupStat(displayName: ""), stats: StatsContent(era: "", wins: 0, losses: 0))], pitchHand: PitchHand(code: "", description: "")), team: Team(id: 0, name: "", abbreviation: "", teamName: ""))))])])
 }
 
-struct Dates: Codable, Identifiable, Equatable {
-    static func == (lhs: Dates, rhs: Dates) -> Bool {
-        return lhs.games == rhs.games
-    }
-    
+struct Dates: Codable, Identifiable {
     
     var id = UUID()
     var games: [Games]
@@ -33,11 +29,8 @@ struct Dates: Codable, Identifiable, Equatable {
     }
 }
 
-struct Games: Codable, Identifiable, Equatable {
-    static func == (lhs: Games, rhs: Games) -> Bool {
-        return lhs.gamePk == rhs.gamePk
-    }
-    
+struct Games: Codable, Identifiable {
+
     var id = UUID()
     var gamePk: Int
     var gameDate: String
@@ -117,6 +110,7 @@ struct ProbablePitcher: Codable {
     var boxscoreName: String
     var stats: [Stats]?
     var pitchHand: PitchHand
+
     
     enum CodingKeys: String, CodingKey {
         case id, primaryNumber, boxscoreName, stats, pitchHand
@@ -186,6 +180,7 @@ struct Linescore: Codable {
     enum CodingKeys: String, CodingKey {
         case currentInning, currentInningOrdinal, inningState, inningHalf, isTopInning, scheduledInnings, innings, teams, offense, balls, strikes, outs
     }
+
     
     var getNumberInnings: Int {
         guard let inning = currentInning else {
@@ -284,6 +279,7 @@ struct Innings: Codable, Identifiable {
     }
 }
 
+
 struct InningResults: Codable {
     var runs: Int?
     var hits, errors , leftOnBase: Int?
@@ -304,6 +300,7 @@ struct InningResults: Codable {
 //MARK: - Teams Linescore
 struct TeamsLinescore: Codable {
     var home, away: TeamsResults
+    
 }
 
 struct TeamsResults: Codable {
@@ -345,4 +342,4 @@ struct InfoBase: Codable {
     var fullName: String?
     var link: String?
 }
-
+*/

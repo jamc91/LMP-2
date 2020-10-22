@@ -7,10 +7,12 @@
 //
 
 import SwiftUI
+import WebKit
 
 struct StandingView: View {
     
     @ObservedObject var viewModel = ViewModel()
+    @State private var league = 0
     
     var body: some View {
         ZStack {
@@ -18,9 +20,19 @@ struct StandingView: View {
             ScrollView (showsIndicators: false) {
                 VStack (spacing: 10) {
                     TopHeaderView(title: "Standings", showCalendarButton: false).padding(.horizontal, 20)
-                    StandingMLBView(viewModel: viewModel)
-                }.padding(.bottom, 70)
+                    Picker("", selection: $league) {
+                        Text("LMP").tag(0)
+                        Text("MLB").tag(1)
+                    }.pickerStyle(SegmentedPickerStyle())
+                    .padding()
+                    if league == 0 {
+                        StandingRegularSeasonView(standing: viewModel.standingList.first).padding(.horizontal, 20)
+                    } else {
+                        StandingMLBView(viewModel: viewModel)
+                    }
+                }
             }
+            //WebView(url: "https://www.mlb.com/standings/postseason")
         }
     }
 }
@@ -227,3 +239,45 @@ struct HeaderSectionView: View {
     }
 }
 
+struct WebView: UIViewRepresentable {
+    
+    var url: String
+    
+    func makeCoordinator() -> ContentController {
+        ContentController(self)
+    }
+    
+    func makeUIView(context: Context) -> WKWebView {
+        guard let urlString = URL(string: url) else { return WKWebView() }
+        let request = URLRequest(url: urlString)
+        
+        let wkWebView = WKWebView()
+        wkWebView.navigationDelegate = context.coordinator
+        wkWebView.uiDelegate = context.coordinator
+        wkWebView.load(request)
+        return wkWebView
+        
+        
+        
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: UIViewRepresentableContext<WebView>) {
+        
+    }
+    
+    class ContentController: NSObject, WKNavigationDelegate, WKUIDelegate {
+        
+        private let parent: WebView
+        
+        init(_ parent: WebView) {
+            self.parent = parent
+        }
+        
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            webView.evaluateJavaScript("document.getElementById('react-header').remove();", completionHandler: nil)
+            webView.evaluateJavaScript("document.getElementById('ad-top-banner-sm').remove();", completionHandler: nil)
+            webView.evaluateJavaScript("document.getElementById('react-footer').remove();", completionHandler: nil)
+            
+        }
+    }
+}

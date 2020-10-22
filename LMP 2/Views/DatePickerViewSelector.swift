@@ -17,17 +17,15 @@ struct DatePickerViewSelector: View {
             Spacer()
             VStack {
                 TopButtons(viewModel: viewModel)
-                LeagueSegmentedPicker(viewModel: viewModel)
                 DatePickerGraphicalView(viewModel: viewModel)
-                
             }
             .background(Color(.tertiarySystemBackground))
             .cornerRadius(15)
             .opacity(viewModel.showPickerView ? 1.0 : 0.0)
-            .scaleEffect(viewModel.showPickerView ? 1.0 : 0.4)
+            .scaleEffect(viewModel.showPickerView ? 1.0 : 1.5)
             Spacer()
         }
-        .padding()
+        .padding(.horizontal, 30)
         .background((self.viewModel.showPickerView ? Color.black.opacity(0.5) : Color.clear)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
@@ -52,54 +50,24 @@ struct TopButtons: View {
         HStack {
             Button("Cancelar") {
                 self.viewModel.showPickerView = false
-                self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
-                    self.viewModel.loadData(url: .games(date: self.viewModel.dateNow.dateFormatter(),league: viewModel.league)) { (resultsMLB: resultsMLB) in
-                        if resultsMLB.totalGamesInProgress == 0 {
-                            self.viewModel.timer.invalidate()
-                        }
-                        self.viewModel.gamesMLB = resultsMLB.dates
-                    }
-                })
+                self.viewModel.timerStatus(state: false)
             }
             Spacer()
             Button("Aceptar") {
                 self.viewModel.gamesMLB.removeAll()
                 self.viewModel.showActivityIndicator = true
                 self.viewModel.showPickerView = false
-                self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
-                    self.viewModel.loadData(url: .games(date: self.viewModel.dateNow.dateFormatter(), league: viewModel.league)) { (resultsMLB: resultsMLB) in
-                        if resultsMLB.totalGamesInProgress == 0 {
-                            self.viewModel.timer.invalidate()
-                        }
-                        self.viewModel.gamesMLB = resultsMLB.dates
-                    }
-                })
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.viewModel.loadData(url: .games(date: self.viewModel.dateNow.dateFormatter(), league: viewModel.league)) { (resultsMLB: resultsMLB) in
-                        if resultsMLB.totalGamesInProgress == 0 {
-                            self.viewModel.timer.invalidate()
-                        }
-                        self.viewModel.gamesMLB = resultsMLB.dates
+                self.viewModel.timerStatus(state: false)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.viewModel.fetchData(url: .gamesLink(date: viewModel.date.dateFormatter()), placeholder: ScoreboardResults.default) { (game: ScoreboardResults) in
+                        viewModel.timerStatus(state: game.totalGamesInProgress == 0)
+                        viewModel.gamesMLB = game.dates
+                        
                     }
                 }
             }
-        }.padding()
-    }
-}
-
-struct LeagueSegmentedPicker: View {
-    
-    @ObservedObject var viewModel: ViewModel
-    
-    var body: some View {
-        HStack {
-            Picker("", selection: $viewModel.league) {
-                Text("MLB").tag(League.MLB)
-                Text("LMP").tag(League.LMP)
-            }
-            .padding(.horizontal)
-            .pickerStyle(SegmentedPickerStyle())
-        }
+        }.padding(.vertical)
+        .padding(.horizontal, 20)
     }
 }
 
@@ -108,9 +76,9 @@ struct DatePickerGraphicalView: View {
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
-        DatePicker("", selection: $viewModel.dateNow, displayedComponents: .date)
+        DatePicker("", selection: $viewModel.date, displayedComponents: .date)
             .datePickerStyle(GraphicalDatePickerStyle())
             .labelsHidden()
-            .frame(width: UIScreen.main.bounds.width / 1.2, alignment: .center)
+            .frame(width: UIScreen.main.bounds.width / 1.3, alignment: .center)
     }
 }

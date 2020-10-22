@@ -61,7 +61,7 @@ struct LeadersBattingView: View {
                 .animation(.default)
                 .padding(.horizontal, 20)
             }.background(Color(.systemGroupedBackground))
-        }
+        }.navigationBarHidden(true)
     }
 }
 
