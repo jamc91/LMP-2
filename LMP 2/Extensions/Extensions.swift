@@ -23,11 +23,15 @@ extension URL {
     }
     
     static func gamesLink(date: String) -> URL {
-        URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132&sportId=1,17&date=\(date)&sortBy=gameStatus&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")!
+        URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132&sportId=1,17&date=\(date)&sortBy=gameStatus&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")!
     }
     
-    static var standing: URL {
+    static var standingLMPLink: URL {
         URL(string: "https://api.lmp.mx/3.0.0/standing")!
+    }
+    
+    static var standingMLBLink: URL {
+        URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!
     }
     
     static func leaders(mode: String, season: String, category: String, order: String) -> URL {

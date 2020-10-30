@@ -30,8 +30,8 @@ struct DiamondView: View {
                 .font(.system(size: 30, weight: .thin))
                 .rotationEffect(Angle(degrees: 45))
                 .offset(x: -22, y: 10)
-            
-        }.frame(width: 100, height: 100, alignment: .center)
+        }
+        .frame(width: 100, height: 100, alignment: .center)
     }
 }
 

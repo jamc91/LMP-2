@@ -14,7 +14,6 @@ struct RHETextView: View {
     var awayRuns, awayHits, awayErrors: Int
     var homeRuns, homeHits, homeErrors: Int
     
-    
     var body: some View {
         VStack {
             HStack (spacing: 0) {

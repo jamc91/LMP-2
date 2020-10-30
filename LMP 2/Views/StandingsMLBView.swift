@@ -10,12 +10,12 @@ import SwiftUI
 
 struct StandingMLBView: View {
     
-    @ObservedObject var viewModel = ViewModel()
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         
         VStack {
-            ForEach(viewModel.standingMLBALList.records) { item in
+            ForEach(viewModel.standingMLB.records) { item in
                 Section(header: HeaderSectionView(title: item.division?.name ?? "")) {
                     VStack {
                         HeaderStandingMLB(items: [("TEAM", .infinity), ("W", 20), ("L", 20), ("PCT", 35), ("GB", 30), ("L10", 40), ("STRK", 40), ("RDIFF", 45)])
@@ -34,7 +34,7 @@ struct StandingMLBView: View {
 
 struct StandingMLBView_Previews: PreviewProvider {
     static var previews: some View {
-        StandingMLBView()
+        StandingMLBView(viewModel: ViewModel())
     }
 }
 
@@ -44,11 +44,10 @@ struct HeaderStandingMLB: View {
     
     var body: some View {
         
-        VStack (spacing: 0) {
+        VStack {
             HStack {
                 ForEach(items, id: \.column) { item in
                     Text(item.column)
-                        .modifier(modifierText(frameSize: item.frame, font: .subheadline))
                         .foregroundColor(.secondary)
                     if item.column.contains("TEAM")  {
                         Spacer()
@@ -73,22 +72,22 @@ struct StandingMLBALView: View {
                     .resizable()
                     .frame(width: 20, height: 20)
                 Text(team.team.abbreviation)
-                    .modifier(modifierText(frameSize: .infinity, font: .subheadline))
+                    
                 Spacer()
                 Text("\(team.wins)")
-                    .modifier(modifierText(frameSize: 20, font: .subheadline))
+                    
                 Text("\(team.losses)")
-                    .modifier(modifierText(frameSize: 20, font: .subheadline))
+                    
                 Text(team.winningPercentage)
-                    .modifier(modifierText(frameSize: 35, font: .subheadline))
+                    
                 Text(team.gamesBack)
-                    .modifier(modifierText(frameSize: 30, font: .subheadline))
+                    
                 Text("\(team.records.splitRecords.first!.wins)-\(team.records.splitRecords.first!.losses)")
-                    .modifier(modifierText(frameSize: 40, font: .subheadline))
+                    
                 Text(team.streak?.streakCode ?? "")
-                    .modifier(modifierText(frameSize: 40, font: .subheadline))
+                   
                 Text("\(team.runDifferential > 0 ? "+" : "")\(team.runDifferential)")
-                    .modifier(modifierText(frameSize: 45, font: .subheadline))
+                   
                     .foregroundColor(team.runDifferential > 0 ? .green : .red)
             }
             .padding(5)

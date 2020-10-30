@@ -10,7 +10,8 @@ import SwiftUI
 
 struct GameContentView: View {
     
-    @ObservedObject var viewModel = ViewModel()
+    @ObservedObject var viewModel: ViewModel
+    @Environment(\.presentationMode) var presentationMode
     var gamePk: Int
     
     var body: some View {
@@ -18,7 +19,7 @@ struct GameContentView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    viewModel.isPresentContent = false
+                    presentationMode.wrappedValue.dismiss()
                 }, label: {
                     Image(systemName: "xmark.circle.fill")
             })
@@ -29,9 +30,16 @@ struct GameContentView: View {
             ScrollView {
                 HeaderScoreboardView(viewModel: viewModel)
                 HStack {
-                    TeamNameBoxscoreView(awayName: viewModel.contentMLB.gameData.teams.away.teamName, homeName: viewModel.contentMLB.gameData.teams.home.teamName)
-                    BoxscoreView(totalInnings: 1..<viewModel.contentMLB.liveData.linescore.getNumberInnings + 1, runs: viewModel.contentMLB.liveData.linescore.innings)
-                    RHETextView(awayRuns: viewModel.contentMLB.liveData.linescore.teams.away.runs, awayHits: viewModel.contentMLB.liveData.linescore.teams.away.hits, awayErrors: viewModel.contentMLB.liveData.linescore.teams.away.errors, homeRuns: viewModel.contentMLB.liveData.linescore.teams.home.runs, homeHits: viewModel.contentMLB.liveData.linescore.teams.home.hits, homeErrors: viewModel.contentMLB.liveData.linescore.teams.home.errors)
+                    TeamNameBoxscoreView(awayName: viewModel.contentMLB.gameData.teams.away.teamName,
+                                         homeName: viewModel.contentMLB.gameData.teams.home.teamName)
+                    BoxscoreView(totalInnings: 1..<viewModel.contentMLB.liveData.linescore.getNumberInnings + 1,
+                                 runs: viewModel.contentMLB.liveData.linescore.innings)
+                    RHETextView(awayRuns: viewModel.contentMLB.liveData.linescore.teams.away.runs,
+                                awayHits: viewModel.contentMLB.liveData.linescore.teams.away.hits,
+                                awayErrors: viewModel.contentMLB.liveData.linescore.teams.away.errors,
+                                homeRuns: viewModel.contentMLB.liveData.linescore.teams.home.runs,
+                                homeHits: viewModel.contentMLB.liveData.linescore.teams.home.hits,
+                                homeErrors: viewModel.contentMLB.liveData.linescore.teams.home.errors)
                 }
             }
             .navigationTitle("Boxscore")
@@ -43,7 +51,7 @@ struct GameContentView: View {
 
 struct GameContentView_Previews: PreviewProvider {
     static var previews: some View {
-        GameContentView(gamePk: 0)
+        GameContentView(viewModel: ViewModel(), gamePk: 0)
     }
 }
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct StandingResultsMLB: Codable {
+struct StandingMLB: Codable {
     var records: [Records]
     
     init() {

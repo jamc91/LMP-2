@@ -14,7 +14,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            GeneralTabView(viewModel: viewModel)
+            MainTabView(viewModel: viewModel)
                 .zIndex(0)
                 .modifier(AnimationBlur(showBlur: $viewModel.showPickerView))
             DatePickerViewSelector(viewModel: viewModel)
@@ -38,7 +38,7 @@ struct AnimationBlur: ViewModifier {
         return content
             .animation(nil)
             .blur(radius: showBlur ? 8.0 : 0.0)
-            .animation(.spring())
+            .animation(.interactiveSpring(response: 0.15, dampingFraction: 0.86, blendDuration: 0.25))
     }
 }
 

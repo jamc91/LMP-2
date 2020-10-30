@@ -16,7 +16,6 @@ struct LMPModelResults: Codable {
 
 struct GamesLMP: Codable {
     
-       // var id = UUID()
         let gameStatus: Int
         let gameTime, awayTeam: String
         let awayRuns: Int

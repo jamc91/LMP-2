@@ -10,7 +10,7 @@ import SwiftUI
 
 struct DatePickerViewSelector: View {
     
-    @ObservedObject var viewModel = ViewModel()
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         VStack {
@@ -29,7 +29,7 @@ struct DatePickerViewSelector: View {
         .background((self.viewModel.showPickerView ? Color.black.opacity(0.5) : Color.clear)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
-                            self.viewModel.showPickerView = false
+                            viewModel.didTapCancelButton()
                         })
         .edgesIgnoringSafeArea(.all)
         .animation(.spring(response: 0.3, dampingFraction: 1.0, blendDuration: 0.3))
@@ -38,7 +38,7 @@ struct DatePickerViewSelector: View {
 
 struct DatePickerViewSelector_Previews: PreviewProvider {
     static var previews: some View {
-        DatePickerViewSelector().padding().previewLayout(.sizeThatFits)
+        DatePickerViewSelector(viewModel: ViewModel())
     }
 }
 
@@ -48,23 +48,12 @@ struct TopButtons: View {
     
     var body: some View {
         HStack {
-            Button("Cancelar") {
-                self.viewModel.showPickerView = false
-                self.viewModel.timerStatus(state: false)
+            Button("Cancel") {
+                viewModel.didTapCancelButton()
             }
             Spacer()
-            Button("Aceptar") {
-                self.viewModel.gamesMLB.removeAll()
-                self.viewModel.showActivityIndicator = true
-                self.viewModel.showPickerView = false
-                self.viewModel.timerStatus(state: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.viewModel.fetchData(url: .gamesLink(date: viewModel.date.dateFormatter()), placeholder: ScoreboardResults.default) { (game: ScoreboardResults) in
-                        viewModel.timerStatus(state: game.totalGamesInProgress == 0)
-                        viewModel.gamesMLB = game.dates
-                        
-                    }
-                }
+            Button("Accept") {
+                viewModel.didTapAcceptButton()
             }
         }.padding(.vertical)
         .padding(.horizontal, 20)

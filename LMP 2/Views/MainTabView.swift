@@ -8,23 +8,23 @@
 
 import SwiftUI
 
-struct GeneralTabView: View {
+struct MainTabView: View {
     
-    @ObservedObject var viewModel = ViewModel()
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         TabView {
-            ScoreBoardView(viewModel: viewModel)
-                .tabItem {
-                    TabItemView(title: "Scores", imageName: "doc.richtext.fill")
-                }
-            StandingView(viewModel: viewModel)
-                .tabItem {
-                    TabItemView(title: "Standings", imageName: "flag.fill")
-                }
-            LeadersBattingView(viewModel: viewModel)
-                .tabItem {
-                    TabItemView(title: "Stats", imageName: "chart.bar.xaxis")
+            MainScrollView(content: {
+                ScoreBoardView(viewModel: viewModel)
+            })
+            .tabItem {
+                TabItemView(title: "Scoreboard", imageName: "doc.richtext.fill")
+            }
+            MainScrollView {
+                StandingView(viewModel: viewModel)
+            }
+            .tabItem {
+                TabItemView(title: "Standings", imageName: "flag.fill")
             }
         }
     }
@@ -32,7 +32,7 @@ struct GeneralTabView: View {
 
 struct TopHeaderView: View {
     
-    @ObservedObject var viewModel = ViewModel()
+    @ObservedObject var viewModel: ViewModel
     var title: String
     var showCalendarButton: Bool
     
@@ -44,8 +44,7 @@ struct TopHeaderView: View {
             Spacer()
             if showCalendarButton {
                 Button(action: {
-                    self.viewModel.showPickerView = true
-                    self.viewModel.timerStatus(state: true)
+                    viewModel.didTapCalendarButton()
                 }) {
                     Image(systemName: "calendar.circle.fill")
                         .font(.system(size: 35))

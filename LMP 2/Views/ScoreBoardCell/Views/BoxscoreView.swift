@@ -10,7 +10,6 @@ import SwiftUI
 
 struct BoxscoreView: View {
     
-    
     var totalInnings: Range<Int>
     var runs: [Innings]
     

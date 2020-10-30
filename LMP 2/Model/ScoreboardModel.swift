@@ -8,17 +8,31 @@
 
 import Foundation
 
+enum ScoreboardLoadingState {
+    case empty, loading, loaded
+    
+}
+
+enum GameState: String {
+    case live = "Live", final = "Final", preview = "Preview"
+}
+
 struct ScoreboardResults: Codable {
     var totalGamesInProgress: Int
     var dates: [Dates]
     
-    static var `default` = ScoreboardResults(totalGamesInProgress: 0, dates: [Dates]())
+    static var `default` = ScoreboardResults()
+    
+    init() {
+        totalGamesInProgress = 0
+        dates = [Dates]()
+    }
 }
 
 struct Dates: Codable, Identifiable {
     var id = UUID()
     var games: [Games]
-
+    
     enum CodingKeys: String, CodingKey {
         case games
     }
