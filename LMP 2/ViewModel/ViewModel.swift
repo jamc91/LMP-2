@@ -21,13 +21,13 @@ final class ViewModel: ObservableObject {
     @Published var date = Date()
     @Published var showPickerView = false
     @Published private(set) var loadingState = ScoreboardLoadingState.loading
+    @Published var showingAlert = false
     
     init() {
         fetchData(url: .gamesLink(date: date.dateFormatter())) { (game: ScoreboardResults) in
             self.loadingState = game.dates.isEmpty ? .empty : .loaded
             self.timerStatus(state: game.totalGamesInProgress == 0)
             self.games = game.dates.flatMap { $0.games }
-            
         }
         fetchData(url: .standingLMPLink) { (standing: StandingLMP) in
             self.standingLMP = standing
@@ -48,6 +48,7 @@ final class ViewModel: ObservableObject {
                 case .finished:
                     print("Success")
                 case .failure(let error):
+                    self.showingAlert = true
                     debugPrint(error)
                 }
             }, receiveValue: { result in

@@ -23,7 +23,9 @@ struct StandingView: View {
             }.pickerStyle(SegmentedPickerStyle())
             .padding()
             if league == 0 {
-                StandingRegularSeasonView(standing: viewModel.standingLMP.response.first).padding(.horizontal, 20)
+                Section(header: HeaderSectionView(title: "First").padding(.horizontal)) {
+                    StandingRegularSeasonView(standing: viewModel.standingLMP.response.first).padding(.horizontal, 20)
+                }
             } else {
                 StandingMLBView(viewModel: viewModel)
             }
@@ -57,7 +59,7 @@ struct StandingRegularSeasonView: View {
                     Text(item.teamName)
                     Spacer()
                     Group {
-                        HStack (spacing: 0) {
+                        HStack (spacing: 1) {
                             Text("\(item.wins)")
                                 .frame(width: 25, alignment: .center)
                             Text("\(item.losses)")
@@ -67,7 +69,9 @@ struct StandingRegularSeasonView: View {
                             Text(item.gb)
                                 .frame(width: 35, alignment: .center)
                         }
-                    }.lineLimit(1)
+                    }
+                    .font(.subheadline)
+                    .lineLimit(1)
                     
                 }.padding(.horizontal, 10)
                 Divider()

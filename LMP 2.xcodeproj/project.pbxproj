@@ -11,10 +11,11 @@
 		140D1D272511DDB500796E94 /* GameContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140D1D262511DDB500796E94 /* GameContentView.swift */; };
 		14114ADD2512DE7B00F9FA46 /* GameContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14114ADC2512DE7B00F9FA46 /* GameContentModel.swift */; };
 		141983502485CC7100F4DC1D /* StatsLMPModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1419834F2485CC7100F4DC1D /* StatsLMPModel.swift */; };
+		141F9A08254F740B00AFAD9D /* ProbablePitcherViewtest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141F9A07254F740B00AFAD9D /* ProbablePitcherViewtest.swift */; };
+		1425499E255F848200EBE5AD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1425499D255F848200EBE5AD /* SDWebImageSwiftUI */; };
 		143E36D1253943DC0084066C /* LMPModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143E36D0253943DC0084066C /* LMPModel.swift */; };
 		143E36D5253CF96D0084066C /* RHETextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143E36D4253CF96D0084066C /* RHETextView.swift */; };
 		143E36D8253D06B20084066C /* TeamNameBoxscoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143E36D7253D06B20084066C /* TeamNameBoxscoreView.swift */; };
-		143E36DD253FF63D0084066C /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 143E36DC253FF63D0084066C /* SDWebImageSwiftUI */; };
 		143EA1C0252EC6CE00C44A94 /* BoxscoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EA1BF252EC6CE00C44A94 /* BoxscoreView.swift */; };
 		144A5EC725214F2600315B07 /* DatePickerViewSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EC625214F2600315B07 /* DatePickerViewSelector.swift */; };
 		144A5EE2252198DC00315B07 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE1252198DC00315B07 /* TeamView.swift */; };
@@ -44,6 +45,7 @@
 		140D1D262511DDB500796E94 /* GameContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContentView.swift; sourceTree = "<group>"; };
 		14114ADC2512DE7B00F9FA46 /* GameContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContentModel.swift; sourceTree = "<group>"; };
 		1419834F2485CC7100F4DC1D /* StatsLMPModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsLMPModel.swift; sourceTree = "<group>"; };
+		141F9A07254F740B00AFAD9D /* ProbablePitcherViewtest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbablePitcherViewtest.swift; sourceTree = "<group>"; };
 		143E36D0253943DC0084066C /* LMPModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMPModel.swift; sourceTree = "<group>"; };
 		143E36D4253CF96D0084066C /* RHETextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHETextView.swift; sourceTree = "<group>"; };
 		143E36D7253D06B20084066C /* TeamNameBoxscoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamNameBoxscoreView.swift; sourceTree = "<group>"; };
@@ -78,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				143E36DD253FF63D0084066C /* SDWebImageSwiftUI in Frameworks */,
+				1425499E255F848200EBE5AD /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +107,7 @@
 				143EA1BF252EC6CE00C44A94 /* BoxscoreView.swift */,
 				143E36D4253CF96D0084066C /* RHETextView.swift */,
 				143E36D7253D06B20084066C /* TeamNameBoxscoreView.swift */,
+				141F9A07254F740B00AFAD9D /* ProbablePitcherViewtest.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -211,7 +214,7 @@
 			);
 			name = "LMP 2";
 			packageProductDependencies = (
-				143E36DC253FF63D0084066C /* SDWebImageSwiftUI */,
+				1425499D255F848200EBE5AD /* SDWebImageSwiftUI */,
 			);
 			productName = "LMP 2";
 			productReference = 14E05B122460AA92008F2836 /* LMP 2.app */;
@@ -242,7 +245,7 @@
 			);
 			mainGroup = 14E05B092460AA92008F2836;
 			packageReferences = (
-				143E36DB253FF63D0084066C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				1425499C255F848200EBE5AD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 14E05B132460AA92008F2836 /* Products */;
 			projectDirPath = "";
@@ -273,6 +276,7 @@
 			files = (
 				1405AC8F25281B5B00BFEFB8 /* ScoreboardModel.swift in Sources */,
 				14E729EC247DA05F004A814D /* ViewModel.swift in Sources */,
+				141F9A08254F740B00AFAD9D /* ProbablePitcherViewtest.swift in Sources */,
 				14E05B162460AA92008F2836 /* AppDelegate.swift in Sources */,
 				14E05B182460AA92008F2836 /* SceneDelegate.swift in Sources */,
 				14E05B462460B4A7008F2836 /* ScoreBoardView.swift in Sources */,
@@ -496,9 +500,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		143E36DB253FF63D0084066C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+		1425499C255F848200EBE5AD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.5.0;
@@ -507,9 +511,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		143E36DC253FF63D0084066C /* SDWebImageSwiftUI */ = {
+		1425499D255F848200EBE5AD /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 143E36DB253FF63D0084066C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			package = 1425499C255F848200EBE5AD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */

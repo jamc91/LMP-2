@@ -46,9 +46,10 @@ struct Games: Codable, Identifiable {
     var status: Status
     var teams: Teams
     var linescore: Linescore
+    var decisions: Decisions
     
     enum CodingKeys: String, CodingKey {
-        case gamePk, gameDate, teams, status, linescore
+        case gamePk, gameDate, teams, status, linescore, decisions
     }
     
     init(from decoder: Decoder) throws {
@@ -59,6 +60,7 @@ struct Games: Codable, Identifiable {
         status = try container.decode(forKey: .status, default: Status())
         teams = try container.decode(forKey: .teams, default: Teams())
         linescore = try container.decode(forKey: .linescore, default: Linescore())
+        decisions = try container.decode(forKey: .decisions, default: Decisions())
     }
 }
 
@@ -432,6 +434,24 @@ struct Linescore: Codable {
         default:
             return ["circle", "circle", "circle"]
         }
+    }
+}
+
+struct Decisions: Codable {
+    var winner, loser, save: ProbablePitcher
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        winner = try container.decode(forKey: .winner, default: ProbablePitcher())
+        loser = try container.decode(forKey: .loser, default: ProbablePitcher())
+        save = try container.decode(forKey: .save, default: ProbablePitcher())
+    }
+    
+    init() {
+        winner = ProbablePitcher()
+        loser = ProbablePitcher()
+        save = ProbablePitcher()
     }
 }
 

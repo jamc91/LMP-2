@@ -74,6 +74,7 @@ extension String {
 }
 
 extension String {
+    
     func hourFormat(status: Bool) -> String {
         
         if status {
@@ -87,7 +88,6 @@ extension String {
                 formatter.dateFormat = "h:mm a"
                 let dateString = formatter.string(from: hour)
                 return dateString
-                
             }
             return ""
         }
@@ -107,3 +107,31 @@ extension KeyedDecodingContainerProtocol {
     }
 }
 
+extension String {
+    func shortName() -> String {
+        switch self {
+        case "Mayos de Navojoa":
+            return "Mayos"
+        case "Yaquis de Obregon":
+            return "Yaquis"
+        case "Algodoneros de Guasave":
+            return "Algodoneros"
+        case "Sultanes de Monterrey":
+            return "Sultanes"
+        case "Naranjeros de Hermosillo":
+            return "Naranjeros"
+        case "Charros de Jalisco":
+            return "Charros"
+        case "Tomateros de Culiacan":
+            return "Tomateros"
+        case "Cañeros de los Mochis":
+            return "Cañeros"
+        case "Aguilas de Mexicali":
+            return "Aguilas"
+        case "Venados de Mazatlan":
+            return "Venados"
+        default:
+            return "Desconocido"
+        }
+    }
+}

@@ -17,7 +17,7 @@ struct DatePickerViewSelector: View {
             Spacer()
             VStack {
                 TopButtons(viewModel: viewModel)
-                DatePickerGraphicalView(viewModel: viewModel)
+                DatePickerGraphicalView(date: $viewModel.date)
             }
             .background(Color(.tertiarySystemBackground))
             .cornerRadius(15)
@@ -55,17 +55,17 @@ struct TopButtons: View {
             Button("Accept") {
                 viewModel.didTapAcceptButton()
             }
-        }.padding(.vertical)
-        .padding(.horizontal, 20)
+        }
+        .padding([.vertical, .horizontal])
     }
 }
 
 struct DatePickerGraphicalView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    @Binding var date: Date
     
     var body: some View {
-        DatePicker("", selection: $viewModel.date, displayedComponents: .date)
+        DatePicker("", selection: $date, displayedComponents: .date)
             .datePickerStyle(GraphicalDatePickerStyle())
             .labelsHidden()
             .frame(width: UIScreen.main.bounds.width / 1.3, alignment: .center)

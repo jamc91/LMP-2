@@ -7,12 +7,11 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 struct ScoreBoardView: View {
     
     @ObservedObject var viewModel: ViewModel
-    
+    @State private var showContent = false
     var body: some View {
         VStack (spacing: 10) {
             TopHeaderView(viewModel: viewModel, title: "Scoreboards", showCalendarButton: true)
@@ -21,13 +20,46 @@ struct ScoreBoardView: View {
             case .loading:
                 LoadingView()
             case .loaded:
-                Section(header: HeaderSectionView(title: "Mexican Pacific League")) {
-                    ForEach(viewModel.games) { game in
-                        ScoreboardRow(gameModel: game)
-                            .background(Color(.secondarySystemGroupedBackground))
-                            .cornerRadius(10)
+                if !viewModel.games.filter { $0.teams.away.team.sport.id == 17 }.isEmpty {
+                    Section(header: HeaderSectionView(title: "Mexican Pacific League")) {
+                        ForEach(viewModel.games.filter { $0.teams.away.team.sport.id == 17 }) { game in
+                            ScoreRowView(gameModel: game, showContent: $showContent)
+                                .background(Color(.secondarySystemGroupedBackground))
+                                .cornerRadius(10)
+                                .onTapGesture {
+                                    viewModel.fetchData(url: URL(string: "https://statsapi.mlb.com/api/v1.1/game/\(game.gamePk)/feed/live")!) { (game: ContentResults) in
+                                        self.viewModel.contentMLB = game
+                                        self.showContent = true
+                                    }
+                                }
+                                .sheet(isPresented: $showContent, content: {
+                                    GameContentView(viewModel: viewModel)
+                                })
+                                .alert(isPresented: $viewModel.showingAlert) {
+                                    Alert(title: Text("Error"), message: Text("Ha ocurrido un error al descargar la informacion"), dismissButton: .cancel(Text("OK")))
+                                }
+                        }
                     }
                 }
+                if !viewModel.games.filter { $0.teams.away.team.sport.id == 1 }.isEmpty {
+                    Section(header: HeaderSectionView(title: "Major League Baseball")) {
+                        ForEach(viewModel.games.filter { $0.teams.away.team.sport.id == 1 }) { game in
+                            ScoreRowView(gameModel: game, showContent: $showContent)
+                                .background(Color(.secondarySystemGroupedBackground))
+                                .cornerRadius(10)
+                                .onTapGesture {
+                                    viewModel.fetchData(url: URL(string: "https://statsapi.mlb.com/api/v1.1/game/\(game.gamePk)/feed/live")!) { (game: ContentResults) in
+                                        self.viewModel.contentMLB = game
+                                        self.showContent = true
+                                    }
+                                }
+                                .sheet(isPresented: $showContent, content: {
+                                    GameContentView(viewModel: viewModel)
+                                })
+                        }
+                    }
+                }
+                
             case .empty:
                 EmptyGamesView()
             }
@@ -44,12 +76,12 @@ struct ScoreBoardView_Previews: PreviewProvider {
 
 //MARK: - Status Game Views
 
-struct ScoreboardRow: View {
+struct ScoreRowView: View {
     
     var gameModel: Games
+    @Binding var showContent: Bool
     
     var body: some View {
-        
         switch GameState(rawValue: gameModel.status.abstractGameState) {
         case .live:
             GameLiveView(gameModel: gameModel)
@@ -68,16 +100,20 @@ struct GameFinalView: View {
     var gameModel: Games
     
     var body: some View {
-        HStack {
-            TeamView(teamName: "\(gameModel.teams.away.team.id)",
-                     wins: gameModel.teams.away.leagueRecord.wins,
-                     losses: gameModel.teams.away.leagueRecord.losses)
-            ScoreView(awayScore: gameModel.teams.away.score,
-                      homeScore: gameModel.teams.home.score,
-                      status: gameModel.status.detailedState)
-            TeamView(teamName: "\(gameModel.teams.home.team.id)",
-                     wins: gameModel.teams.home.leagueRecord.wins,
-                     losses: gameModel.teams.home.leagueRecord.losses)
+        VStack {
+            HStack {
+                TeamView(teamName: "\(gameModel.teams.away.team.id)",
+                         wins: gameModel.teams.away.leagueRecord.wins,
+                         losses: gameModel.teams.away.leagueRecord.losses)
+                ScoreView(awayScore: gameModel.teams.away.score,
+                          homeScore: gameModel.teams.home.score,
+                          status: gameModel.status.detailedState)
+                TeamView(teamName: "\(gameModel.teams.home.team.id)",
+                         wins: gameModel.teams.home.leagueRecord.wins,
+                         losses: gameModel.teams.home.leagueRecord.losses)
+            }
+            Divider().padding(.horizontal).foregroundColor(.secondary)
+            ProbablePitcherView(player1: gameModel.decisions.winner, player2: gameModel.decisions.loser)
         }
     }
 }
@@ -137,7 +173,7 @@ struct GamePreview: View {
                          losses: gameModel.teams.home.leagueRecord.losses)
             }
             Divider().padding(.horizontal)
-            ProbablePitcherView(team: gameModel.teams)
+            ProbablePitcherView(player1: gameModel.teams.away.probablePitcher, player2: gameModel.teams.home.probablePitcher)
         }
     }
 }
@@ -155,104 +191,13 @@ struct LoadingView: View {
 
 struct EmptyGamesView: View {
     var body: some View {
-        Spacer(minLength: UIScreen.main.bounds.height / 3)
-        HStack (spacing: 5) {
+        Spacer(minLength: UIScreen.main.bounds.height / 3.5)
+        VStack (spacing: 5) {
+            Image("batsgray")
+                .resizable()
+                .frame(width: 65, height: 65, alignment: .center)
             Text("No hay juegos programados.")
                 .foregroundColor(.secondary)
         }
-    }
-}
-
-//MARK: - Views
-
-
-struct ProbablePitcherView: View {
-    
-    var team: Teams
-    
-    var body: some View{
-        
-        HStack {
-            PitcherAwayView(pitcher: team.away)
-            Spacer()
-            PitcherHomeView(pitcher: team.home)
-        }.padding()
-    }
-}
-
-
-struct PitcherAwayView: View {
-    
-    var pitcher: TeamData
-    
-    var body: some View {
-        HStack {
-            WebImage(url: .imageURL(image: pitcher.probablePitcher.id))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .background(Color(.systemGray5))
-                .clipShape(Circle())
-                .frame(width: 50, height: 50, alignment: .center)
-            ProbablePitcherStatsView(pitcher: pitcher, alignment: .leading)
-                .redacted(reason: pitcher.probablePitcher.boxscoreName == "unknown" ? .placeholder : .init())
-        }.frame(maxWidth: .infinity)
-    }
-}
-
-struct PitcherHomeView: View {
-    
-    var pitcher: TeamData
-    
-    var body: some View {
-        HStack {
-            ProbablePitcherStatsView(pitcher: pitcher, alignment: .trailing)
-                .redacted(reason: pitcher.probablePitcher.boxscoreName == "unknown" ? .placeholder : .init())
-            WebImage(url: .imageURL(image: pitcher.probablePitcher.id))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .background(Color(.systemGray5))
-                .clipShape(Circle())
-                .frame(width: 50, height: 50, alignment: .center)
-        }.frame(maxWidth: .infinity)
-        
-    }
-}
-
-struct ProbablePitcherStatsView: View {
-    
-    var pitcher: TeamData
-    var alignment: HorizontalAlignment
-    
-    var body: some View {
-        VStack (alignment: alignment) {
-            Text(pitcher.probablePitcher.boxscoreName)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .fontWeight(.bold)
-            Text("\(pitcher.probablePitcher.pitchHand.code.appending("HP")) #\(pitcher.probablePitcher.primaryNumber)")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            ForEach(pitcher.probablePitcher.stats) { stat in
-                if stat.group.displayName.contains("pitching") && stat.type.displayName.contains("statsSingleSeason") {
-                    Text("\(stat.stats.wins)-\(stat.stats.losses), \(stat.stats.era) ERA")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-    }
-}
-
-struct textModifier: ViewModifier {
-    
-    @State var font: Font = .headline
-    @State var fontColor: Color = .primary
-    @State var fontDesing: Font.Design = .rounded
-    
-    func body(content: Content) -> some View {
-        return content
-            .font(font)
-            .foregroundColor(fontColor)
-            
     }
 }

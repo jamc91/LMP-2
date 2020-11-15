@@ -18,7 +18,7 @@ struct MainTabView: View {
                 ScoreBoardView(viewModel: viewModel)
             })
             .tabItem {
-                TabItemView(title: "Scoreboard", imageName: "doc.richtext.fill")
+                TabItemView(title: "Scoreboards", imageName: "mail.stack.fill")
             }
             MainScrollView {
                 StandingView(viewModel: viewModel)

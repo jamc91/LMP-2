@@ -57,3 +57,17 @@ struct BSOView_Previews: PreviewProvider {
         BSOView(balls: ["circle.fill", "circle", "circle"], strikes: ["circle.fill", "circle"], outs: ["circle.fill", "circle"]).previewLayout(.sizeThatFits)
     }
 }
+
+struct textModifier: ViewModifier {
+    
+    @State var font: Font = .headline
+    @State var fontColor: Color = .primary
+    @State var fontDesing: Font.Design = .rounded
+    
+    func body(content: Content) -> some View {
+        return content
+            .font(font)
+            .foregroundColor(fontColor)
+            
+    }
+}

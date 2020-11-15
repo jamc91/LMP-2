@@ -16,6 +16,7 @@ struct TeamNameBoxscoreView: View {
         VStack (alignment: .leading) {
             Group {
                 Text("TEAM")
+                    .font(.caption)
                     .foregroundColor(.secondary)
                 Text(awayName)
                     .bold()
