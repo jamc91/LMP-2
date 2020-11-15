@@ -16,8 +16,7 @@ struct DatePickerViewSelector: View {
         VStack {
             Spacer()
             VStack {
-                TopButtons(viewModel: viewModel)
-                DatePickerGraphicalView(date: $viewModel.date)
+                DatePickerGraphicalView(viewModel: viewModel)
             }
             .background(Color(.tertiarySystemBackground))
             .cornerRadius(15)
@@ -25,7 +24,7 @@ struct DatePickerViewSelector: View {
             .scaleEffect(viewModel.showPickerView ? 1.0 : 1.5)
             Spacer()
         }
-        .padding(.horizontal, 30)
+        .padding(.horizontal, 35)
         .background((self.viewModel.showPickerView ? Color.black.opacity(0.5) : Color.clear)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
@@ -42,32 +41,18 @@ struct DatePickerViewSelector_Previews: PreviewProvider {
     }
 }
 
-struct TopButtons: View {
+struct DatePickerGraphicalView: View {
     
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
-        HStack {
-            Button("Cancel") {
-                viewModel.didTapCancelButton()
-            }
-            Spacer()
-            Button("Accept") {
-                viewModel.didTapAcceptButton()
-            }
-        }
-        .padding([.vertical, .horizontal])
-    }
-}
-
-struct DatePickerGraphicalView: View {
-    
-    @Binding var date: Date
-    
-    var body: some View {
-        DatePicker("", selection: $date, displayedComponents: .date)
+        DatePicker("", selection: $viewModel.date, displayedComponents: .date)
             .datePickerStyle(GraphicalDatePickerStyle())
             .labelsHidden()
             .frame(width: UIScreen.main.bounds.width / 1.3, alignment: .center)
+            .onReceive(viewModel.$date) { _ in
+                viewModel.didTapAcceptButton()
+            }
+            .padding()
     }
 }
