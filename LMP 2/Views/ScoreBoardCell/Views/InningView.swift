@@ -14,20 +14,22 @@ struct InningView: View {
     var currentInning: String
     
     var body: some View {
-        HStack (spacing: 10) {
+        HStack {
             Image(systemName: arrowStatus)
                 .foregroundColor(Color("ActiveColor"))
                 .font(.title2)
             Text(currentInning)
                 .foregroundColor(Color("LightGray"))
                 .font(.title2)
-        }.frame(width: 100, height: 100, alignment: .center)
+        }.frame(width: 100, height: 100)
     }
 }
 
-
 struct InningView_Previews: PreviewProvider {
     static var previews: some View {
-        InningView(arrowStatus: "arrowtriangle.up.fill", currentInning: "1st").previewLayout(.sizeThatFits)
+        Group {
+            InningView(arrowStatus: "arrowtriangle.up.fill", currentInning: "1st").previewLayout(.sizeThatFits)
+            InningView(arrowStatus: "arrowtriangle.down.fill", currentInning: "1st").previewLayout(.sizeThatFits).preferredColorScheme(.dark)
+        }
     }
 }

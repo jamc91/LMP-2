@@ -37,6 +37,9 @@ struct DiamondView: View {
 
 struct DiamondView_Previews: PreviewProvider {
     static var previews: some View {
-        DiamondView(baseState: [("squareshape", ""), ("squareshape", ""), ("squareshape", "")]).previewLayout(.sizeThatFits)
+        Group {
+            DiamondView(baseState: [("squareshape", "LightGray"), ("squareshape", "LightGray"), ("squareshape", "LightGray")]).previewLayout(.sizeThatFits)
+            DiamondView(baseState: [("squareshape", "ActiveColor"), ("squareshape", "ActiveColor"), ("squareshape", "ActiveColor")]).previewLayout(.sizeThatFits).preferredColorScheme(.dark)
+        }
     }
 }

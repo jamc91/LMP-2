@@ -22,5 +22,7 @@ struct MainScrollView<Content: View>: View {
                 content
             }
         }
+        .padding(.top, 1)
+        .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.top))
     }
 }

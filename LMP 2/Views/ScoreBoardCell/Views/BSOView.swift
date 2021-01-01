@@ -11,40 +11,40 @@ import SwiftUI
 struct BSOView: View {
     
     @Environment(\.colorScheme) var colorScheme
-    var balls: [String]
-    var strikes: [String]
-    var outs: [String]
+    let balls: [String]
+    let strikes: [String]
+    let outs: [String]
     
     var body: some View {
         VStack (alignment: .leading) {
-            HStack {
+            HStack(spacing: 4) {
                 Text("B")
-                    .modifier(textModifier(font: .title3, fontColor: Color("LightGray"), fontDesing: .default))
+                    .modifier(textModifier(font: .headline, fontColor: Color("LightGray"), fontDesing: .default))
                 ForEach(balls, id: \.self) { item in
                     Image(systemName: colorScheme == .light ? item : "circle.fill")
                         .foregroundColor(Color(isActive(status: item)))
-                        .font(.system(size: 12))
+                        .font(.system(size: 11))
                 }
             }
-            HStack {
+            HStack(spacing: 4) {
                 Text("S")
-                    .modifier(textModifier(font: .title3, fontColor: Color("LightGray"), fontDesing: .default))
+                    .modifier(textModifier(font: .headline, fontColor: Color("LightGray"), fontDesing: .default))
                 ForEach(strikes, id: \.self) { item in
                     Image(systemName: colorScheme == .light ? item : "circle.fill")
                         .foregroundColor(Color(isActive(status: item)))
-                        .font(.system(size: 12))
+                        .font(.system(size: 11))
                 }
             }
-            HStack {
+            HStack(spacing: 4) {
                 Text("O")
-                    .modifier(textModifier(font: .title3, fontColor: Color("LightGray"), fontDesing: .default))
+                    .modifier(textModifier(font: .headline, fontColor: Color("LightGray"), fontDesing: .default))
                 ForEach(outs, id: \.self) { item in
                     Image(systemName: colorScheme == .light ? item : "circle.fill")
                         .foregroundColor(Color(isActive(status: item)))
-                        .font(.system(size: 12))
+                        .font(.system(size: 11))
                 }
             }.offset(x: -2, y: 0)
-        }.frame(width: 100, height: 100, alignment: .center)
+        }.frame(width: 100, height: 100)
     }
     func isActive(status: String) -> String {
         return status == "circle.fill" ? "ActiveColor" : "LightGray"
@@ -54,15 +54,24 @@ struct BSOView: View {
 
 struct BSOView_Previews: PreviewProvider {
     static var previews: some View {
-        BSOView(balls: ["circle.fill", "circle", "circle"], strikes: ["circle.fill", "circle"], outs: ["circle.fill", "circle"]).previewLayout(.sizeThatFits)
+        Group {
+            BSOView(
+                balls: ["circle.fill", "circle", "circle", "circle"],
+                strikes: ["circle.fill", "circle", "circle"],
+                outs: ["circle.fill", "circle", "circle"]).previewLayout(.sizeThatFits)
+            BSOView(
+                balls: ["circle.fill", "circle", "circle", "circle"],
+                strikes: ["circle.fill", "circle", "circle"],
+                outs: ["circle.fill", "circle", "circle"]).previewLayout(.sizeThatFits).preferredColorScheme(.dark)
+        }
     }
 }
 
 struct textModifier: ViewModifier {
     
-    @State var font: Font = .headline
-    @State var fontColor: Color = .primary
-    @State var fontDesing: Font.Design = .rounded
+    var font: Font = .headline
+    var fontColor: Color = .primary
+    var fontDesing: Font.Design = .rounded
     
     func body(content: Content) -> some View {
         return content

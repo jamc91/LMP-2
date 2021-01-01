@@ -9,13 +9,13 @@
 import Foundation
 
 extension Date {
-    
      func dateFormatter() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/d/YYYY"
+        formatter.dateFormat = "MM/d/yyyy"
         return formatter.string(from: self)
     }
 }
+
 
 extension URL {
     static func apiURL(_ link: String) -> URL {
@@ -31,7 +31,7 @@ extension URL {
     }
     
     static var standingMLBLink: URL {
-        URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=firstHalf,secondHalf,regularSeason&hydrate=division,team")!
+        URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=regularSeason&hydrate=division,team")!
     }
     
     static func leaders(mode: String, season: String, category: String, order: String) -> URL {
@@ -112,7 +112,7 @@ extension String {
         switch self {
         case "Mayos de Navojoa":
             return "Mayos"
-        case "Yaquis de Obregon":
+        case "Yaquis de Obregón":
             return "Yaquis"
         case "Algodoneros de Guasave":
             return "Algodoneros"
@@ -122,13 +122,13 @@ extension String {
             return "Naranjeros"
         case "Charros de Jalisco":
             return "Charros"
-        case "Tomateros de Culiacan":
+        case "Tomateros de Culiacán":
             return "Tomateros"
-        case "Cañeros de los Mochis":
+        case "Cañeros de Los Mochis":
             return "Cañeros"
-        case "Aguilas de Mexicali":
+        case "Águilas de Mexicali":
             return "Aguilas"
-        case "Venados de Mazatlan":
+        case "Venados de Mazatlán":
             return "Venados"
         default:
             return "Desconocido"

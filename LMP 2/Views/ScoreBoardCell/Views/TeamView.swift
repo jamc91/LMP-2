@@ -10,8 +10,8 @@ import SwiftUI
 
 struct TeamView: View {
     
-    var teamName: String
-    var wins, losses: Int
+    let teamName: String
+    let wins, losses: Int
     
     var body: some View {
         VStack {
@@ -23,13 +23,15 @@ struct TeamView: View {
                 .font(.headline)
                 .foregroundColor(.secondary)
         }
-        .frame(maxWidth: .infinity)
-        .padding()
+        .padding(.horizontal)
     }
 }
 
 struct TeamView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamView(teamName: "140", wins: 0, losses: 0).previewLayout(.sizeThatFits)
+        Group {
+            TeamView(teamName: "140", wins: 0, losses: 0).previewLayout(.sizeThatFits)
+            TeamView(teamName: "140", wins: 0, losses: 0).previewLayout(.sizeThatFits).preferredColorScheme(.dark)
+        }
     }
 }
