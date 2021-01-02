@@ -90,10 +90,10 @@ struct DatePickerGraphicalView: View {
     }
     private func didTapApplyButton() {
         withAnimation(.spring()) {
+            viewModel.loadingState = .loading
+            viewModel.scheduledGames.removeAll()
             showPicker = false
         }
-        viewModel.loadingState = .loading
-        viewModel.scheduledGames.removeAll()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             viewModel.startTimer()
             viewModel.getScheduledGames()
