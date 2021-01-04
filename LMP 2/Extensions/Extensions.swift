@@ -92,6 +92,31 @@ extension String {
             return ""
         }
     }
+    
+    func minuteFormatter() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+//        formatter.timeZone = .current
+//        formatter.locale = Locale(identifier: "en_US_POSIX")
+        if let stringDate = formatter.date(from: self) {
+            formatter.dateFormat = "mm:ss"
+            let dateString = formatter.string(from: stringDate)
+            return dateString
+        } else {
+            return "Error"
+        }
+    }
+    
+    func dateVideoFormatter() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        if let date = formatter.date(from: self) {
+            formatter.dateStyle = .medium
+            let dateString = formatter.string(from: date)
+            return dateString
+        }
+        return "Error"
+    }
 }
 
 extension KeyedDecodingContainerProtocol {

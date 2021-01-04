@@ -19,16 +19,8 @@ struct LMP2App: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                TabBarView(games: $contentViewModel.scheduledGames, loadingState: $contentViewModel.loadingState, showDatePicker: $showDatePicker) { gamePk in
-                    contentViewModel.getLiveContent(gamePk: gamePk) {
-                        presentSheet = true
-                    }
-                } didTapCalendarButton: {
-                    if !contentViewModel.timerStopped {
-                        contentViewModel.stopTimer()
-                    }
-                }
-                .sheet(isPresented: $presentSheet) {
+                TabBarView(contentViewModel: contentViewModel, showDatePicker: $showDatePicker, presentSheet: $presentSheet)
+                .fullScreenCover(isPresented: $presentSheet) {
                     GameContentView(boxscore: contentViewModel.liveContent)
                 }
                 .onChange(of: scenePhase) { state in
@@ -38,9 +30,9 @@ struct LMP2App: App {
                 DatePickerViewSelector(viewModel: contentViewModel, showPicker: $showDatePicker)
                     .zIndex(1)
             }
-            .onAppear(perform: {
+            .onAppear {
                 contentViewModel.loadData()
-            })
+            }
         }
     }
 }

@@ -15,26 +15,31 @@ struct GameContentView: View {
     let boxscore: BoxscoreResponse
     
     var body: some View {
-        VStack {
-            DismissButton(dismiss: { presentationMode.wrappedValue.dismiss() })
-            ScrollView {
-                LinescoreView(teams: boxscore.gameData.teams, linescore: boxscore.liveData.linescore)
-                Divider()
-                SelectorTeamPickerView(awayTeamName: boxscore.gameData.teams.away.teamName, homeTeamName: boxscore.gameData.teams.home.teamName, selectionTeam: $selectedTeam)
-                switch selectedTeam {
-                case .Away:
-                    TeamContentView(
-                        teamContent: boxscore.gameData.teams.away,
-                        teamInfo: boxscore.liveData.boxscore.teams.away,
-                        player: boxscore.gameData)
-                case .Home:
-                    TeamContentView(
-                        teamContent: boxscore.gameData.teams.home,
-                        teamInfo: boxscore.liveData.boxscore.teams.home,
-                        player: boxscore.gameData)
+        TabView {
+            VStack {
+                DismissButton(dismiss: { presentationMode.wrappedValue.dismiss() })
+                ScrollView {
+                    LinescoreView(teams: boxscore.gameData.teams, linescore: boxscore.liveData.linescore)
+                    Divider()
+                    SelectorTeamPickerView(awayTeamName: boxscore.gameData.teams.away.teamName, homeTeamName: boxscore.gameData.teams.home.teamName, selectionTeam: $selectedTeam)
+                    switch selectedTeam {
+                    case .Away:
+                        TeamContentView(
+                            teamContent: boxscore.gameData.teams.away,
+                            teamInfo: boxscore.liveData.boxscore.teams.away,
+                            player: boxscore.gameData)
+                    case .Home:
+                        TeamContentView(
+                            teamContent: boxscore.gameData.teams.home,
+                            teamInfo: boxscore.liveData.boxscore.teams.home,
+                            player: boxscore.gameData)
+                    }
+                    FooterPitchingView(note: boxscore.liveData.boxscore.info)
                 }
-                FooterPitchingView(note: boxscore.liveData.boxscore.info)
             }
+            .tabItem { Label("Boxscore", systemImage: "list.bullet") }
+            VideosView(videoData: VideoResponse.data.highlights.highlights.items)
+                .tabItem { Label("Videos", systemImage: "video") }
         }
     }
 }

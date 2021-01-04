@@ -10,28 +10,27 @@ import SwiftUI
 
 struct TabBarView: View {
 
-    @Binding var games: [Games]
-    @Binding var loadingState: ScoreboardLoadingState
+    @ObservedObject var contentViewModel: ContentViewModel
     @Binding var showDatePicker: Bool
-    let fetchLiveData: (Int) -> Void
-    let didTapCalendarButton: () -> Void
+    @Binding var presentSheet: Bool
     
     var body: some View {
             TabView {
-                MainScrollView(content: {
+                MainScrollView {
                     HeaderView(title: "Scoreboard", showCalendarButton: true) {
-                        self.showDatePicker = true
                         didTapCalendarButton()
                     }
-                    ScoreboardView(loadingState: $loadingState, games: $games) { gamePk in
-                        fetchLiveData(gamePk)
+                    ScoreboardView(loadingState: $contentViewModel.loadingState, games: $contentViewModel.scheduledGames) { gamePk in
+                        contentViewModel.getLiveContent(gamePk: gamePk) {
+                            self.presentSheet = true
+                        }
                     }
-                })
+                }
                 .tabItem {
                     Label("Scoreboard", systemImage: "mail.stack.fill")
                 }
                 MainScrollView {
-                 //   StandingView(viewModel: viewModel)
+                    StandingView(viewModel: contentViewModel)
                 }
                 .tabItem {
                     Label("Standings", systemImage: "flag.fill")
@@ -44,8 +43,20 @@ struct TabBarView: View {
 struct TabBarView_Previews: PreviewProvider {
     
     static var previews: some View {
-        TabBarView(games: .constant(Games.data), loadingState: .constant(.loaded), showDatePicker: .constant(false), fetchLiveData: {_ in }, didTapCalendarButton: {})
+        TabBarView(
+            contentViewModel: ContentViewModel(games: Games.data, standingMLB: StandingMLB.data,
+            standingLMP: StandingLMP.data),
+            showDatePicker: .constant(false),
+            presentSheet: .constant(false))
     }
 }
 
-
+/// Metodos de la vista
+extension TabBarView {
+    private func didTapCalendarButton() {
+        self.showDatePicker = true
+        if !contentViewModel.timerStopped {
+            contentViewModel.stopTimer()
+        }
+    }
+}

@@ -106,3 +106,11 @@ struct StandingPlayoffsElements: Codable {
         case homeGamesPlayed = "home_games_played"
     }
 }
+
+extension StandingLMP {
+    static var data: StandingLMP {
+        let url = Bundle.main.url(forResource: "standingsLMP", withExtension: "json")
+        let data = try! Data(contentsOf: url!)
+        return try! JSONDecoder().decode(StandingLMP.self, from: data)
+    }
+}

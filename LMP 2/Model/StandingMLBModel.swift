@@ -73,3 +73,11 @@ struct SplitRecords: Codable, Identifiable {
         case wins, losses, type, pct
     }
 }
+
+extension StandingMLB {
+    static var data: StandingMLB {
+        let url = Bundle.main.url(forResource: "standingsMLB", withExtension: "json")
+        let data = try! Data(contentsOf: url!)
+        return try! JSONDecoder().decode(StandingMLB.self, from: data)
+    }
+}

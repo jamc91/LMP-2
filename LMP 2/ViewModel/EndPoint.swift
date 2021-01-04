@@ -14,6 +14,7 @@ enum EndPoint {
     case live(String)
     case standingMLB
     case standingLMP
+    case videoList(String)
     
 }
 
@@ -28,6 +29,8 @@ extension EndPoint: RequestBuilder {
             return EndPoint.buildURLRequest(urlString: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=regularSeason&hydrate=division,team")
         case .standingLMP:
             return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/standing")
+        case .videoList(let gamePk):
+            return EndPoint.buildURLRequest(urlString: "https://statsapi.mlb.com/api/v1/game/\(gamePk)/content")
         }
     }
     

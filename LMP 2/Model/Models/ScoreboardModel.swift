@@ -1,5 +1,5 @@
 //
-//  ScoreboardModelTest.swift
+//  ScoreboardModel.swift
 //  LMP 2
 //
 //  Created by Jesús Medina Camargo on 12/10/20.
@@ -42,9 +42,10 @@ struct Games: Identifiable, Codable {
     let teams: Teams
     let linescore: Linescore
     let decisions: Decisions
+    let venue: Venue
     
     enum CodingKeys: String, CodingKey {
-        case gamePk, gameDate, status, teams, linescore, decisions
+        case gamePk, gameDate, status, teams, linescore, decisions, venue
     }
     
     init(from decoder: Decoder) throws {
@@ -56,6 +57,7 @@ struct Games: Identifiable, Codable {
         teams = try container.decode(forKey: .teams, default: Teams())
         linescore = try container.decode(forKey: .linescore, default: Linescore())
         decisions = try container.decode(forKey: .decisions, default: Decisions())
+        venue = try container.decode(forKey: .venue, default: Venue())
     }
 }
 

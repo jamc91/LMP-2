@@ -24,16 +24,16 @@ struct StandingView: View {
             .padding(.horizontal)
             if league == 0 {
                 Section(header: HeaderSectionView(title: "First").padding(.horizontal)) {
-                    StandingRegularSeasonView(standing: viewModel.standingLMP.response.first).padding(.horizontal, 20)
+                    StandingRegularSeasonView(standing: viewModel.standingLMP?.response.first ?? []).padding(.horizontal, 20)
                 }
                 Section(header: HeaderSectionView(title: "Second").padding(.horizontal)) {
-                    StandingRegularSeasonView(standing: viewModel.standingLMP.response.second).padding(.horizontal, 20)
+                    StandingRegularSeasonView(standing: viewModel.standingLMP?.response.second ?? []).padding(.horizontal, 20)
                 }
                 Section(header: HeaderSectionView(title: "General").padding(.horizontal)) {
-                    StandingRegularSeasonView(standing: viewModel.standingLMP.response.general).padding(.horizontal, 20)
+                    StandingRegularSeasonView(standing: viewModel.standingLMP?.response.general ?? []).padding(.horizontal, 20)
                 }
                 Section(header: HeaderSectionView(title: "Points").padding(.horizontal)) {
-                    StandingPointsView(standing: viewModel.standingLMP.response.points).padding(.horizontal, 20)
+                    StandingPointsView(standing: viewModel.standingLMP?.response.points ?? []).padding(.horizontal, 20)
                 }
             } else {
                 StandingMLBView(viewModel: viewModel).padding(.horizontal, 20)

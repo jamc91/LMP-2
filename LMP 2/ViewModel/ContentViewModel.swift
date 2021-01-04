@@ -12,20 +12,32 @@ import Combine
 final class ContentViewModel: APISession, ObservableObject {
     
     /// Lista de juegos del dia.
-    @Published var scheduledGames = [Games]()
+    @Published var scheduledGames: [Games]
     /// Posiciones Liga MLB
-    @Published var standingMLB = StandingMLB()
+    @Published var standingMLB: StandingMLB?
     /// Posiciones Liga LMP
-    @Published var standingLMP = StandingLMP()
+    @Published var standingLMP: StandingLMP?
     /// Informacion de los juegos en vivo.
     @Published var liveContent = BoxscoreResponse()
     /// Informa del estado de carga a la vista.
     @Published var loadingState = ScoreboardLoadingState.loading
     
+    @Published var videoList: VideoResponse?
+    
     @Published var date = Date()
     
     private var timer: Timer?
     var timerStopped = false
+    
+    init(
+        games: [Games] = [],
+        standingMLB: StandingMLB? = nil,
+        standingLMP: StandingLMP? = nil
+    ){
+        self.scheduledGames = games
+        self.standingMLB = standingMLB
+        self.standingLMP = standingLMP
+    }
 
     /// Llama a todas las funciones para recuperar los datos.
     func loadData() {
@@ -66,6 +78,14 @@ final class ContentViewModel: APISession, ObservableObject {
     func getStandingsLMP() {
         request(with: EndPoint.standingLMP) { (standingLMP: StandingLMP) in
             self.standingLMP = standingLMP
+        }
+    }
+    
+    /// Recupera la lista de videos.
+    func getVideoList(gamePk: Int, completion: @escaping () -> Void) {
+        request(with: EndPoint.videoList("\(gamePk)")) { (videoList: VideoResponse) in
+            self.videoList = videoList
+            completion()
         }
     }
     

@@ -15,7 +15,7 @@ struct StandingMLBView: View {
     var body: some View {
         
         VStack {
-            ForEach(viewModel.standingMLB.records) { item in
+            ForEach(viewModel.standingMLB?.records ?? []) { item in
                 Section(header: HeaderSectionView(title: item.division?.name ?? "")) {
                     VStack {
                         HeaderStandingMLB()
