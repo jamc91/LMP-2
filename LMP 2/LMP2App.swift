@@ -21,7 +21,7 @@ struct LMP2App: App {
             ZStack {
                 TabBarView(contentViewModel: contentViewModel, showDatePicker: $showDatePicker, presentSheet: $presentSheet)
                 .fullScreenCover(isPresented: $presentSheet) {
-                    GameContentView(boxscore: contentViewModel.liveContent)
+                    GameContentView(contentViewModel: contentViewModel)
                 }
                 .onChange(of: scenePhase) { state in
                     if state == .background { contentViewModel.stopTimer() }

@@ -18,7 +18,7 @@ final class ContentViewModel: APISession, ObservableObject {
     /// Posiciones Liga LMP
     @Published var standingLMP: StandingLMP?
     /// Informacion de los juegos en vivo.
-    @Published var liveContent = BoxscoreResponse()
+    @Published var liveContent: BoxscoreResponse?
     /// Informa del estado de carga a la vista.
     @Published var loadingState = ScoreboardLoadingState.loading
     
@@ -32,11 +32,15 @@ final class ContentViewModel: APISession, ObservableObject {
     init(
         games: [Games] = [],
         standingMLB: StandingMLB? = nil,
-        standingLMP: StandingLMP? = nil
+        standingLMP: StandingLMP? = nil,
+        liveContent: BoxscoreResponse? = nil,
+        videoList: VideoResponse? = nil
     ){
         self.scheduledGames = games
         self.standingMLB = standingMLB
         self.standingLMP = standingLMP
+        self.liveContent = liveContent
+        self.videoList = videoList
     }
 
     /// Llama a todas las funciones para recuperar los datos.
@@ -82,10 +86,9 @@ final class ContentViewModel: APISession, ObservableObject {
     }
     
     /// Recupera la lista de videos.
-    func getVideoList(gamePk: Int, completion: @escaping () -> Void) {
+    func getVideoList(gamePk: Int) {
         request(with: EndPoint.videoList("\(gamePk)")) { (videoList: VideoResponse) in
             self.videoList = videoList
-            completion()
         }
     }
     

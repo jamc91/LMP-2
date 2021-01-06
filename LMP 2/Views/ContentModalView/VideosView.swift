@@ -23,6 +23,7 @@ struct VideosView: View {
                 }
             }
         }
+        .tabItem { Label("Videos", systemImage: "video") }
     }
 }
 

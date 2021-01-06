@@ -10,36 +10,20 @@ import SwiftUI
 
 struct GameContentView: View {
     
+    @ObservedObject var contentViewModel: ContentViewModel
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTeam = SelectionTeam.Home
-    let boxscore: BoxscoreResponse
     
     var body: some View {
         TabView {
-            VStack {
-                DismissButton(dismiss: { presentationMode.wrappedValue.dismiss() })
-                ScrollView {
-                    LinescoreView(teams: boxscore.gameData.teams, linescore: boxscore.liveData.linescore)
-                    Divider()
-                    SelectorTeamPickerView(awayTeamName: boxscore.gameData.teams.away.teamName, homeTeamName: boxscore.gameData.teams.home.teamName, selectionTeam: $selectedTeam)
-                    switch selectedTeam {
-                    case .Away:
-                        TeamContentView(
-                            teamContent: boxscore.gameData.teams.away,
-                            teamInfo: boxscore.liveData.boxscore.teams.away,
-                            player: boxscore.gameData)
-                    case .Home:
-                        TeamContentView(
-                            teamContent: boxscore.gameData.teams.home,
-                            teamInfo: boxscore.liveData.boxscore.teams.home,
-                            player: boxscore.gameData)
-                    }
-                    FooterPitchingView(note: boxscore.liveData.boxscore.info)
+            if let boxscore = contentViewModel.liveContent {
+                BoxscoreView(boxscore: boxscore, selectedTeam: $selectedTeam) {
+                    presentationMode.wrappedValue.dismiss()
                 }
             }
-            .tabItem { Label("Boxscore", systemImage: "list.bullet") }
-            VideosView(videoData: VideoResponse.data.highlights.highlights.items)
-                .tabItem { Label("Videos", systemImage: "video") }
+            if let videoList = contentViewModel.videoList?.highlights.highlights.items, !videoList.isEmpty {
+            VideosView(videoData: videoList)
+            }
         }
     }
 }
@@ -47,14 +31,46 @@ struct GameContentView: View {
 struct GameContentView_Previews: PreviewProvider {
     static var previews: some View {
         
-        GameContentView(boxscore: BoxscoreResponse.data)
+        GameContentView(contentViewModel: ContentViewModel(liveContent: BoxscoreResponse.data, videoList: VideoResponse.data))
 
+    }
+}
+
+struct BoxscoreView: View {
+    
+    var boxscore: BoxscoreResponse
+    @Binding var selectedTeam: SelectionTeam
+    let dismiss: () -> Void
+    
+    var body: some View {
+        VStack {
+            DismissButton(dismiss: { dismiss() })
+            ScrollView {
+                LinescoreView(teams: boxscore.gameData.teams, linescore: boxscore.liveData.linescore)
+                Divider()
+                SelectorTeamPickerView(awayTeamName: boxscore.gameData.teams.away.teamName, homeTeamName: boxscore.gameData.teams.home.teamName, selectionTeam: $selectedTeam)
+                switch selectedTeam {
+                case .Away:
+                    TeamContentView(
+                        teamContent: boxscore.gameData.teams.away,
+                        teamInfo: boxscore.liveData.boxscore.teams.away,
+                        player: boxscore.gameData)
+                case .Home:
+                    TeamContentView(
+                        teamContent: boxscore.gameData.teams.home,
+                        teamInfo: boxscore.liveData.boxscore.teams.home,
+                        player: boxscore.gameData)
+                }
+                FooterPitchingView(note: boxscore.liveData.boxscore.info)
+            }
+        }
+        .tabItem { Label("Boxscore", systemImage: "list.bullet") }
     }
 }
 
 struct DismissButton: View {
     
-    var dismiss: () -> Void
+    let dismiss: () -> Void
     
     var body: some View {
         HStack {

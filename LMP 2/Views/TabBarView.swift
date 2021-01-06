@@ -24,6 +24,7 @@ struct TabBarView: View {
                         contentViewModel.getLiveContent(gamePk: gamePk) {
                             self.presentSheet = true
                         }
+                        contentViewModel.getVideoList(gamePk: gamePk)
                     }
                 }
                 .tabItem {

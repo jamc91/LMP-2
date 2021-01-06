@@ -77,7 +77,7 @@ struct PreviewTest: View {
     private func setBackgroundColor(img: Int) -> Color {
         switch img {
         case 673:
-            return Color(#colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1))
+            return Color(#colorLiteral(red: 0.0690612942, green: 0.1649987102, blue: 0.3144499958, alpha: 1))
         case 674:
             return Color(#colorLiteral(red: 0, green: 0.2574918866, blue: 0.5735817552, alpha: 1))
         case 675:
