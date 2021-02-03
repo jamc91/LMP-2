@@ -59,9 +59,8 @@ struct VideoCell: View {
         ZStack {
             VStack(alignment: .leading) {
                 ZStack {
-                    WebImage(url: item.image.cuts[0].src)
+                    WebImage(url: item.image.cuts[0].src, isAnimating: .constant(true))
                         .resizable()
-                        .placeholder(Image("imageVideo"))
                         .aspectRatio(contentMode: .fit)
                         .onTapGesture {
                             showVideo = true

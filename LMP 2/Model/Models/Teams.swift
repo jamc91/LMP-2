@@ -95,6 +95,7 @@ struct TeamInformation: Codable {
     let sport: LeagueInformation
     let shortName: String
     
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -122,6 +123,18 @@ struct TeamInformation: Codable {
 struct LeagueInformation: Codable {
     let id: Int
     let name: String
+    
+    var sortedLeague: Int {
+        if id == 103 || id == 104 {
+            return 103
+        } else {
+            return id
+        }
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

@@ -14,22 +14,23 @@ struct ScoreboardView: View {
     @Binding var games: [Games]
     let fetchLiveData: (Int) -> Void
     
-    var sortedGamesInSections: [Int: [Games]] {
-        Dictionary(grouping: games, by: { $0.teams.away.team.sport.id })
+    var gamesInDictionaryForLeague: [Int: [Games]] {
+        Dictionary(grouping: games, by: { $0.teams.away.team.league.sortedLeague })
     }
-    var gameSections: [Int] {
-        sortedGamesInSections.map { $0.key }.sorted(by: >)
+    
+    var leagueGameForKey: [Int] {
+        gamesInDictionaryForLeague.map { $0.key }.sorted(by: >)
     }
     
     var body: some View {
-        VStack (spacing: 10) {
+        LazyVStack (spacing: 10) {
             switch loadingState {
             case .loading:
                 LoadingView()
             case .loaded:
-                ForEach(gameSections, id: \.self) { section in
-                    Section(header: HeaderSectionView(title: section == 17 ? "Mexican Pacific League" : "Major League Baseball")) {
-                        ForEach(sortedGamesInSections[section] ?? []) { game in
+                ForEach(leagueGameForKey, id: \.self) { league in
+                    Section(header: HeaderSectionView(title: setSectionTitle(league: league))) {
+                        ForEach(gamesInDictionaryForLeague[league] ?? []) { game in
                             ScoreRowView(gameModel: game)
                                 .onTapGesture {
                                     switch game.status.abstractGameState {
@@ -48,6 +49,18 @@ struct ScoreboardView: View {
         }
         .padding([.horizontal, .bottom], 20)
     }
+    private func setSectionTitle(league: Int) -> String {
+        switch league {
+        case 103, 104:
+            return "Major League Baseball"
+        case 132:
+            return "Mexican Pacific League"
+        case 162:
+            return "Caribbean Series"
+        default:
+            return "Liga Desconocida"
+        }
+    }
 }
 
 struct ScoreboardView_Previews: PreviewProvider {
@@ -59,7 +72,6 @@ struct ScoreboardView_Previews: PreviewProvider {
         }.background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
     }
 }
-
 
 //MARK: - Status Game Views
 

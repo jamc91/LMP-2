@@ -22,7 +22,7 @@ extension EndPoint: RequestBuilder {
     var urlRequest: URLRequest {
         switch self {
         case .schedule(let date):
-            return EndPoint.buildURLRequest(urlString: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132&sportId=1,17&date=\(date)&sortBy=gameStatus&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")
+            return EndPoint.buildURLRequest(urlString: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132,162&sportId=1,17&date=\(date)&sortBy=gameStatus&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")
         case .live(let gamePk):
             return EndPoint.buildURLRequest(urlString: "https://statsapi.mlb.com/api/v1.1/game/\(gamePk)/feed/live")
         case .standingMLB:
