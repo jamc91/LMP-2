@@ -14,22 +14,23 @@ struct ScoreboardView: View {
     @Binding var games: [Games]
     let fetchLiveData: (Int) -> Void
     
-    var sortedGamesInSections: [Int: [Games]] {
-        Dictionary(grouping: games, by: { $0.teams.away.team.sport.id })
+    var gamesInDictionaryForLeague: [String: [Games]] {
+        Dictionary(grouping: games, by: { $0.teams.away.team.league.nameLeague })
     }
-    var gameSections: [Int] {
-        sortedGamesInSections.map { $0.key }.sorted(by: >)
+    
+    var leagueGameForKey: [String] {
+        gamesInDictionaryForLeague.map { $0.key }.sorted(by: >)
     }
     
     var body: some View {
-        VStack (spacing: 10) {
+        LazyVStack (spacing: 10) {
             switch loadingState {
             case .loading:
                 LoadingView()
             case .loaded:
-                ForEach(gameSections, id: \.self) { section in
-                    Section(header: HeaderSectionView(title: section == 17 ? "Mexican Pacific League" : "Major League Baseball")) {
-                        ForEach(sortedGamesInSections[section] ?? []) { game in
+                ForEach(leagueGameForKey, id: \.self) { league in
+                    Section(header: HeaderSectionView(title: league)) {
+                        ForEach(gamesInDictionaryForLeague[league] ?? []) { game in
                             ScoreRowView(gameModel: game)
                                 .onTapGesture {
                                     switch game.status.abstractGameState {
@@ -60,7 +61,6 @@ struct ScoreboardView_Previews: PreviewProvider {
     }
 }
 
-
 //MARK: - Status Game Views
 
 struct ScoreRowView: View {
@@ -75,7 +75,7 @@ struct ScoreRowView: View {
             case .final:
                 ScoreFinalCell(game: gameModel)
             case .preview:
-                ScorePreviewCell(game: gameModel)
+                PreviewTest(game: gameModel)
             }
         }
         .background(Color(.secondarySystemGroupedBackground))

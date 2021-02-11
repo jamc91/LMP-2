@@ -124,11 +124,16 @@ struct LeagueInformation: Codable {
     let id: Int
     let name: String
     
-    var sortedLeague: Int {
-        if id == 103 || id == 104 {
-            return 103
-        } else {
-            return id
+    var nameLeague: String {
+        switch id {
+        case 103, 104:
+            return "Major League Baseball"
+        case 132:
+            return "Mexican Pacific League"
+        case 162:
+            return "Caribbean Series"
+        default:
+            return "Liga Desconocida"
         }
     }
     
