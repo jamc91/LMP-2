@@ -15,11 +15,15 @@ struct VideosView: View {
     let videoData: [Items]
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                ForEach(videoData) { item in
-                    VideoCell(item: item)
+        ZStack {
+            Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
+            ScrollView {
+                VStack(spacing: 0) {
+                    HeaderView(title: "Videos", showCalendarButton: false, showPicker: nil)
+                    ForEach(videoData) { item in
+                        VideoCell(item: item)
                         
+                    }
                 }
             }
         }

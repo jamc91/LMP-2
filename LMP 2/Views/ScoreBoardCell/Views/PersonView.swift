@@ -23,7 +23,7 @@ struct PersonView: View {
     let position: PositionPlayer
     
     var image: some View {
-        WebImage(url: .imageURL(image: imageID))
+        WebImage(url: EndPoint.image(imageID).urlRequest.url)
             .resizable()
             .placeholder(Image("default-player"))
             .frame(width: 50, height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)

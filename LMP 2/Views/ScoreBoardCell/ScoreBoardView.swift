@@ -75,7 +75,8 @@ struct ScoreRowView: View {
             case .final:
                 ScoreFinalCell(game: gameModel)
             case .preview:
-                PreviewTest(game: gameModel)
+                //PreviewTest(game: gameModel)
+                ScorePreviewCell(game: gameModel)
             }
         }
         .background(Color(.secondarySystemGroupedBackground))

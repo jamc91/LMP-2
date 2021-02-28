@@ -17,31 +17,31 @@ extension Date {
 }
 
 
-extension URL {
-    static func apiURL(_ link: String) -> URL {
-        URL(string: "https://statsapi.mlb.com\(link)")!
-    }
-    
-    static func gamesLink(date: String) -> URL {
-        URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132&sportId=1,17&date=\(date)&sortBy=gameStatus&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")!
-    }
-    
-    static var standingLMPLink: URL {
-        URL(string: "https://api.lmp.mx/3.0.0/standing")!
-    }
-    
-    static var standingMLBLink: URL {
-        URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=regularSeason&hydrate=division,team")!
-    }
-    
-    static func leaders(mode: String, season: String, category: String, order: String) -> URL {
-        URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=\(mode)&type=\(season)&column=\(category)&order=\(order)")!
-    }
-    
-    static func imageURL(image: Int) -> URL {
-       return URL(string: "https://content.mlb.com/images/headshots/current/60x60/\(image)@2x.png")!
-    }
-}
+//extension URL {
+//    static func apiURL(_ link: String) -> URL {
+//        URL(string: "https://statsapi.mlb.com\(link)")!
+//    }
+//    
+//    static func gamesLink(date: String) -> URL {
+//        URL(string: "https://statsapi.mlb.com/api/v1/schedule?language=es&leagueId=103,104,132&sportId=1,17&date=\(date)&sortBy=gameStatus&sortBy=gameDate&hydrate=team,linescore(matchup,runners),person,stats,probablePitcher,decisions")!
+//    }
+//    
+//    static var standingLMPLink: URL {
+//        URL(string: "https://api.lmp.mx/3.0.0/standing")!
+//    }
+//    
+//    static var standingMLBLink: URL {
+//        URL(string: "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&standingsTypes=regularSeason&hydrate=division,team")!
+//    }
+//    
+//    static func leaders(mode: String, season: String, category: String, order: String) -> URL {
+//        URL(string: "https://api.lmp.mx/3.0.0/leaders?mode=\(mode)&type=\(season)&column=\(category)&order=\(order)")!
+//    }
+//    
+//    static func imageURL(image: Int) -> URL {
+//       return URL(string: "https://content.mlb.com/images/headshots/current/60x60/\(image)@2x.png")!
+//    }
+//}
 
 extension String {
     
