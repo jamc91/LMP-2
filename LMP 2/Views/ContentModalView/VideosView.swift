@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 import AVKit
+import SDWebImageSwiftUI
 
 struct VideosView: View {
     
@@ -63,12 +63,13 @@ struct VideoCell: View {
         ZStack {
             VStack(alignment: .leading) {
                 ZStack {
-                    WebImage(url: item.image.cuts[0].src, isAnimating: .constant(true))
+                    WebImage(url: item.image.cuts[0].src)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 200)
                         .onTapGesture {
                             showVideo = true
-                    }
+                        }
                 }
                 VStack(alignment: .leading, spacing: 5) {
                     Text(item.headline)
@@ -93,5 +94,8 @@ struct VideoCell: View {
         .padding(.horizontal)
         .padding(.vertical, 10)
         .background(Color(.systemGroupedBackground))
+    }
+    private func getRect() -> CGFloat {
+        return UIScreen.main.bounds.width
     }
 }

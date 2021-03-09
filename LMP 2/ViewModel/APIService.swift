@@ -1,20 +1,21 @@
 //
-//  APISession.swift
+//  APIService.swift
 //  LMP 2
 //
-//  Created by Jesús Medina Camargo on 12/20/20.
-//  Copyright © 2020 Jesús Medina Camargo. All rights reserved.
+//  Created by Jesús Medina Camargo on 07/03/21.
+//  Copyright © 2021 Jesús Medina Camargo. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-class APISession {
+class APIService {
     
-    private var cancellables = Set<AnyCancellable>()
+    var cancellables = Set<AnyCancellable>()
     
-    func request<T: Codable>(with builder: RequestBuilder, completion: @escaping (T) -> Void) {
-        URLSession.shared.dataTaskPublisher(for: builder.urlRequest)
+    func getData<T: Codable>(with builder: RequestBuilder, completion: @escaping (Result<T, APIError>) -> Void) {
+        URLSession.shared
+            .dataTaskPublisher(for: builder.urlRequest)
             .mapError { _ in .unknown }
             .flatMap { data, response -> AnyPublisher<T, APIError> in
                 if let response = response as? HTTPURLResponse {
@@ -24,11 +25,11 @@ class APISession {
                             .mapError { _ in .decodingError }
                             .eraseToAnyPublisher()
                     } else {
-                        return Fail(error: APIError.httpError(response.statusCode))
+                        return Fail(error: .httpError(response.statusCode))
                             .eraseToAnyPublisher()
                     }
                 }
-                return Fail(error: APIError.unknown)
+                return Fail(error: .unknown)
                     .eraseToAnyPublisher()
             }
             .receive(on: RunLoop.main)
@@ -36,12 +37,12 @@ class APISession {
             .sink { result in
                 switch result {
                 case .failure(let error):
-                    debugPrint(error)
+                    completion(.failure(error))
                 case .finished:
                     break
                 }
             } receiveValue: { value in
-                completion(value)
+                completion(.success(value))
             }
             .store(in: &cancellables)
     }

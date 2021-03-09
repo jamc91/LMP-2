@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-final class ContentViewModel: APISession, ObservableObject {
+final class ContentViewModel:APIService, ObservableObject {
     
     /// Lista de juegos del dia.
     @Published var scheduledGames: [Games]
@@ -53,42 +53,63 @@ final class ContentViewModel: APISession, ObservableObject {
     
     /// Recupera los juegos programados segun la fecha seleccionada.
     func getScheduledGames() {
-        request(with: EndPoint.schedule(date.dateFormatter())) { (scheduledGames: ScoreboardModel) in
-            self.loadingState = scheduledGames.dates.isEmpty ? .empty : .loaded
-
-            if scheduledGames.totalGamesInProgress == 0 && !self.timerStopped {
-                self.stopTimer()
+        getData(with: EndPoint.schedule(date.dateFormatter())) { [weak self] (result: Result<ScoreboardModel, APIError>) in
+            switch result {
+            case .success(let games):
+                self?.loadingState = games.dates.isEmpty ? .empty : .loaded
+                self?.scheduledGames = games.dates.flatMap { $0.games }
+            case .failure(let apiError):
+                self?.printApiErrorMessage(error: apiError)
             }
-            self.scheduledGames = scheduledGames.dates.flatMap { $0.games }
         }
     }
     
     /// Recupera los datos de los juegos en vivo.
     func getLiveContent(gamePk: Int, completion: @escaping () -> Void) {
-        request(with: EndPoint.live("\(gamePk)")) { (liveContent: BoxscoreResponse) in
-            self.liveContent = liveContent
-            completion()
+        getData(with: EndPoint.live("\(gamePk)")) { [weak self] (result: Result<BoxscoreResponse, APIError>) in
+            switch result {
+            case .success(let liveData):
+                self?.liveContent = liveData
+                completion()
+            case .failure(let apiError):
+                self?.printApiErrorMessage(error: apiError)
+            }
         }
     }
-    
+
     /// Recupera las posiciones de la liga MLB.
     func getStandingsMLB() {
-        request(with: EndPoint.standingMLB) { (standingMLB: StandingMLB) in
-            self.standingMLB = standingMLB
+        getData(with: EndPoint.standingMLB) { [weak self] (result: Result<StandingMLB, APIError>) in
+            switch result {
+            case .success(let standingMLB):
+                self?.standingMLB = standingMLB
+            case .failure(let apiError):
+                self?.printApiErrorMessage(error: apiError)
+            }
         }
     }
-    
+
     /// Recupera las posiciones de la liga LMP.
     func getStandingsLMP() {
-        request(with: EndPoint.standingLMP) { (standingLMP: StandingLMP) in
-            self.standingLMP = standingLMP
+        getData(with: EndPoint.standingLMP) { [weak self] (result: Result<StandingLMP, APIError>) in
+            switch result {
+            case .success(let standingLMP):
+                self?.standingLMP = standingLMP
+            case .failure(let apiError):
+                self?.printApiErrorMessage(error: apiError)
+            }
         }
     }
-    
+
     /// Recupera la lista de videos.
     func getVideoList(gamePk: Int) {
-        request(with: EndPoint.videoList("\(gamePk)")) { (videoList: VideoResponse) in
-            self.videoList = videoList
+        getData(with: EndPoint.videoList("\(gamePk)")) { [weak self] (result: Result<VideoResponse, APIError>) in
+            switch result {
+            case .success(let videos):
+                self?.videoList = videos
+            case .failure(let apiError):
+                self?.printApiErrorMessage(error: apiError)
+            }
         }
     }
     
@@ -107,5 +128,16 @@ final class ContentViewModel: APISession, ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { _ in
             self.getScheduledGames()
         })
+    }
+    
+    private func printApiErrorMessage(error: APIError) {
+        switch error {
+        case .decodingError:
+            print("decoding Error")
+        case .httpError(let statusCode):
+            print("error http \(statusCode)")
+        case .unknown:
+            print("error desconocido")
+        }
     }
 }

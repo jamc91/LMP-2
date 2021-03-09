@@ -23,7 +23,7 @@ struct ScoreboardView: View {
     }
     
     var body: some View {
-        LazyVStack (spacing: 10) {
+        VStack (spacing: 10) {
             switch loadingState {
             case .loading:
                 LoadingView()
