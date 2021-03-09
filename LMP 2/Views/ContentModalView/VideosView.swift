@@ -95,7 +95,4 @@ struct VideoCell: View {
         .padding(.vertical, 10)
         .background(Color(.systemGroupedBackground))
     }
-    private func getRect() -> CGFloat {
-        return UIScreen.main.bounds.width
-    }
 }
