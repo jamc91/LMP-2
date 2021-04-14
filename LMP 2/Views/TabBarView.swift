@@ -9,55 +9,24 @@
 import SwiftUI
 
 struct TabBarView: View {
-
-    @ObservedObject var contentViewModel: ContentViewModel
-    @Binding var showDatePicker: Bool
-    @Binding var presentSheet: Bool
+    
+    @EnvironmentObject var viewModel: ContentViewModel
     
     var body: some View {
-            TabView {
-                MainScrollView {
-                    HeaderView(title: "Scoreboard", showCalendarButton: true) {
-                        didTapCalendarButton()
-                    }
-                    ScoreboardView(loadingState: $contentViewModel.loadingState, games: $contentViewModel.scheduledGames) { gamePk in
-                        contentViewModel.getLiveContent(gamePk: gamePk) {
-                            self.presentSheet = true
-                        }
-                        contentViewModel.getVideoList(gamePk: gamePk)
-                    }
-                }
-                .tabItem {
-                    Label("Scoreboard", systemImage: "mail.stack.fill")
-                }
-                MainScrollView {
-                    StandingView(viewModel: contentViewModel)
-                }
-                .tabItem {
-                    Label("Standings", systemImage: "flag.fill")
-                }
-            }
-            .blur(radius: showDatePicker ? 8.0 : 0.0)
+        TabView {
+            ScoresView()
+            Text("Standings").tabItem { Label("Standings", systemImage: "flag.fill") }
+            Text("News").tabItem { Label("News", systemImage: "newspaper.fill") }
+            Text("Stats").tabItem { Label("Stats", systemImage: "chart.bar.fill") }
+            Text("Settings").tabItem { Label("Settings", systemImage: "gearshape.fill") }
+        }
+        .accentColor(.black)
     }
 }
 
 struct TabBarView_Previews: PreviewProvider {
     
     static var previews: some View {
-        TabBarView(
-            contentViewModel: ContentViewModel(games: Games.data, standingMLB: StandingMLB.data,
-            standingLMP: StandingLMP.data),
-            showDatePicker: .constant(false),
-            presentSheet: .constant(false))
-    }
-}
-
-/// Metodos de la vista
-extension TabBarView {
-    private func didTapCalendarButton() {
-        self.showDatePicker = true
-        if !contentViewModel.timerStopped {
-            contentViewModel.stopTimer()
-        }
+        TabBarView().environmentObject(ContentViewModel(games: Constats.shared.games.dates.flatMap { $0.games }, standingMLB: Constats.shared.standingMLB, standingLMP: Constats.shared.standingLMP, liveContent: Constats.shared.live, videoList: Constats.shared.content))
     }
 }

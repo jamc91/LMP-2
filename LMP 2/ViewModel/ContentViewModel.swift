@@ -12,17 +12,20 @@ import Combine
 final class ContentViewModel:APIService, ObservableObject {
     
     /// Lista de juegos del dia.
-    @Published var scheduledGames: [Games]
+    @Published var scheduledGames: [Game]
     /// Posiciones Liga MLB
     @Published var standingMLB: StandingMLB?
     /// Posiciones Liga LMP
     @Published var standingLMP: StandingLMP?
     /// Informacion de los juegos en vivo.
-    @Published var liveContent: BoxscoreResponse?
+    @Published var live: LiveResponse?
+    /// Informacion del contenido imagenes, videos etc....
+    @Published var content: ContentResponse?
     /// Informa del estado de carga a la vista.
     @Published var loadingState = ScoreboardLoadingState.loading
     
-    @Published var videoList: VideoResponse?
+    @Published var showDatePicker = false
+    @Published var showSheet = false
     
     @Published var date = Date()
     
@@ -30,17 +33,19 @@ final class ContentViewModel:APIService, ObservableObject {
     var timerStopped = false
     
     init(
-        games: [Games] = [],
+        games: [Game] = [],
         standingMLB: StandingMLB? = nil,
         standingLMP: StandingLMP? = nil,
-        liveContent: BoxscoreResponse? = nil,
-        videoList: VideoResponse? = nil
+        liveContent: LiveResponse? = nil,
+        videoList: ContentResponse? = nil
     ){
         self.scheduledGames = games
         self.standingMLB = standingMLB
         self.standingLMP = standingLMP
-        self.liveContent = liveContent
-        self.videoList = videoList
+        self.live = liveContent
+        self.content = videoList
+        super.init()
+        loadData()
     }
 
     /// Llama a todas las funciones para recuperar los datos.
@@ -53,7 +58,7 @@ final class ContentViewModel:APIService, ObservableObject {
     
     /// Recupera los juegos programados segun la fecha seleccionada.
     func getScheduledGames() {
-        getData(with: EndPoint.schedule(date.dateFormatter())) { [weak self] (result: Result<ScoreboardModel, APIError>) in
+        getData(with: EndPoint.schedule(date.dateFormatter())) { [weak self] (result: Result<ScheduleResponse, APIError>) in
             switch result {
             case .success(let games):
                 self?.loadingState = games.dates.isEmpty ? .empty : .loaded
@@ -66,10 +71,10 @@ final class ContentViewModel:APIService, ObservableObject {
     
     /// Recupera los datos de los juegos en vivo.
     func getLiveContent(gamePk: Int, completion: @escaping () -> Void) {
-        getData(with: EndPoint.live("\(gamePk)")) { [weak self] (result: Result<BoxscoreResponse, APIError>) in
+        getData(with: EndPoint.live("\(gamePk)")) { [weak self] (result: Result<LiveResponse, APIError>) in
             switch result {
             case .success(let liveData):
-                self?.liveContent = liveData
+                self?.live = liveData
                 completion()
             case .failure(let apiError):
                 self?.printApiErrorMessage(error: apiError)
@@ -103,10 +108,10 @@ final class ContentViewModel:APIService, ObservableObject {
 
     /// Recupera la lista de videos.
     func getVideoList(gamePk: Int) {
-        getData(with: EndPoint.videoList("\(gamePk)")) { [weak self] (result: Result<VideoResponse, APIError>) in
+        getData(with: EndPoint.videoList("\(gamePk)")) { [weak self] (result: Result<ContentResponse, APIError>) in
             switch result {
             case .success(let videos):
-                self?.videoList = videos
+                self?.content = videos
             case .failure(let apiError):
                 self?.printApiErrorMessage(error: apiError)
             }
@@ -125,7 +130,7 @@ final class ContentViewModel:APIService, ObservableObject {
     func startTimer() {
         timerStopped = false
         print("Timer Inicializado")
-        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
             self.getScheduledGames()
         })
     }
@@ -139,5 +144,25 @@ final class ContentViewModel:APIService, ObservableObject {
         case .unknown:
             print("error desconocido")
         }
+    }
+    
+    func didTapCalendarButton() {
+        showDatePicker = true
+        stopTimer()
+    }
+    
+    func didTapDoneButton() {
+            loadingState = .loading
+            scheduledGames.removeAll()
+            showDatePicker = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.startTimer()
+            self.getScheduledGames()
+        }
+    }
+    
+    func didTapCancelButton() {
+        showDatePicker = false
+        startTimer()
     }
 }

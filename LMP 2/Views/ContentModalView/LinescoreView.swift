@@ -33,8 +33,8 @@ struct BoxscoreView_Previews: PreviewProvider {
     
     static var previews: some View {
         LinescoreView(
-            teams: BoxscoreResponse.data.gameData.teams,
-            linescore: BoxscoreResponse.data.liveData.linescore).previewLayout(.sizeThatFits)
+            teams: Constats.shared.live.gameData.teams,
+            linescore: Constats.shared.live.liveData.linescore).previewLayout(.sizeThatFits)
     }
 }
 

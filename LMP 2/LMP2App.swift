@@ -11,27 +11,15 @@ import SwiftUI
 @main
 struct LMP2App: App {
     
-    @StateObject var contentViewModel = ContentViewModel()
+    @StateObject private var viewModel = ContentViewModel()
     @Environment(\.scenePhase) var scenePhase
-    @State private var showDatePicker = false
-    @State private var presentSheet = false
     
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                TabBarView(contentViewModel: contentViewModel, showDatePicker: $showDatePicker, presentSheet: $presentSheet)
-                .fullScreenCover(isPresented: $presentSheet) {
-                    GameContentView(contentViewModel: contentViewModel)
-                }
+            ContentView().environmentObject(viewModel)
                 .onChange(of: scenePhase) { state in
-                    if state == .background { contentViewModel.stopTimer() }
-                    if state == .active { contentViewModel.startTimer() }
-                }
-                DatePickerViewSelector(viewModel: contentViewModel, showPicker: $showDatePicker)
-                    .zIndex(1)
-            }
-            .onAppear {
-                contentViewModel.loadData()
+                    if state == .background { viewModel.stopTimer() }
+                    if state == .active { viewModel.startTimer() }
             }
         }
     }

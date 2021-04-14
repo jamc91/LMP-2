@@ -12,16 +12,16 @@ struct GameContentView: View {
     
     @ObservedObject var contentViewModel: ContentViewModel
     @Environment(\.presentationMode) var presentationMode
-    @State private var selectedTeam = SelectionTeam.Home
+    @State private var selectedTeam = SelectionTeam.home
     
     var body: some View {
         TabView {
-            if let boxscore = contentViewModel.liveContent {
+            if let boxscore = contentViewModel.live {
                 BoxscoreView(boxscore: boxscore, selectedTeam: $selectedTeam) {
                     presentationMode.wrappedValue.dismiss()
                 }
             }
-            if let videoList = contentViewModel.videoList?.highlights.highlights.items, !videoList.isEmpty {
+            if let videoList = contentViewModel.content?.highlights.highlights.items, !videoList.isEmpty {
             VideosView(videoData: videoList)
             }
         }
@@ -31,14 +31,14 @@ struct GameContentView: View {
 struct GameContentView_Previews: PreviewProvider {
     static var previews: some View {
         
-        GameContentView(contentViewModel: ContentViewModel(liveContent: BoxscoreResponse.data, videoList: VideoResponse.data))
+        GameContentView(contentViewModel: ContentViewModel(liveContent: Constats.shared.live, videoList: Constats.shared.content))
 
     }
 }
 
 struct BoxscoreView: View {
     
-    var boxscore: BoxscoreResponse
+    var boxscore: LiveResponse
     @Binding var selectedTeam: SelectionTeam
     let dismiss: () -> Void
     
@@ -50,12 +50,12 @@ struct BoxscoreView: View {
                 Divider()
                 SelectorTeamPickerView(awayTeamName: boxscore.gameData.teams.away.teamName, homeTeamName: boxscore.gameData.teams.home.teamName, selectionTeam: $selectedTeam)
                 switch selectedTeam {
-                case .Away:
+                case .away:
                     TeamContentView(
                         teamContent: boxscore.gameData.teams.away,
                         teamInfo: boxscore.liveData.boxscore.teams.away,
                         player: boxscore.gameData)
-                case .Home:
+                case .home:
                     TeamContentView(
                         teamContent: boxscore.gameData.teams.home,
                         teamInfo: boxscore.liveData.boxscore.teams.home,
@@ -199,7 +199,6 @@ struct FooterView: View {
             }
             Spacer()
         }
-        .padding(10)
     }
 }
 
@@ -286,6 +285,6 @@ struct FooterPitchingView: View {
             }
             Spacer()
         }
-        .padding(10)
+        .padding(.horizontal, 5)
     }
 }

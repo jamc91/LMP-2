@@ -8,7 +8,6 @@
 
 import SwiftUI
 import AVKit
-import SDWebImageSwiftUI
 
 struct VideosView: View {
     
@@ -34,7 +33,7 @@ struct VideosView: View {
 struct VideosView_Previews: PreviewProvider {
     static var previews: some View {
     
-            VideosView(videoData: VideoResponse.data.highlights.highlights.items)
+        VideosView(videoData: Constats.shared.content.highlights.highlights.items)
         
         .previewLayout(.sizeThatFits)
     }
@@ -63,8 +62,7 @@ struct VideoCell: View {
         ZStack {
             VStack(alignment: .leading) {
                 ZStack {
-                    WebImage(url: item.image.cuts[0].src)
-                        .resizable()
+                    WebImage(url: item.image.cuts[0].src.absoluteString)
                         .aspectRatio(contentMode: .fill)
                         .frame(height: 200)
                         .onTapGesture {

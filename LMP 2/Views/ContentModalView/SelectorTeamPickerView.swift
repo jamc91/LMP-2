@@ -16,8 +16,8 @@ struct SelectorTeamPickerView: View {
     
     var body: some View {
         Picker("Select Team", selection: $selectionTeam) {
-            Text(awayTeamName).tag(SelectionTeam.Away)
-            Text(homeTeamName).tag(SelectionTeam.Home)
+            Text(awayTeamName).tag(SelectionTeam.away)
+            Text(homeTeamName).tag(SelectionTeam.home)
         }
         .pickerStyle(SegmentedPickerStyle())
         .padding()
@@ -26,6 +26,6 @@ struct SelectorTeamPickerView: View {
 
 struct SelectorTeamPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectorTeamPickerView(awayTeamName: "Mayos", homeTeamName: "Naranjeros", selectionTeam: .constant(.Home)).previewLayout(.sizeThatFits)
+        SelectorTeamPickerView(awayTeamName: "Mayos", homeTeamName: "Naranjeros", selectionTeam: .constant(.home)).previewLayout(.sizeThatFits)
     }
 }
