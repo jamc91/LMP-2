@@ -8,6 +8,6 @@
 
 import Foundation
 
-enum ScoreboardLoadingState {
+enum LoadingState {
     case empty, loading, loaded
 }

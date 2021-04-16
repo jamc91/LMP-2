@@ -49,7 +49,7 @@ struct PitchingStatsView_Previews: PreviewProvider {
 
 extension PitchingStatsView {
     
-    func getPlayer(id: Int) -> (name: Player, stats: Player) {
+    func getPlayer(id: Int) -> (name: Person, stats: Player) {
         guard let name = playerName.players["ID\(id)"], let stats = stats.players["ID\(id)"] else { fatalError() }
         return (name, stats)
     }

@@ -10,8 +10,8 @@ import SwiftUI
 
 struct ProbablePitcherView: View {
     
-    var player1: People
-    var player2: People
+    var player1: Person
+    var player2: Person
     
     var body: some View {
         HStack {

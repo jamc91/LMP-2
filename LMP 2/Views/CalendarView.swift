@@ -26,7 +26,7 @@ struct CalendarView: View {
         .disabled(!viewModel.showDatePicker))
         .ignoresSafeArea()
         .onChange(of: viewModel.date, perform: { value in
-            viewModel.didTapDoneButton()
+            viewModel.changeDate()
         })
     }
 }

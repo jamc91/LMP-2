@@ -9,17 +9,17 @@
 import Foundation
 
 struct Decisions: Codable {
-    let winner, loser, save: People
+    let winner, loser, save: Person
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        winner = try container.decode(forKey: .winner, default: People())
-        loser = try container.decode(forKey: .loser, default: People())
-        save = try container.decode(forKey: .save, default: People())
+        winner = try container.decode(forKey: .winner, default: Person())
+        loser = try container.decode(forKey: .loser, default: Person())
+        save = try container.decode(forKey: .save, default: Person())
     }
     
-    init(winner: People = People(), loser: People = People(), save: People = People()) {
+    init(winner: Person = Person(), loser: Person = Person(), save: Person = Person()) {
         self.winner = winner
         self.loser = loser
         self.save = save

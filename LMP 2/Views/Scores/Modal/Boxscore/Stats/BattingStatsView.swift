@@ -32,9 +32,9 @@ struct BattingStatsView: View {
     var body: some View {
         Section(header: RowStatsView(type: .Header, content: headerData)) {
             VStack(spacing: 0) {
-                ForEach(stats.batters, id: \.self) { id in
+                ForEach(stats.battersBoxscore, id: \.self) { id in
                     RowStatsView(type: .Stats, content: makeBattingArray(id: id))
-                        .background(Color(getPlayer(id: id).stats.gameStatus.isCurrentBatter ? .systemGray5 : .systemBackground))
+                        .background(Color(getPlayer(id: id).stats.gameStatus.isCurrentBatter && playerName.status.abstractGameState == .live ? .systemGray5 : .systemBackground))
                         .padding(getPlayer(id: id).stats.gameStatus.isSubstitute ? .leading : .init())
                 }
                 RowStatsView(type: .Totals, content: totalsData)
@@ -52,13 +52,9 @@ struct BattingStatsView_Previews: PreviewProvider {
 
 extension BattingStatsView {
     
-    func getPlayer(id: Int) -> (name: Player, stats: Player) {
+    func getPlayer(id: Int) -> (name: Person, stats: Player) {
         guard let name = playerName.players["ID\(id)"], let stats = stats.players["ID\(id)"] else { fatalError() }
         return (name, stats)
-    }
-    func filterIDs(id: [Int]) -> [Int] {
-        let filteredIDs = id.filter { !stats.players["ID\($0)"]!.position.type.contains("Pitcher") }
-        return filteredIDs
     }
     
     var headerData: RowData {
@@ -66,18 +62,17 @@ extension BattingStatsView {
     }
     
     func makeBattingArray(id: Int) -> RowData {
-        [
-            (text: getPlayer(id: id).name.boxscoreName, width: .infinity),
-            (text: String(getPlayer(id: id).stats.stats.batting.atBats), width: 20),
-            (text: String(getPlayer(id: id).stats.stats.batting.runs), width: 15),
-            (text: String(getPlayer(id: id).stats.stats.batting.hits), width: 15),
-            (text: String(getPlayer(id: id).stats.stats.batting.rbi), width: 25),
-            (text: String(getPlayer(id: id).stats.stats.batting.baseOnBalls), width: 20),
-            (text: String(getPlayer(id: id).stats.stats.batting.strikeOuts), width: 20),
-            (text: String(getPlayer(id: id).stats.stats.batting.leftOnBase), width: 25),
-            (text: String(getPlayer(id: id).stats.seasonStats.batting.avg), width: 35),
-            (text: String(getPlayer(id: id).stats.seasonStats.batting.ops), width: 35)
-        ]
+        let player = getPlayer(id: id)
+        return [(text: "\(player.name.boxscoreName), \(player.stats.position.abbreviation)", width: .infinity),
+                (text: String(player.stats.stats.batting.atBats), width: 20),
+            (text: String(player.stats.stats.batting.runs), width: 15),
+            (text: String(player.stats.stats.batting.hits), width: 15),
+            (text: String(player.stats.stats.batting.rbi), width: 25),
+            (text: String(player.stats.stats.batting.baseOnBalls), width: 20),
+            (text: String(player.stats.stats.batting.strikeOuts), width: 20),
+            (text: String(player.stats.stats.batting.leftOnBase), width: 25),
+            (text: String(player.stats.seasonStats.batting.avg), width: 35),
+            (text: String(player.stats.seasonStats.batting.ops), width: 35)]
     }
     
     var totalsData: RowData {
@@ -88,6 +83,7 @@ extension BattingStatsView {
             (text: String(stats.teamStats.batting.rbi), width: 25),
             (text: String(stats.teamStats.batting.baseOnBalls), width: 20),
             (text: String(stats.teamStats.batting.strikeOuts), width: 20),
-            (text: String(""), width: 100)]
+            (text: String(stats.teamStats.batting.leftOnBase), width: 25),
+            (text: String(""), width: 73)]
     }
 }

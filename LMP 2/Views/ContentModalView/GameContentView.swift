@@ -109,7 +109,7 @@ struct BattingView: View {
     var player: GameData
     
     var body: some View {
-        ForEach(team.batters.filter { !team.players["ID\($0)"]!.position.type.contains("Pitcher") }, id: \.self) { person in
+        ForEach(team.batters, id: \.self) { person in
             if let safePerson = team.players["ID\(person)"], let safePlayer = player.players["ID\(person)"] {
                 TextListView(name: "\(safePlayer.boxscoreName), \(safePerson.position.abbreviation)",
                              nameFontWeight: .bold,

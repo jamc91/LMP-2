@@ -1,5 +1,5 @@
 //
-//  APIService.swift
+//  ApiService.swift
 //  LMP 2
 //
 //  Created by Jesús Medina Camargo on 07/03/21.
@@ -9,15 +9,16 @@
 import Foundation
 import Combine
 
-class APIService {
+class ApiService {
     
-    var cancellables = Set<AnyCancellable>()
+    static let shared = ApiService()
+    private var cancellables = Set<AnyCancellable>()
     
-    func getData<T: Codable>(with builder: RequestBuilder, completion: @escaping (Result<T, APIError>) -> Void) {
+    func getData<T: Codable>(with builder: RequestBuilder, completion: @escaping (Result<T, ApiError>) -> Void) {
         URLSession.shared
             .dataTaskPublisher(for: builder.urlRequest)
             .mapError { _ in .unknown }
-            .flatMap { data, response -> AnyPublisher<T, APIError> in
+            .flatMap { data, response -> AnyPublisher<T, ApiError> in
                 if let response = response as? HTTPURLResponse {
                     if (200...299).contains(response.statusCode) {
                         return Just(data)

@@ -48,6 +48,13 @@ struct BoxscoreTeamsContent: Codable {
     let info: [Info]
     let note: [FieldList]
     let namePlayers = GameData()
+    
+    var battersBoxscore: [Int] {
+        batters.filter {
+            guard let player = players["ID\($0)"] else { return false }
+            return (battingOrder.contains($0) || player.gameStatus.isSubstitute || player.stats.batting.atBats > 0)
+        }
+    }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

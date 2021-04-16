@@ -16,10 +16,8 @@ struct ContentLiveView: View {
     var body: some View {
         VStack(alignment: .trailing) {
             dismissButton
-            TabView {
-                if let liveContent = viewModel.live {
-                    BoxscoreGameView(live: liveContent)
-                }
+            if let liveContent = viewModel.live {
+                BoxscoreGameView(live: liveContent)
             }
         }
     }

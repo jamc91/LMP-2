@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PlayerView: View {
     
-    var player: People
+    var player: Person
     var stats: StatsContent {
         let playerStat = player.stats.first(where: { $0.group.displayName.contains("pitching") && $0.type.displayName.contains("statsSingleSeason")})?.stats ?? StatsContent()
         return playerStat

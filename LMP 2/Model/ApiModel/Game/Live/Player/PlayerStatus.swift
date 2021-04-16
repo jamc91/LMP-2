@@ -1,5 +1,5 @@
 //
-//  GameStatus.swift
+//  PlayerStatus.swift
 //  LMP 2
 //
 //  Created by Jesús Medina Camargo on 08/04/21.
