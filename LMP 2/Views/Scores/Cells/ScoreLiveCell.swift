@@ -27,17 +27,19 @@ struct ScoreLiveCell: View {
             }
             .padding(10)
             Divider()
+            if let linescore = game.linescore {
             HStack {
-                InningView(arrowStatus: game.linescore.inningArrowStatus, currentInning: game.linescore.currentInningOrdinal)
+                InningView(arrowStatus: linescore.inningArrowStatus, currentInning: linescore.currentInningOrdinal)
                 Spacer()
-                DiamondView(baseState: game.linescore.offense.diamondState)
+                DiamondView(baseState: linescore.offense.diamondState)
                 Spacer()
                 BSOView(
-                    balls: game.linescore.ballsState,
-                    strikes: game.linescore.strikesState,
-                    outs: game.linescore.outsState)
+                    balls: linescore.ballsState,
+                    strikes: linescore.strikesState,
+                    outs: linescore.outsState)
             }
             .padding(.horizontal)
+            }
         }
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(10)

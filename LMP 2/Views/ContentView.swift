@@ -14,8 +14,8 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            TabBarView().zIndex(0)
-            CalendarView().zIndex(1)
+            TabBarView()
+            CalendarView()
         }
         .animation(.spring())
     }
@@ -23,6 +23,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(ContentViewModel())
+        ContentView()
+            .environmentObject(ContentViewModel())
     }
 }

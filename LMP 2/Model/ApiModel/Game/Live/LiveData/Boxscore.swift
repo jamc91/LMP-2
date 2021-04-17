@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Boxscore: Codable {
     let teams: BoxscoreTeams
@@ -47,7 +48,6 @@ struct BoxscoreTeamsContent: Codable {
     let batters, pitchers, bench, bullpen, battingOrder: [Int]
     let info: [Info]
     let note: [FieldList]
-    let namePlayers = GameData()
     
     var battersBoxscore: [Int] {
         batters.filter {

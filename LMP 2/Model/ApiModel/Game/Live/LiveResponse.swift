@@ -12,8 +12,4 @@ struct LiveResponse: Codable {
     let gameData: GameData
     let liveData: LiveData
     
-    init(gameData: GameData = GameData(), liveData: LiveData = LiveData()) {
-        self.gameData = gameData
-        self.liveData = liveData
-    }
 }

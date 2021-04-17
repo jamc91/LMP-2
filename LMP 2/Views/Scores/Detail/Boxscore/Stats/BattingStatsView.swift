@@ -34,8 +34,9 @@ struct BattingStatsView: View {
             VStack(spacing: 0) {
                 ForEach(stats.battersBoxscore, id: \.self) { id in
                     RowStatsView(type: .Stats, content: makeBattingArray(id: id))
-                        .background(Color(getPlayer(id: id).stats.gameStatus.isCurrentBatter && playerName.status.abstractGameState == .live ? .systemGray5 : .systemBackground))
                         .padding(getPlayer(id: id).stats.gameStatus.isSubstitute ? .leading : .init())
+                        .background(Color(getPlayer(id: id).stats.gameStatus.isCurrentBatter && playerName.status.abstractGameState == .live ? .systemGray5 : .systemBackground))
+                        
                 }
                 RowStatsView(type: .Totals, content: totalsData)
                 FotterBattingStatsView(team: stats)

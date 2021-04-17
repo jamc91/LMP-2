@@ -15,16 +15,15 @@ struct BoxscoreGameView: View {
     
     var body: some View {
         List {
-            LinescoreTest(content: live)
-            picker
             Group {
-            BattingStatsView(content: live, selectedTeam: selectionTeam)
-            PitchingStatsView(content: live, selectedTeam: selectionTeam)
-            FooterPitchingStatsView(note: live.liveData.boxscore.info)
+                LinescoreView(response: live)
+                picker
+                BattingStatsView(content: live, selectedTeam: selectionTeam)
+                PitchingStatsView(content: live, selectedTeam: selectionTeam)
+                FooterPitchingStatsView(note: live.liveData.boxscore.info)
             }
             .listRowInsets(EdgeInsets())
         }
-        
     }
 }
 

@@ -14,8 +14,8 @@ struct Game: Identifiable, Codable {
     let gamePk: Int
     let gameDate: String
     let status: Status
-    let teams: Teams
-    let linescore: Linescore
+    let teams: Teams<TeamContent>
+    let linescore: Linescore?
     let decisions: Decisions
     let venue: Venue
     
@@ -29,8 +29,8 @@ struct Game: Identifiable, Codable {
         gamePk = try container.decode(forKey: .gamePk, default: 0)
         gameDate = try container.decode(forKey: .gameDate, default: "")
         status = try container.decode(forKey: .status, default: Status())
-        teams = try container.decode(forKey: .teams, default: Teams())
-        linescore = try container.decode(forKey: .linescore, default: Linescore())
+        teams = try container.decode(Teams.self, forKey: .teams)
+        linescore = try container.decode(forKey: .linescore, default: nil)
         decisions = try container.decode(forKey: .decisions, default: Decisions())
         venue = try container.decode(forKey: .venue, default: Venue())
     }

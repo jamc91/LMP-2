@@ -9,21 +9,28 @@
 import Foundation
 
 struct GameData: Codable {
-        let status: Status
-        let teams: TeamsLinescore
-        let players: [String: Person]
+    
+    let datetime: DateTime
+    let status: Status
+    let teams: Teams<TeamInformation>
+    let players: [String: Person]
+    let venue: Venue
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            
-            status = try container.decode(forKey: .status, default: Status())
-            teams = try container.decode(forKey: .teams, default: TeamsLinescore())
-            players = try container.decode(forKey: .players, default: [String : Person]())
-        }
-        
-        init(status: Status = Status(), teams: TeamsLinescore = TeamsLinescore(), players: [String: Person] = [String : Person]()) {
-            self.status = status
-            self.teams = teams
-            self.players = players
+        datetime = try container.decode(forKey: .datetime, default: DateTime())
+        status = try container.decode(forKey: .status, default: Status())
+        teams = try container.decode(Teams.self, forKey: .teams)
+        players = try container.decode(forKey: .players, default: [String : Person]())
+        venue = try container.decode(forKey: .venue, default: Venue())
+    }
+    
+    init(datetime: DateTime = DateTime(), status: Status = Status(), teams: Teams<TeamInformation>, players: [String: Person] = [String : Person](), venue: Venue = Venue()) {
+        self.datetime = datetime
+        self.status = status
+        self.teams = teams
+        self.players = players
+        self.venue = venue
     }
 }

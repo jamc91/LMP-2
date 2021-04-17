@@ -17,9 +17,9 @@ struct Inning: Identifiable, Codable {
         case num, away, home
     }
     
-    init(num: Int = 0, away: InningTeamResults = InningTeamResults(), home: InningTeamResults = InningTeamResults()) {
-        self.num = num
-        self.away = away
-        self.home = home
-    }
+//    init(num: Int = 0, away: InningTeamResults = InningTeamResults(), home: InningTeamResults = InningTeamResults()) {
+//        self.num = num
+//        self.away = away
+//        self.home = home
+//    }
 }

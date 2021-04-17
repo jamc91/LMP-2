@@ -137,7 +137,7 @@ final class ContentViewModel: ObservableObject {
     private func printApiErrorMessage(error: ApiError) {
         switch error {
         case .decodingError:
-            print("decoding Error")
+            print(error)
         case .httpError(let statusCode):
             print("error http \(statusCode)")
         case .unknown:

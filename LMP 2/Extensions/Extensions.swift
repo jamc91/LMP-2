@@ -48,7 +48,7 @@ extension String {
 
 extension String {
     
-    func hourFormat(status: Bool) -> String {
+    func hourFormat(status: Bool = false) -> String {
         
         if status {
             return "Time TBD"
@@ -93,9 +93,6 @@ extension String {
 }
 
 extension KeyedDecodingContainerProtocol {
-    func decode<T: Decodable>(forKey key: Key) throws -> T {
-        return try decode(T.self, forKey: key)
-    }
     
     func decode<T: Decodable>(
         forKey key: Key,

@@ -8,37 +8,14 @@
 
 import Foundation
 
-struct Teams: Codable {
-    let away: TeamContent
-    let home: TeamContent
+struct Teams<T: Codable>: Codable {
+    let away, home: T
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        away = try container.decode(forKey: .away, default: TeamContent())
-        home = try container.decode(forKey: .home, default: TeamContent())
-    }
-    
-    init(away: TeamContent = TeamContent(), home: TeamContent = TeamContent()) {
-        self.away = away
-        self.home = home
-    }
-}
-
-struct TeamsLinescore: Codable {
-    let away: TeamInformation
-    let home: TeamInformation
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        away = try container.decode(forKey: .away, default: TeamInformation())
-        home = try container.decode(forKey: .home, default: TeamInformation())
-    }
-    
-    init(away: TeamInformation = TeamInformation(), home: TeamInformation = TeamInformation()) {
-        self.away = away
-        self.home = home
+        away = try container.decode(T.self, forKey: .away)
+        home = try container.decode(T.self, forKey: .home)
     }
 }
 
@@ -50,6 +27,7 @@ struct TeamInformation: Codable {
     let league: LeagueInformation
     let sport: LeagueInformation
     let shortName: String
+    let record: RecordTeam
     
     
     init(from decoder: Decoder) throws {
@@ -62,9 +40,10 @@ struct TeamInformation: Codable {
         league = try container.decode(forKey: .league, default: LeagueInformation())
         sport = try container.decode(forKey: .sport, default: LeagueInformation())
         shortName = try container.decode(forKey: .shortName, default: "")
+        record = try container.decode(forKey: .record, default: RecordTeam())
     }
     
-    init(id: Int = 0, venue: Venue = Venue(), abbreviation: String = "", teamName: String = "", league: LeagueInformation = LeagueInformation(), sport: LeagueInformation = LeagueInformation(), shortName: String = "") {
+    init(id: Int = 0, venue: Venue = Venue(), abbreviation: String = "", teamName: String = "", league: LeagueInformation = LeagueInformation(), sport: LeagueInformation = LeagueInformation(), shortName: String = "", record: RecordTeam = RecordTeam()) {
         self.id = id
         self.venue = venue
         self.abbreviation = abbreviation
@@ -72,7 +51,7 @@ struct TeamInformation: Codable {
         self.league = league
         self.sport = sport
         self.shortName = shortName
-        
+        self.record = record
     }
 }
 
@@ -110,20 +89,7 @@ struct LeagueInformation: Codable {
     }
 }
 
-struct Venue: Codable {
-    let id: Int
-    let name: String
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        id = try container.decode(forKey: .id, default: 0)
-        name = try container.decode(forKey: .name, default: "")
-    }
-    
-    init(id: Int = 0, name: String = "") {
-        self.id = id
-        self.name = name
-    }
-}
+
+
+
 

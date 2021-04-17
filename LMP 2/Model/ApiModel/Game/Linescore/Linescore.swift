@@ -12,7 +12,6 @@ enum SelectionTeam: String, CaseIterable, Identifiable {
     case home, away
     
     var id: String { rawValue }
-    
 }
 
 struct Linescore: Codable {
@@ -22,7 +21,7 @@ struct Linescore: Codable {
     let isTopInning: Bool
     let scheduledInnings: Int
     let innings: [Inning]
-    let teams: TeamsLinescoreResults
+    let teams: Teams<InningTeamResults?>
     let offense: Offense
     let balls: Int
     let strikes: Int
@@ -36,24 +35,11 @@ struct Linescore: Codable {
         isTopInning = try container.decode(forKey: .isTopInning, default: false)
         scheduledInnings = try container.decode(forKey: .scheduledInnings, default: 0)
         innings = try container.decode(forKey: .innings, default: [Inning]())
-        teams = try container.decode(forKey: .teams, default: TeamsLinescoreResults())
+        teams = try container.decode(Teams.self, forKey: .teams)
         offense = try container.decode(forKey: .offense, default: Offense())
         balls = try container.decode(forKey: .balls, default: 0)
         strikes = try container.decode(forKey: .strikes, default: 0)
         outs = try container.decode(forKey: .outs, default: 0)
-    }
-    
-    init(currentInning: Int = 1, currentInningOrdinal: String = "", isTopInning: Bool = false, scheduledInnings: Int = 9, innings: [Inning] = [], teams: TeamsLinescoreResults = TeamsLinescoreResults(), offense: Offense = Offense(), balls: Int = 0, strikes: Int = 0, outs: Int = 0) {
-        self.currentInning = currentInning
-        self.currentInningOrdinal = currentInningOrdinal
-        self.isTopInning = isTopInning
-        self.scheduledInnings = scheduledInnings
-        self.innings = innings
-        self.teams = teams
-        self.offense = offense
-        self.balls = balls
-        self.strikes = strikes
-        self.outs = outs
     }
     
     var getNumberInnings: Int {
@@ -110,15 +96,15 @@ struct Linescore: Codable {
     }
 }
 
-
-struct TeamsLinescoreResults: Codable {
-    let away, home: InningTeamResults
-    
-    init(away: InningTeamResults = InningTeamResults(), home: InningTeamResults = InningTeamResults()) {
-        self.away = away
-        self.home = home
-    }
-}
+//
+//struct TeamsLinescoreResults: Codable {
+//    let away, home: InningTeamResults
+//
+//    init(away: InningTeamResults = InningTeamResults(), home: InningTeamResults = InningTeamResults()) {
+//        self.away = away
+//        self.home = home
+//    }
+//}
 
 struct Offense: Codable {
     var first: InfoBase?
