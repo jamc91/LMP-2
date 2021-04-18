@@ -16,8 +16,17 @@ struct ContentLiveView: View {
     var body: some View {
         VStack(alignment: .trailing) {
             dismissButton
-            if let liveContent = viewModel.live {
-                BoxscoreGameView(live: liveContent)
+            switch viewModel.live?.gameData.status.abstractGameState {
+            case .live, .final:
+                if let boxscoreData = viewModel.live {
+                    BoxscoreGameView(live: boxscoreData)
+                }
+            case .preview:
+                if let previewData = viewModel.live {
+                    DetailPreview(previewData: previewData)
+                }
+            case .none:
+                Text("No hay informacion.")
             }
         }
     }

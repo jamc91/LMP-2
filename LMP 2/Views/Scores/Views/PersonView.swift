@@ -25,8 +25,8 @@ struct PersonView: View {
         WebImage(url: EndPoint.image(imageID).urlRequest.url!.absoluteString)
             .scaledToFit()
             .background(Color(.systemGray5))
-            .clipShape(Circle())
-            .frame(width: 50, height: 50)
+          //  .clipShape(Circle())
+            .frame(width: 60, height: 60)
             .unredacted()
     }
     

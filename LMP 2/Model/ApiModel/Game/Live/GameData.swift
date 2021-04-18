@@ -15,6 +15,7 @@ struct GameData: Codable {
     let teams: Teams<TeamInformation>
     let players: [String: Person]
     let venue: Venue
+    let probablePitchers: Teams<Person>?
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -24,13 +25,15 @@ struct GameData: Codable {
         teams = try container.decode(Teams.self, forKey: .teams)
         players = try container.decode(forKey: .players, default: [String : Person]())
         venue = try container.decode(forKey: .venue, default: Venue())
+        probablePitchers = try container.decode(Teams.self, forKey: .probablePitchers)
     }
     
-    init(datetime: DateTime = DateTime(), status: Status = Status(), teams: Teams<TeamInformation>, players: [String: Person] = [String : Person](), venue: Venue = Venue()) {
+    init(datetime: DateTime = DateTime(), status: Status = Status(), teams: Teams<TeamInformation>, players: [String: Person] = [String : Person](), venue: Venue = Venue(), probablePitchers: Teams<Person>) {
         self.datetime = datetime
         self.status = status
         self.teams = teams
         self.players = players
         self.venue = venue
+        self.probablePitchers = probablePitchers
     }
 }

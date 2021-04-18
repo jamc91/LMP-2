@@ -17,7 +17,7 @@ struct PlayerView: View {
     }
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             player.webImage
                 .background(Color(.systemGray5))
                 .clipShape(Circle())

@@ -21,6 +21,7 @@ struct Teams<T: Codable>: Codable {
 
 struct TeamInformation: Codable {
     let id: Int
+    let name: String
     let venue: Venue
     let abbreviation: String
     let teamName: String
@@ -34,6 +35,7 @@ struct TeamInformation: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         id = try container.decode(forKey: .id, default: 0)
+        name = try container.decode(forKey: .name, default: "")
         venue = try container.decode(forKey: .venue, default: Venue())
         abbreviation = try container.decode(forKey: .abbreviation, default: "")
         teamName = try container.decode(forKey: .teamName, default: "")
@@ -43,8 +45,9 @@ struct TeamInformation: Codable {
         record = try container.decode(forKey: .record, default: RecordTeam())
     }
     
-    init(id: Int = 0, venue: Venue = Venue(), abbreviation: String = "", teamName: String = "", league: LeagueInformation = LeagueInformation(), sport: LeagueInformation = LeagueInformation(), shortName: String = "", record: RecordTeam = RecordTeam()) {
+    init(id: Int = 0, name: String = "", venue: Venue = Venue(), abbreviation: String = "", teamName: String = "", league: LeagueInformation = LeagueInformation(), sport: LeagueInformation = LeagueInformation(), shortName: String = "", record: RecordTeam = RecordTeam()) {
         self.id = id
+        self.name = name
         self.venue = venue
         self.abbreviation = abbreviation
         self.teamName = teamName

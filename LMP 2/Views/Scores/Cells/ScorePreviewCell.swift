@@ -19,12 +19,19 @@ struct ScorePreviewCell: View {
                          wins: game.teams.away.leagueRecord.wins,
                          losses: game.teams.away.leagueRecord.losses)
                 Spacer()
-                VStack {
-                    Text("@")
-                        .font(.system(size: 50, weight: .semibold, design: .rounded))
-                        .foregroundColor(.secondary)
-                    Text(game.gameDate.hourFormat(status: game.status.startTimeTBD))
-                        .font(.headline)
+                VStack(spacing: 10) {
+                    Group {
+                        Text(game.teams.away.team.teamName)
+                            .fontWeight(.semibold) +
+                            Text(" @ ")
+                            .foregroundColor(.secondary) +
+                            Text(game.teams.home.team.teamName)
+                            .fontWeight(.semibold)
+                    }
+                    .minimumScaleFactor(0.2)
+                    .lineLimit(1)
+                    Label(game.gameDate.hourFormat(status: game.status.startTimeTBD), systemImage: "clock")
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
                 Spacer()
