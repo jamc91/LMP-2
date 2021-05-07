@@ -6,7 +6,7 @@
 //  Copyright © 2020 Jesús Medina Camargo. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 struct StandingLMP: Codable {
     let response: Standing
@@ -17,17 +17,17 @@ struct StandingLMP: Codable {
 }
 
 enum TypeStanding: String, CaseIterable {
-    case First, Second, General, Points, Playoffs, Semifinal, Final
+    case first, second, general, points, playoffs, semifinal, final
 }
 
 struct Standing: Codable {
-    let first, second, general: [StandingRegular]
-    let points: [StandingPoints]
-    let playoffs: StandingPlayoffs?
+    let first, second, general: [Regular]
+    let points: [Points]
+    let playoffs: Playoffs?
     
 }
 
-struct StandingRegular: Codable, Identifiable {
+struct Regular: Codable, Identifiable {
     var id = UUID()
     let name: String
     let teamName: String
@@ -43,23 +43,7 @@ struct StandingRegular: Codable, Identifiable {
     }
 }
 
-extension StandingRegular {
-    static var data: [StandingRegular] { [
-        .init(name: "Obregon", teamName: "OBR", wins: 21, losses: 8, percent: ".754", gb: "--", pts: "10.0"),
-        .init(name: "Hermosillo", teamName: "HER", wins: 15, losses: 11, percent: ".577", gb: "4.5", pts: "9.0"),
-        .init(name: "Monterrey", teamName: "MTY", wins: 14, losses: 12, percent: ".538", gb: "5.5", pts: "8.0"),
-        .init(name: "Culiacan", teamName: "CUL", wins: 15, losses: 13, percent: ".536", gb: "5.5", pts: "7.0"),
-        .init(name: "Guasave", teamName: "GSV", wins: 14, losses: 13, percent: ".519", gb: "6.0", pts: "6.0"),
-        .init(name: "Jalisco", teamName: "JAL", wins: 15, losses: 14, percent: ".517", gb: "6.0", pts: "5.5"),
-        .init(name: "Mazatlan", teamName: "MAZ", wins: 14, losses: 14, percent: ".500", gb: "6.5", pts: "5.0"),
-        .init(name: "Mexicali", teamName: "MXC", wins: 13, losses: 16, percent: ".448", gb: "8.0", pts: "6.5"),
-        .init(name: "Navojoa", teamName: "NAV", wins: 10, losses: 19, percent: ".345", gb: "11.0", pts: "4.0"),
-        .init(name: "Obregon", teamName: "OBR", wins: 9, losses: 20, percent: ".310", gb: "12.0", pts: "3.5")
-    ]
-    }
-}
-
-struct StandingPoints: Codable, Identifiable {
+struct Points: Codable, Identifiable {
     var id = UUID()
     let name: String
     let teamName: String
@@ -75,11 +59,11 @@ struct StandingPoints: Codable, Identifiable {
     }
 }
 
-struct StandingPlayoffs: Codable {
-    let repesca, semifinal, final: [StandingPlayoffsElements]
+struct Playoffs: Codable {
+    let repesca, semifinal, final: [PlayoffsContent]
 }
 
-struct StandingPlayoffsElements: Codable {
+struct PlayoffsContent: Codable, Identifiable {
     var id = UUID()
     let awayTeamName, awayImage: String
     let awayWins, awayLosses: Int
@@ -107,10 +91,44 @@ struct StandingPlayoffsElements: Codable {
     }
 }
 
-extension StandingLMP {
-    static var data: StandingLMP {
-        let url = Bundle.main.url(forResource: "standingsLMP", withExtension: "json")
-        let data = try! Data(contentsOf: url!)
-        return try! JSONDecoder().decode(StandingLMP.self, from: data)
+enum RegularType: String, CaseIterable {
+    
+    case first, second, general, points
+    
+    @ViewBuilder
+    func getStandingList(standing: StandingLMP) -> some View {
+            switch self {
+            case .first:
+                StandingRegularView(standingRegular: standing.response.first)
+            case .second:
+                StandingRegularView(standingRegular: standing.response.second)
+            case .general:
+                StandingRegularView(standingRegular: standing.response.general)
+            case .points:
+                StandingPointsView(standingRegular: standing.response.points)
+        }
     }
+}
+
+enum PlayoffsType: String, CaseIterable {
+    
+    case playoffs, semifinal, final
+    
+    @ViewBuilder
+    func getStandingList(standing: StandingLMP) -> some View {
+            switch self {
+            case .playoffs:
+                StandingPlayoffsView(content: standing.response.playoffs?.repesca)
+            case .semifinal:
+                StandingPlayoffsView(content: standing.response.playoffs?.semifinal)
+            case .final:
+                StandingPlayoffsView(content: standing.response.playoffs?.final)
+        }
+    }
+}
+
+
+enum StandingLeague: String, CaseIterable {
+    case regular, playoffs
+    
 }

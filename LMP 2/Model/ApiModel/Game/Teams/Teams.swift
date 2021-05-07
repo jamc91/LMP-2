@@ -11,12 +11,6 @@ import Foundation
 struct Teams<T: Codable>: Codable {
     let away, home: T
     
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        away = try container.decode(T.self, forKey: .away)
-        home = try container.decode(T.self, forKey: .home)
-    }
 }
 
 struct TeamInformation: Codable {

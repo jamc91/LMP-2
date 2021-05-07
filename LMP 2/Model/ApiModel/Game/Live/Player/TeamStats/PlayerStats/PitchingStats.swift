@@ -22,6 +22,7 @@ struct PitchingStats: Codable {
         baseOnBalls = try container.decode(forKey: .baseOnBalls, default: 0)
         strikeOuts = try container.decode(forKey: .strikeOuts, default: 0)
         homeRuns = try container.decode(forKey: .homeRuns, default: 0)
+     
     }
     
     init(inningsPitched: String = "", hits: Int = 0, runs: Int = 0, earnedRuns: Int = 0, baseOnBalls: Int = 0, strikeOuts: Int = 0, homeRuns: Int = 0) {

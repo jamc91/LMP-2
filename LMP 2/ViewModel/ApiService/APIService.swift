@@ -23,7 +23,7 @@ class ApiService {
                     if (200...299).contains(response.statusCode) {
                         return Just(data)
                             .decode(type: T.self, decoder: JSONDecoder())
-                            .mapError { _ in .decodingError }
+                            .mapError { .decodingError($0) }
                             .eraseToAnyPublisher()
                     } else {
                         return Fail(error: .httpError(response.statusCode))

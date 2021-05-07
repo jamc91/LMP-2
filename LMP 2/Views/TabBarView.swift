@@ -15,8 +15,8 @@ struct TabBarView: View {
     var body: some View {
         TabView {
             ScoresView()
-            Text("Standings").tabItem { Label("Standings", systemImage: "flag.fill") }
-            Text("News").tabItem { Label("News", systemImage: "newspaper.fill") }
+            StandingLMPView()
+            NewsView()
             Text("Stats").tabItem { Label("Stats", systemImage: "chart.bar.fill") }
             Text("Settings").tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }

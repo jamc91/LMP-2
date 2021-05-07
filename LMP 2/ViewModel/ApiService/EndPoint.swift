@@ -15,6 +15,8 @@ enum EndPoint {
     case standingLMP
     case videoList(String)
     case image(Int)
+    case posts(Int)
+    case postDetail(String)
 }
 
 extension EndPoint: RequestBuilder {
@@ -32,6 +34,10 @@ extension EndPoint: RequestBuilder {
             return EndPoint.buildURLRequest(urlString: "https://statsapi.mlb.com/api/v1/game/\(gamePk)/content")
         case .image(let imageId):
             return EndPoint.buildURLRequest(urlString: "https://content.mlb.com/images/headshots/current/60x60/\(imageId)@2x.png")
+        case .posts(let page):
+            return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/posts?page=\(page)")
+        case .postDetail(let slug):
+            return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/posts/\(slug)?param=slug")
         }
     }
     

@@ -85,10 +85,11 @@ extension ScoresView {
                                 .onTapGesture {
                                     contentViewModel.getLiveContent(gamePk: game.gamePk) {
                                         contentViewModel.showSheet = true
+                                        contentViewModel.stopTimer()
                                     }
                                     contentViewModel.getVideoList(gamePk: game.gamePk)
                                 }
-                                .sheet(isPresented: $contentViewModel.showSheet, content: {
+                                .fullScreenCover(isPresented: $contentViewModel.showSheet, content: {
                                     ContentLiveView(viewModel: contentViewModel)
                                 })
                         }
@@ -99,5 +100,19 @@ extension ScoresView {
             }
         }
         .padding([.horizontal, .bottom])
+    }
+}
+
+struct HeaderSectionView: View {
+    
+    var title: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .fontWeight(.bold)
+                .font(.system(size: 22))
+            Spacer()
+        }.padding(.top, 10)
     }
 }

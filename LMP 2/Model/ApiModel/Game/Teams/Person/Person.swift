@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SDWebImageSwiftUI
 
 struct Person: Codable {
     let id: Int
@@ -22,7 +23,7 @@ struct Person: Codable {
     }
     
     var webImage: WebImage {
-        return WebImage(url: EndPoint.image(id).urlRequest.url?.absoluteString ?? "")
+        return WebImage(url: EndPoint.image(id).urlRequest.url)
     }
     
     var playerPitchingStats: StatsContent {

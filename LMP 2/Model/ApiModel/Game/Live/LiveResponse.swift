@@ -9,6 +9,7 @@
 import Foundation
 
 struct LiveResponse: Codable {
+    let gamePk: Int
     let gameData: GameData
     let liveData: LiveData
     

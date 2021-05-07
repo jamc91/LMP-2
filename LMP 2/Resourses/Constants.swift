@@ -15,4 +15,6 @@ struct Constats {
     let games: ScheduleResponse = Bundle.main.decode("schedule.json")
     let live: LiveResponse = Bundle.main.decode("live.json")
     let content: ContentResponse = Bundle.main.decode("content.json")
+    let posts: PostsModel<Response> = Bundle.main.decode("posts.json")
+    let detailPost: PostsModel<Post> = Bundle.main.decode("detailpost.json")
 }

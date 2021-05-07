@@ -14,10 +14,10 @@ struct CalendarView: View {
     let deviceName = UIDevice.current.name
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             calendar
         }
-        .padding([.horizontal, .bottom], 5)
+        .padding([.horizontal, .bottom], 7)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .background((viewModel.showDatePicker ? Color.black.opacity(0.8) : Color.clear)
         .onTapGesture {
@@ -44,7 +44,7 @@ extension CalendarView {
             .padding([.horizontal, .top])
             .offset(y: 20.0)
             .background(Color(.secondarySystemGroupedBackground))
-            .mask(RoundedRectangle(cornerRadius: cornerRadius(device: deviceName), style: .continuous))
+            .mask(RoundedRectangle(cornerRadius: 40.0, style: .continuous))
             .offset(y: viewModel.showDatePicker ? 0 : UIScreen.main.bounds.minY+470)
     }
 }

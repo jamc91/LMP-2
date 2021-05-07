@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct PersonView: View {
     
@@ -22,10 +23,12 @@ struct PersonView: View {
     let position: PositionPlayer
     
     var image: some View {
-        WebImage(url: EndPoint.image(imageID).urlRequest.url!.absoluteString)
+        WebImage(url: EndPoint.image(imageID).urlRequest.url)
+            .resizable()
+            .placeholder(Image("default-player"))
             .scaledToFit()
             .background(Color(.systemGray5))
-          //  .clipShape(Circle())
+            .cornerRadius(5)
             .frame(width: 60, height: 60)
             .unredacted()
     }

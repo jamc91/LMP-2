@@ -20,7 +20,7 @@ struct TeamView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 50, height: 50, alignment: .center)
             Text("(\(wins)-\(losses))")
-                .font(.headline)
+                .font(.subheadline)
                 .foregroundColor(.secondary)
         }
         .padding(.horizontal)

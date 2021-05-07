@@ -11,6 +11,12 @@ import SwiftUI
 struct ScorePreviewCell: View {
     
     let game: Game
+    let venue: Venue?
+    
+    init(game: Game, venue: Venue? = nil) {
+        self.game = game
+        self.venue = venue
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,17 +28,21 @@ struct ScorePreviewCell: View {
                 VStack(spacing: 10) {
                     Group {
                         Text(game.teams.away.team.teamName)
-                            .fontWeight(.semibold) +
-                            Text(" @ ")
-                            .foregroundColor(.secondary) +
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary) +
+                            Text(" @ ") +
                             Text(game.teams.home.team.teamName)
                             .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        Label(game.gameDate.hourFormat(status: game.status.startTimeTBD), systemImage: "clock")
+                        if let venue = venue {
+                            Text("\(venue.name)•\(venue.location.city), \(venue.location.stateAbbrev)")
+                        }
                     }
-                    .minimumScaleFactor(0.2)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .minimumScaleFactor(0.1)
                     .lineLimit(1)
-                    Label(game.gameDate.hourFormat(status: game.status.startTimeTBD), systemImage: "clock")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
                 }
                 Spacer()
                 TeamView(teamName: "\(game.teams.home.team.id)",
