@@ -15,6 +15,7 @@
 		143A772C2591787F009D790F /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A772B2591787E009D790F /* HeaderView.swift */; };
 		144A5EE2252198DC00315B07 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE1252198DC00315B07 /* TeamView.swift */; };
 		144A5EE525219B8400315B07 /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE425219B8400315B07 /* ScoreView.swift */; };
+		144AE0EC264F1D36005E5D66 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144AE0EB264F1D36005E5D66 /* DateFormatter+.swift */; };
 		144B98D02579F0C000576BBC /* TextInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B98CF2579F0C000576BBC /* TextInfoView.swift */; };
 		144E2BFD2583287500DF570D /* ScheduleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E2BFC2583287500DF570D /* ScheduleResponse.swift */; };
 		144E2C0025832CFD00DF570D /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E2BFF25832CFD00DF570D /* Status.swift */; };
@@ -114,6 +115,7 @@
 		143A772B2591787E009D790F /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		144A5EE1252198DC00315B07 /* TeamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
 		144A5EE425219B8400315B07 /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
+		144AE0EB264F1D36005E5D66 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
 		144B98CF2579F0C000576BBC /* TextInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInfoView.swift; sourceTree = "<group>"; };
 		144E2BFC2583287500DF570D /* ScheduleResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleResponse.swift; sourceTree = "<group>"; };
 		144E2BFF25832CFD00DF570D /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
@@ -592,6 +594,7 @@
 			children = (
 				14C768BF24E757DE00AC3F6F /* Extensions.swift */,
 				1489546E261FCCBA0013CB5B /* LoadLocalJson.swift */,
+				144AE0EB264F1D36005E5D66 /* DateFormatter+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -802,6 +805,7 @@
 				1461842D2623BD17004EF195 /* BattingStatsView.swift in Sources */,
 				14E05B1A2460AA92008F2836 /* TabBarView.swift in Sources */,
 				1484EC1B2599496F002B82AC /* ScoreFinalCell.swift in Sources */,
+				144AE0EC264F1D36005E5D66 /* DateFormatter+.swift in Sources */,
 				1484EC172599429F002B82AC /* ScorePreviewCell.swift in Sources */,
 				148954B4261FF0770013CB5B /* PrimaryPosition.swift in Sources */,
 				144E2C0325832E4000DF570D /* Teams.swift in Sources */,

@@ -34,7 +34,7 @@ struct ScorePreviewCell: View {
                             Text(game.teams.home.team.teamName)
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
-                        Label(game.gameDate.hourFormat(status: game.status.startTimeTBD), systemImage: "clock")
+                        Text(game.gameDate, style: .time)
                         if let venue = venue {
                             Text("\(venue.name)•\(venue.location.city), \(venue.location.stateAbbrev)")
                         }

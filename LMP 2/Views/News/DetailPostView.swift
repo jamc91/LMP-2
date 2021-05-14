@@ -32,7 +32,7 @@ struct DetailPostView: View {
                         Text(viewModel.detailPost?.title ?? "")
                             .font(.system(size: 20, weight: .semibold, design: .serif))
                             .italic()
-                        Text(viewModel.detailPost?.date.dateVideoFormatter() ?? "")
+                        Text(viewModel.detailPost?.date ?? Date(), style: .date)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         Text(viewModel.detailPost?.content.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil) ?? "")

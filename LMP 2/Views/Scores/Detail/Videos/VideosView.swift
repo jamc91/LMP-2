@@ -62,9 +62,11 @@ struct VideoRow: View {
                 Text(item.headline)
                     .font(.title2)
                     .fontWeight(.semibold)
-                Text("\(item.duration.minuteFormatter()) | \(item.date.dateVideoFormatter())")
-                    .foregroundColor(.secondary)
-                
+                Group {
+                    Text("\(item.duration.minuteFormatter()) | ") +
+                    Text(item.date, style: .date)
+                }
+                .foregroundColor(.secondary)
             }
         }
         .onTapGesture {

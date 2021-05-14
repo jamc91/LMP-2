@@ -26,7 +26,7 @@ struct Items: Codable, Identifiable {
     var id = UUID()
     let headline: String
     let image: HighlightsImage
-    let date: String
+    let date: Date
     let duration: String
     let playbacks: [HighlightsPlaybacks]
     

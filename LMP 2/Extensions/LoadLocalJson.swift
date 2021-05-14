@@ -10,10 +10,12 @@ import Foundation
 
 extension Bundle {
     func decode<T: Codable>(_ url: String) -> T {
+        
         guard let url = self.url(forResource: url, withExtension: nil) else { fatalError("Error al crear URL") }
         do {
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .custom(Formatter.formatterDate)
             let jsonDecoded = try decoder.decode(T.self, from: data)
             return jsonDecoded
         } catch {

@@ -32,7 +32,7 @@ struct PostCell: View {
                     .lineLimit(2)
                 Text(post.description.replacingOccurrences(of: "[&]|acute;", with: "", options: .regularExpression, range: nil))
                     .lineLimit(2)
-                Text(post.date.dateVideoFormatter())
+                Text(post.date, style: .date)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }

@@ -22,7 +22,7 @@ struct Post: Codable, Identifiable, Equatable {
     let coverThumb: URL
     let title: String
     let description: String
-    let date: String
+    let date: Date
     let slug: String
     let content: String
     
@@ -43,7 +43,7 @@ struct Post: Codable, Identifiable, Equatable {
         coverThumb = try container.decode(forKey: .coverThumb, default: URL(string: "")!)
         title = try container.decode(forKey: .title, default: "")
         description = try container.decode(forKey: .description, default: "")
-        date = try container.decode(forKey: .date, default: "")
+        date = try container.decode(forKey: .date, default: Date())
         slug = try container.decode(forKey: .slug, default: "")
         content = try container.decode(forKey: .content, default: "")
     }

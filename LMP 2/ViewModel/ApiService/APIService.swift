@@ -15,6 +15,8 @@ class ApiService {
     private var cancellables = Set<AnyCancellable>()
     
     func getData<T: Codable>(with builder: RequestBuilder, completion: @escaping (Result<T, ApiError>) -> Void) {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .custom(Formatter.formatterDate)
         URLSession.shared
             .dataTaskPublisher(for: builder.urlRequest)
             .mapError { _ in .unknown }
@@ -22,7 +24,7 @@ class ApiService {
                 if let response = response as? HTTPURLResponse {
                     if (200...299).contains(response.statusCode) {
                         return Just(data)
-                            .decode(type: T.self, decoder: JSONDecoder())
+                            .decode(type: T.self, decoder: decoder)
                             .mapError { .decodingError($0) }
                             .eraseToAnyPublisher()
                     } else {
@@ -48,3 +50,5 @@ class ApiService {
             .store(in: &cancellables)
     }
 }
+
+
