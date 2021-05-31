@@ -34,7 +34,7 @@ struct ScoresView_Previews: PreviewProvider {
 // MARK: - Variables
 extension ScoresView {
     var gamesInDictionaryForLeague: [String: [Game]] {
-        Dictionary(grouping: contentViewModel.scheduledGames, by: { $0.teams.away.team.league.nameLeague })
+        Dictionary(grouping: contentViewModel.games, by: { $0.teams.away.team.league.nameLeague })
     }
     
     var leagueGameForKey: [String] {

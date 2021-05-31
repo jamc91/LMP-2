@@ -64,8 +64,8 @@ extension ContentLiveView {
     }
     
     var game: Game {
-        guard let index = viewModel.scheduledGames.firstIndex(where: { $0.gamePk == viewModel.live!.gamePk }) else { fatalError("Error load gamePk") }
-        return viewModel.scheduledGames[index]
+        guard let index = viewModel.games.firstIndex(where: { $0.gamePk == viewModel.live!.gamePk }) else { fatalError("Error load gamePk") }
+        return viewModel.games[index]
     }
 }
 

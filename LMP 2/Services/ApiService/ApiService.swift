@@ -14,6 +14,8 @@ class ApiService {
     static let shared = ApiService()
     private var cancellables = Set<AnyCancellable>()
     
+    private init() {}
+    
     func getData<T: Codable>(with builder: RequestBuilder, completion: @escaping (Result<T, ApiError>) -> Void) {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(Formatter.formatterDate)

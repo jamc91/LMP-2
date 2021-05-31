@@ -44,7 +44,7 @@ struct DetailPostView: View {
                 loading
             }
         }
-        .ignoresSafeArea()
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             viewModel.getDetailPost(slug: slug) {
                 self.showPost = true

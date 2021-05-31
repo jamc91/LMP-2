@@ -16,7 +16,8 @@ struct LMP2App: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(viewModel)
+            ContentView()
+                .environmentObject(viewModel)
                 .onChange(of: scenePhase) { state in
                     if state == .background { viewModel.stopTimer() }
                     if state == .active { viewModel.startTimer() }
