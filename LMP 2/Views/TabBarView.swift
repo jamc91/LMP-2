@@ -27,6 +27,7 @@ struct TabBarView: View {
 struct TabBarView_Previews: PreviewProvider {
     
     static var previews: some View {
-        TabBarView().environmentObject(ContentViewModel(games: Constats.shared.games.dates.flatMap { $0.games }, standingMLB: Constats.shared.standingMLB, standingLMP: Constats.shared.standingLMP, liveContent: Constats.shared.live, videoList: Constats.shared.content))
+        TabBarView()
+            .environmentObject(ContentViewModel(games: Constats.shared.games.dates.flatMap { $0.games }, standingMLB: Constats.shared.standingMLB, standingLMP: Constats.shared.standingLMP))
     }
 }

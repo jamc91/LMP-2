@@ -11,6 +11,7 @@ import SwiftUI
 struct ScoreLiveCell: View {
     
     let game: Game
+    @State private var animation = false
     
     var body: some View {
         VStack(spacing: 0) {

@@ -8,19 +8,22 @@
 
 import Foundation
 
-final class LiveViewModel {
+final class LiveViewModel: ObservableObject {
     
     @Published var live: LiveResponse?
     @Published var content: ContentResponse?
     
+    init(gamePk: Int) {
+        getLiveContent(gamePk: gamePk)
+        getVideoList(gamePk: gamePk)
+    }
     
     /// Recupera los datos de los juegos en vivo.
-    func getLiveContent(gamePk: Int, completion: @escaping () -> Void) {
+    func getLiveContent(gamePk: Int) {
         ApiService.shared.getData(with: EndPoint.live("\(gamePk)")) { [weak self] (result: Result<LiveResponse, ApiError>) in
             switch result {
             case .success(let liveData):
                 self?.live = liveData
-                completion()
             case .failure(let apiError):
                 self?.printApiErrorMessage(error: apiError)
             }

@@ -17,10 +17,6 @@ final class ContentViewModel: ObservableObject {
     @Published var standingMLB: StandingMLB?
     /// Posiciones Liga LMP
     @Published var standingLMP: StandingLMP?
-    /// Informacion de los juegos en vivo.
-    @Published var live: LiveResponse?
-    /// Informacion del contenido imagenes, videos etc....
-    @Published var content: ContentResponse?
     /// Informa del estado de carga a la vista.
     @Published var posts: [Post]
     
@@ -38,7 +34,6 @@ final class ContentViewModel: ObservableObject {
     /// ViewModels
     let timerManager = TimerManager()
     let scoresViewModel = ScoresViewModel()
-    let liveViewModel = LiveViewModel()
     let standingsViewModel = StandingsViewModel()
     let newsViewModel = NewsViewModel()
     
@@ -48,16 +43,12 @@ final class ContentViewModel: ObservableObject {
         games: [Game] = [],
         standingMLB: StandingMLB? = nil,
         standingLMP: StandingLMP? = nil,
-        liveContent: LiveResponse? = nil,
-        videoList: ContentResponse? = nil,
         posts: [Post] = [],
         detailPost: Post? = nil
     ){
         self.games = games
         self.standingMLB = standingMLB
         self.standingLMP = standingLMP
-        self.live = liveContent
-        self.content = videoList
         self.posts = posts
         self.detailPost = detailPost
         loadData()
@@ -87,14 +78,6 @@ final class ContentViewModel: ObservableObject {
             .assign(to: \.standingMLB, on: self)
             .store(in: &cancellables)
         
-        liveViewModel.$live
-            .assign(to: \.live, on: self)
-            .store(in: &cancellables)
-        
-        liveViewModel.$content
-            .assign(to: \.content, on: self)
-            .store(in: &cancellables)
-        
         newsViewModel.$posts
             .assign(to: \.posts, on: self)
             .store(in: &cancellables)
@@ -102,16 +85,6 @@ final class ContentViewModel: ObservableObject {
         newsViewModel.$detailPost
             .assign(to: \.detailPost, on: self)
             .store(in: &cancellables)
-    }
-    
-    /// Recupera los datos de los juegos en vivo.
-    func getLiveContent(gamePk: Int, completion: @escaping () -> Void) {
-        liveViewModel.getLiveContent(gamePk: gamePk, completion: completion)
-    }
-
-    /// Recupera la lista de videos.
-    func getVideoList(gamePk: Int) {
-        liveViewModel.getVideoList(gamePk: gamePk)
     }
     
     func getPosts(page: Int) {
@@ -143,7 +116,7 @@ final class ContentViewModel: ObservableObject {
             loadingState = .loading
             games.removeAll()
             showDatePicker = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.startTimer()
             self.scoresViewModel.getScheduledGames(date: self.date)
         }

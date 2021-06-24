@@ -11,12 +11,18 @@ import SwiftUI
 struct RowStanding: View {
     
     let content: [(text: String, width: CGFloat)]
+    let font: Font
+    
+    init(content: [(text: String, width: CGFloat)], font: Font = .body) {
+        self.content = content
+        self.font = font
+    }
     
     var body: some View {
         HStack(spacing: 3) {
             ForEach(content.indices) { idx in
                 Text(content[idx].text)
-                    .font(.body)
+                    .font(font)
                     .frame(
                         maxWidth: content[idx].width,
                         alignment: getAlignment(from: idx))

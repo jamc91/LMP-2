@@ -26,6 +26,7 @@ final class TimerManager {
         print("Timer Inicializado")
         timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
             getGames()
+            
         })
     }
 }

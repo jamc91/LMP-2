@@ -20,7 +20,7 @@ struct StandingLMPView: View {
                 switch selectionStanding {
                 case .regular:
                     ForEach(RegularType.allCases, id: \.self) { standing in
-                        Section(header: Text(standing.rawValue)) {
+                        Section(header: RegularHeaderSection(title: standing.rawValue, type: standing)) {
                             if let standingModel = viewModel.standingLMP {
                                 standing.getStandingList(standing: standingModel)
                             }
@@ -28,7 +28,7 @@ struct StandingLMPView: View {
                     }
                 case .playoffs:
                     ForEach(PlayoffsType.allCases, id: \.self) { standing in
-                        Section(header: Text(standing.rawValue)) {
+                        Section(header: PlayoffsHeaderSection(title: standing.rawValue)) {
                             if let standingModel = viewModel.standingLMP {
                                 standing.getStandingList(standing: standingModel)
                             }
@@ -39,7 +39,6 @@ struct StandingLMPView: View {
             .navigationTitle("Standings")
         }
         .tabItem { Label("Standings", systemImage: "flag.fill") }
-        .animation(nil)
     }
 }
 
@@ -60,3 +59,52 @@ extension StandingLMPView {
         .pickerStyle(SegmentedPickerStyle())
     }
 }
+
+struct RegularHeaderSection: View {
+    
+    var title: String
+    var type: RegularType
+    
+    var body: some View {
+        switch type {
+        case .first, .second, .general:
+            RowStanding(
+                content: [
+                (text: title, width: .infinity),
+                (text: "W", width: 30),
+                (text: "L", width: 30),
+                (text: "PCT", width: 45),
+                (text: "GB", width: 35),
+                (text: "PTS", width: 45),
+            ],
+            font: .caption)
+        case .points:
+            RowStanding(
+                content: [
+                (text: title, width: .infinity),
+                (text: "1v", width: 40),
+                (text: "2v", width: 40),
+                (text: "TOTAL", width: 45)
+            ],
+            font: .caption)
+        }
+    }
+}
+
+struct PlayoffsHeaderSection: View {
+    
+    var title: String
+    
+    var body: some View {
+            RowStanding(
+                content: [
+                (text: title, width: .infinity),
+                (text: "W", width: 40),
+                (text: "L", width: 40),
+                (text: "PCT", width: 45)
+            ],
+            font: .caption)
+    }
+}
+
+

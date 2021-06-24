@@ -27,9 +27,7 @@ struct ScoreFinalCell: View {
             }
             .padding(10)
             Divider()
-            HStack {
-                ProbablePitcherView(player1: game.decisions.winner, player2: game.decisions.loser)
-            }
+            PlayersFinalView(decisions: game.decisions)
                 
         }
         .background(Color(.secondarySystemGroupedBackground))

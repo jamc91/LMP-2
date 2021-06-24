@@ -41,6 +41,7 @@ struct VideoRow: View {
     
     var player: AVPlayer {
         let player = AVPlayer(url: urlVideo ?? URL(string: "")!)
+    
         player.play()
         return player
     }
@@ -74,6 +75,7 @@ struct VideoRow: View {
         }
         .fullScreenCover(isPresented: $showVideo, content: {
             VideoPlayer(player: player)
+                
                 .ignoresSafeArea()
                 .onDisappear {
                     self.showVideo = false

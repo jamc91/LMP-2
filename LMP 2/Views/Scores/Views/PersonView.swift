@@ -28,7 +28,7 @@ struct PersonView: View {
             .placeholder(Image("default-player"))
             .scaledToFit()
             .background(Color(.systemGray5))
-            .cornerRadius(5)
+            .clipShape(Circle())
             .frame(width: 60, height: 60)
             .unredacted()
     }

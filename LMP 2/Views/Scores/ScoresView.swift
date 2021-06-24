@@ -7,10 +7,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ScoresView: View {
     
     @EnvironmentObject var contentViewModel: ContentViewModel
+    @State private var dealt = Set<Int>()
     
     var body: some View {
         MainScrollView {
@@ -21,7 +23,6 @@ struct ScoresView: View {
             StateView
         }
         .tabItem { Label("Scores", image: "scores") }
-        .animation(nil)
     }
 }
 
@@ -59,47 +60,71 @@ extension ScoresView {
         }
     }
     
+    @ViewBuilder
     func getGameCell(game: Game) -> some View {
-         Group {
-            switch game.status.abstractGameState {
-            case .live:
-                 ScoreLiveCell(game: game)
-            case .final:
-                 ScoreFinalCell(game: game)
-            case .preview:
-                 ScorePreviewCell(game: game)
-            }
+        switch game.status.abstractGameState {
+        case .live:
+            ScoreLiveCell(game: game)
+        case .final:
+            ScoreFinalCell(game: game)
+        case .preview:
+            ScorePreviewCell(game: game)
         }
     }
     
+    private func dealAnimation(game: Game) -> Animation {
+        var delay = 0.0
+        if let index = contentViewModel.games.firstIndex(where: { $0.gamePk == game.gamePk }) {
+            delay = Double(index) * 0.2
+        }
+        return Animation.spring().delay(delay)
+    }
+    
+    private func deal(_ game: Game) {
+        
+        dealt.insert(game.gamePk)
+    }
+
+    private func isUnDealt(game: Game) -> Bool {
+        dealt.contains(game.gamePk)
+    }
+    
     var StateView: some View {
-        VStack(alignment: .center, spacing: 10) {
-            switch contentViewModel.loadingState {
-            case .loading:
-                loading
-            case .loaded:
-                ForEach(leagueGameForKey, id: \.self) { section in
-                    Section(header: HeaderSectionView(title: section)) {
-                        ForEach(gamesInDictionaryForLeague[section, default: .init()]) { game in
-                            getGameCell(game: game)
-                                .onTapGesture {
-                                    contentViewModel.getLiveContent(gamePk: game.gamePk) {
+            VStack(alignment: .center, spacing: 10) {
+                switch contentViewModel.loadingState {
+                case .loading:
+                    loading
+                        .onAppear {
+                            dealt.removeAll()
+                        }
+                case .loaded:
+                    ForEach(leagueGameForKey, id: \.self) { section in
+                        Section(header: HeaderSectionView(title: section)) {
+                            ForEach(gamesInDictionaryForLeague[section, default: .init()].filter(isUnDealt)) { game in
+                                getGameCell(game: game)
+                                    .onTapGesture {
                                         contentViewModel.showSheet = true
                                         contentViewModel.stopTimer()
                                     }
-                                    contentViewModel.getVideoList(gamePk: game.gamePk)
-                                }
-                                .fullScreenCover(isPresented: $contentViewModel.showSheet, content: {
-                                    ContentLiveView(viewModel: contentViewModel)
-                                })
+                                    .fullScreenCover(isPresented: $contentViewModel.showSheet, content: {
+                                        ContentLiveView(gamePk: game.gamePk)
+                                    })
+                            }
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
                         }
                     }
+                    .onAppear {
+                        for game in contentViewModel.games {
+                            withAnimation(dealAnimation(game: game)) {
+                                deal(game)
+                            }
+                        }
+                    }
+                case .empty:
+                    empty
                 }
-            case .empty:
-                empty
             }
-        }
-        .padding([.horizontal, .bottom])
+            .padding([.horizontal, .bottom])
     }
 }
 
