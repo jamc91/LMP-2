@@ -12,9 +12,11 @@ struct ContentLiveView: View {
     
     @StateObject var liveViewModel: LiveViewModel
     @Environment(\.presentationMode) var presentationMode
+    let game: Game?
     
-    init(gamePk: Int) {
-        self._liveViewModel = StateObject(wrappedValue: LiveViewModel(gamePk: gamePk))
+    init(game: Game?) {
+        self.game = game
+        self._liveViewModel = StateObject(wrappedValue: LiveViewModel(gamePk: game?.gamePk ?? 0))
     }
     
     var body: some View {
@@ -28,13 +30,12 @@ struct ContentLiveView: View {
                             .tabItem { Label("Boxscore", systemImage: "list.bullet") }
                     }
                 case .preview:
-//                    if let previewData = liveViewModel.live {
-//                        DetailPreview(previewData: previewData, game: game)
-//                            .tabItem { Label("Preview", systemImage: "list.bullet") }
-//                    }
-                Text("Preview coming soon")
+                    if let previewData = liveViewModel.live, let game = game {
+                        DetailPreview(previewData: previewData, game: game)
+                            .tabItem { Label("Preview", systemImage: "list.bullet") }
+                    }
                 case .none:
-                    Text("No hay informacion.")
+                    ProgressView("Loading")
                 }
                 
                 if let content = liveViewModel.content, !content.highlights.highlights.items.isEmpty {
@@ -52,7 +53,7 @@ struct ContentLiveView: View {
 
 struct ContentLiveView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentLiveView(gamePk: 0)
+        ContentLiveView(game: Constats.shared.games.dates[0].games[0])
     }
 }
 

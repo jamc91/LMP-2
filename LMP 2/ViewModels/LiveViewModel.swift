@@ -14,8 +14,13 @@ final class LiveViewModel: ObservableObject {
     @Published var content: ContentResponse?
     
     init(gamePk: Int) {
+        print(gamePk)
         getLiveContent(gamePk: gamePk)
         getVideoList(gamePk: gamePk)
+    }
+    
+    deinit {
+        print("desinizializado")
     }
     
     /// Recupera los datos de los juegos en vivo.

@@ -19,7 +19,7 @@ struct BSOView: View {
         VStack (alignment: .leading) {
             HStack(spacing: 4) {
                 Text("B")
-                    .modifier(textModifier(font: .headline, fontColor: Color("LightGray"), fontDesing: .default))
+                    .modifier(textModifier(font: .headline, fontColor: .secondary, fontDesing: .default))
                 ForEach(balls, id: \.self) { item in
                     Image(systemName: colorScheme == .light ? item : "circle.fill")
                         .foregroundColor(Color(isActive(status: item)))
@@ -28,7 +28,7 @@ struct BSOView: View {
             }
             HStack(spacing: 4) {
                 Text("S")
-                    .modifier(textModifier(font: .headline, fontColor: Color("LightGray"), fontDesing: .default))
+                    .modifier(textModifier(font: .headline, fontColor: .secondary, fontDesing: .default))
                 ForEach(strikes, id: \.self) { item in
                     Image(systemName: colorScheme == .light ? item : "circle.fill")
                         .foregroundColor(Color(isActive(status: item)))
@@ -37,7 +37,7 @@ struct BSOView: View {
             }
             HStack(spacing: 4) {
                 Text("O")
-                    .modifier(textModifier(font: .headline, fontColor: Color("LightGray"), fontDesing: .default))
+                    .modifier(textModifier(font: .headline, fontColor: .secondary, fontDesing: .default))
                 ForEach(outs, id: \.self) { item in
                     Image(systemName: colorScheme == .light ? item : "circle.fill")
                         .foregroundColor(Color(isActive(status: item)))

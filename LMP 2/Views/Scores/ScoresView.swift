@@ -13,6 +13,7 @@ struct ScoresView: View {
     
     @EnvironmentObject var contentViewModel: ContentViewModel
     @State private var dealt = Set<Int>()
+    @State private var game: Game? = nil
     
     var body: some View {
         MainScrollView {
@@ -22,7 +23,10 @@ struct ScoresView: View {
                 showPicker: contentViewModel.didTapCalendarButton)
             StateView
         }
-        .tabItem { Label("Scores", image: "scores") }
+        .fullScreenCover(isPresented: $contentViewModel.showSheet, content: {
+            ContentLiveView(game: game)
+        })
+        .tabItem { Label("Scores", systemImage: "newspaper.fill") }
     }
 }
 
@@ -89,6 +93,11 @@ extension ScoresView {
         dealt.contains(game.gamePk)
     }
     
+    private func chooseGame(_ game: Game) -> Int {
+        guard let index = contentViewModel.games.firstIndex(where: { $0.id == game.id }) else { return 0 }
+        return contentViewModel.games[index].gamePk
+    }
+    
     var StateView: some View {
             VStack(alignment: .center, spacing: 10) {
                 switch contentViewModel.loadingState {
@@ -103,12 +112,11 @@ extension ScoresView {
                             ForEach(gamesInDictionaryForLeague[section, default: .init()].filter(isUnDealt)) { game in
                                 getGameCell(game: game)
                                     .onTapGesture {
+                                        self.game = game
                                         contentViewModel.showSheet = true
                                         contentViewModel.stopTimer()
                                     }
-                                    .fullScreenCover(isPresented: $contentViewModel.showSheet, content: {
-                                        ContentLiveView(gamePk: game.gamePk)
-                                    })
+                                    
                             }
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                         }
