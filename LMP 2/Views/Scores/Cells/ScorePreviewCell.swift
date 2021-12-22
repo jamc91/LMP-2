@@ -54,7 +54,7 @@ struct ScorePreviewCell: View {
             ProbablePitcherView(player1: game.teams.away.probablePitcher, player2: game.teams.home.probablePitcher)
         }
         .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10.0))
     }
 }
 

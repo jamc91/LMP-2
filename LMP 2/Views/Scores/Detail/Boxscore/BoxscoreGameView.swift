@@ -24,6 +24,7 @@ struct BoxscoreGameView: View {
             }
             .listRowInsets(EdgeInsets())
         }
+        .listStyle(PlainListStyle())
     }
 }
 

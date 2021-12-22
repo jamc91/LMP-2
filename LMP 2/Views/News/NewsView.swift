@@ -11,40 +11,35 @@ import SDWebImageSwiftUI
 
 struct NewsView: View {
     
-    @EnvironmentObject var viewModel: ContentViewModel
-    @State private var index = 2
+    @StateObject var newsViewModel = NewsViewModel()
     
     var body: some View {
         NavigationView {
-            List(viewModel.posts) { post in
-                NavigationLink(
-                    destination: DetailPostView(slug: post.slug),
-                    label: {
-                        PostCell(post: post)
-                            .onAppear(perform: { loadMorePosts(post: post) })
-                    })
-                    .buttonStyle(PlainButtonStyle())
+            ScrollView {
+                LazyVStack {
+                    ForEach(newsViewModel.posts) { post in
+                        NavigationLink(
+                            destination: DetailPostView(slug: post.slug),
+                            label: {
+                                PostCell(post: post)
+                                    .onAppear { newsViewModel.loadMorePosts(post: post)
+                                    }
+                            })
+                            .buttonStyle(PlainButtonStyle())
+                        Divider()
+                    }
+                }
+                .padding(.horizontal)
             }
             .navigationTitle("News")
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .tabItem { Label("News", systemImage: "newspaper.fill") }
-        .accentColor(.blue)
-        .animation(nil)
     }
 }
 
 struct NewsView_Previews: PreviewProvider {
     static var previews: some View {
         NewsView()
-            .environmentObject(ContentViewModel(posts: Constats.shared.posts.response.posts))
-    }
-}
-
-extension NewsView {
-    func loadMorePosts(post: Post) {
-        if viewModel.posts.last == post {
-            viewModel.getPosts(page: index)
-            self.index += 1
-        }
     }
 }

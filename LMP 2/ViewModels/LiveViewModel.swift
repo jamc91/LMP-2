@@ -16,7 +16,7 @@ final class LiveViewModel: ObservableObject {
     init(gamePk: Int) {
         print(gamePk)
         getLiveContent(gamePk: gamePk)
-        getVideoList(gamePk: gamePk)
+     //   getVideoList(gamePk: gamePk)
     }
     
     deinit {

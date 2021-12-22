@@ -8,10 +8,15 @@
 
 import Foundation
 
-final class NewsViewModel {
+final class NewsViewModel: ObservableObject {
     
     @Published var posts: [Post] = []
     @Published var detailPost: Post?
+    var index = 2
+    
+    init() {
+        getPosts(page: 1)
+    }
     
     func getPosts(page: Int) {
         ApiService.shared.getData(with: EndPoint.posts(page)) { [weak self] (result: Result<PostsModel<Response>, ApiError>) in
@@ -21,6 +26,13 @@ final class NewsViewModel {
             case .failure(let error):
                 self?.printApiErrorMessage(error: error)
             }
+        }
+    }
+    
+    func loadMorePosts(post: Post) {
+        if posts.last == post {
+            getPosts(page: index)
+            index += 1
         }
     }
     

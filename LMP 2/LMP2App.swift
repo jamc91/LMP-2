@@ -11,17 +11,12 @@ import SwiftUI
 @main
 struct LMP2App: App {
     
-    @StateObject private var viewModel = ContentViewModel()
-    @Environment(\.scenePhase) var scenePhase
+    @StateObject private var scoresViewModel = ScoresViewModel()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(viewModel)
-                .onChange(of: scenePhase) { state in
-                    if state == .background { viewModel.stopTimer() }
-                    if state == .active { viewModel.startTimer() }
-            }
+                .environmentObject(scoresViewModel)
         }
     }
 }

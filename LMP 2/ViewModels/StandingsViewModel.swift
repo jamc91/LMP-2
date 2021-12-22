@@ -8,14 +8,14 @@
 
 import Foundation
 
-final class StandingsViewModel {
+final class StandingsViewModel: ObservableObject {
     
     @Published var standingLMP: StandingLMP?
     @Published var standingMLB: StandingMLB?
     
     init() {
         getStandingsLMP()
-        getStandingsMLB()
+      //  getStandingsMLB()
     }
     
     func getStandingsLMP() {

@@ -15,16 +15,19 @@ struct PostCell: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            WebImage(url: post.cover)
-                .resizable()
-                .placeholder {
-                    RoundedRectangle(cornerRadius: 15.0, style: .continuous)
-                        .foregroundColor(Color(.systemGray5))
-                }
-                .indicator(.activity)
-                .aspectRatio(contentMode: .fill)
-                .frame(width: UIScreen.main.bounds.width-40, height: 225, alignment: .center)
+            GeometryReader { _ in
+                WebImage(url: URL(string: post.cover))
+                    .resizable()
+                    .placeholder {
+                        RoundedRectangle(cornerRadius: 15.0, style: .continuous)
+                            .foregroundColor(Color(.systemGray5))
+                    }
+                    .indicator(.activity)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: UIScreen.main.bounds.width-40, height: 225, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: 15.0, style: .continuous))
+            }
+            .frame(width: UIScreen.main.bounds.width-40, height: 225, alignment: .center)
             VStack(alignment: .leading, spacing: 5) {
                 Text(post.title)
                     .font(.system(size: 20, weight: .semibold, design: .serif))

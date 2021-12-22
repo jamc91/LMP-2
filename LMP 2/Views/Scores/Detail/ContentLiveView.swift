@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentLiveView: View {
     
     @StateObject var liveViewModel: LiveViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     let game: Game?
     
     init(game: Game?) {
@@ -20,30 +20,59 @@ struct ContentLiveView: View {
     }
     
     var body: some View {
-        VStack(alignment: .trailing) {
-            dismissButton
-            TabView {
-                switch liveViewModel.live?.gameData.status.abstractGameState {
-                case .live, .final:
-                    if let boxscoreData = liveViewModel.live {
-                        BoxscoreGameView(live: boxscoreData)
-                            .tabItem { Label("Boxscore", systemImage: "list.bullet") }
-                    }
-                case .preview:
-                    if let previewData = liveViewModel.live, let game = game {
-                        DetailPreview(previewData: previewData, game: game)
-                            .tabItem { Label("Preview", systemImage: "list.bullet") }
-                    }
-                case .none:
-                    ProgressView("Loading")
+//        VStack {
+//            TabView {
+//                switch liveViewModel.live?.gameData.status.abstractGameState {
+//                case .live, .final:
+//                    if let boxscoreData = liveViewModel.live {
+//                        BoxscoreGameView(live: boxscoreData)
+//                            .tabItem { Label("Boxscore", systemImage: "list.bullet") }
+//                    }
+//                case .preview:
+//                    if let previewData = liveViewModel.live, let game = game {
+//                        DetailPreview(previewData: previewData, game: game)
+//                            .tabItem { Label("Preview", systemImage: "list.bullet") }
+//                    }
+//                case .none:
+//                    ProgressView("Loading")
+//                }
+//
+//                if let content = liveViewModel.content, !content.highlights.highlights.items.isEmpty {
+//                    VideosView(content: content)
+//                        .tabItem { Label("Videos", systemImage: "video.fill") }
+//                }
+//            }
+//            .accentColor(.black)
+//        }
+        VStack {
+            switch liveViewModel.live?.gameData.status.abstractGameState {
+            case .live, .final:
+                if let boxscoreData = liveViewModel.live {
+                    BoxscoreGameView(live: boxscoreData)
+                        .tabItem { Label("Boxscore", systemImage: "list.bullet") }
                 }
-                
-                if let content = liveViewModel.content, !content.highlights.highlights.items.isEmpty {
-                    VideosView(content: content)
-                        .tabItem { Label("Videos", systemImage: "video.fill") }
+            case .preview:
+                if let previewData = liveViewModel.live, let game = game {
+                    DetailPreview(previewData: previewData, game: game)
+                        .tabItem { Label("Preview", systemImage: "list.bullet") }
+                }
+            case .none:
+                ProgressView("Loading")
+            }
+            
+            if let content = liveViewModel.content, !content.highlights.highlights.items.isEmpty {
+                VideosView(content: content)
+                    .tabItem { Label("Videos", systemImage: "video.fill") }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { dismiss() }) {
+                    Text("Done")
+                        .font(.headline)
                 }
             }
-            .accentColor(.black)
         }
         .onDisappear {
             // pendiente detener el timer.
@@ -53,18 +82,20 @@ struct ContentLiveView: View {
 
 struct ContentLiveView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentLiveView(game: Constats.shared.games.dates[0].games[0])
+        NavigationView {
+            ContentLiveView(game: Constats.shared.games.dates[0].games[0])
+        }
     }
 }
 
 extension ContentLiveView {
     var dismissButton: some View {
-        Button(action:  { presentationMode.wrappedValue.dismiss() }) {
+        Button(action:  { dismiss() }) {
             Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 25))
+                .font(.system(size: 22))
                 .foregroundColor(.secondary)     
         }
-        .frame(width: 60)
+        .padding(.vertical)
     }
     
 //    var game: Game {

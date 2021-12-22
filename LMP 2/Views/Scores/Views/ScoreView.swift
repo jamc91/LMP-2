@@ -17,13 +17,13 @@ struct ScoreView: View {
         VStack {
             Text("\(awayScore)-\(homeScore)")
                 .font(.system(size: 45, weight: .semibold, design: .rounded))
-                .minimumScaleFactor(0.1)
                 .lineLimit(1)
                 .foregroundColor(.primary)
             Text(status)
                 .font(.headline)
                 .foregroundColor(.secondary)
         }
+        .frame(width: 100)
     }
 }
 

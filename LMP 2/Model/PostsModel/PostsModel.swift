@@ -18,8 +18,8 @@ struct Response: Codable {
 
 struct Post: Codable, Identifiable, Equatable {
     let id = UUID()
-    let cover: URL
-    let coverThumb: URL
+    let cover: String
+    let coverThumb: String
     let title: String
     let description: String
     let date: Date
@@ -39,8 +39,8 @@ struct Post: Codable, Identifiable, Equatable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        cover = try container.decode(forKey: .cover, default: URL(string: "")!)
-        coverThumb = try container.decode(forKey: .coverThumb, default: URL(string: "")!)
+        cover = try container.decode(forKey: .cover, default: "")
+        coverThumb = try container.decode(forKey: .coverThumb, default: "")
         title = try container.decode(forKey: .title, default: "")
         description = try container.decode(forKey: .description, default: "")
         date = try container.decode(forKey: .date, default: Date())

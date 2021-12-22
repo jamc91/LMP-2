@@ -11,15 +11,17 @@ import SDWebImageSwiftUI
 
 struct DetailPostView: View {
     
-    @EnvironmentObject var viewModel: ContentViewModel
-    let slug: String
-    @State private var showPost = false
+    @StateObject var detailPostViewModel: DetailPostViewModel
+    
+    init(slug: String) {
+        self._detailPostViewModel = StateObject(wrappedValue: DetailPostViewModel(slug: slug))
+    }
     
     var body: some View {
         ZStack {
-            if showPost {
+            if !detailPostViewModel.isLoading {
                 ScrollView {
-                    WebImage(url: viewModel.detailPost?.cover)
+                    WebImage(url: URL(string: detailPostViewModel.detailPost?.cover ?? ""))
                         .resizable()
                         .placeholder {
                             RoundedRectangle(cornerRadius: 15.0, style: .continuous)
@@ -29,13 +31,13 @@ struct DetailPostView: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(height: 350, alignment: .center)
                     VStack(alignment: .leading, spacing: 5) {
-                        Text(viewModel.detailPost?.title ?? "")
+                        Text(detailPostViewModel.detailPost?.title ?? "")
                             .font(.system(size: 20, weight: .semibold, design: .serif))
                             .italic()
-                        Text(viewModel.detailPost?.date ?? Date(), style: .date)
+                        Text(detailPostViewModel.detailPost?.date ?? Date(), style: .date)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        Text(viewModel.detailPost?.content.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil) ?? "")
+                        Text(detailPostViewModel.detailPost?.content.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil) ?? "")
                     }
                     .padding(10)
                     .frame(width: UIScreen.main.bounds.width)
@@ -45,21 +47,12 @@ struct DetailPostView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            viewModel.getDetailPost(slug: slug) {
-                self.showPost = true
-            }
-        }
-        .onDisappear {
-            viewModel.detailPost = nil
-        }
     }
 }
 
 struct DetailPostView_Previews: PreviewProvider {
     static var previews: some View {
         DetailPostView(slug: "")
-            .environmentObject(ContentViewModel(detailPost: Constats.shared.detailPost.response))
     }
 }
 

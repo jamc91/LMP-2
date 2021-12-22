@@ -24,9 +24,8 @@ final class TimerManager {
     func startTimer(getGames: @escaping () -> Void) {
         timerStopped = false
         print("Timer Inicializado")
-        timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: { _ in
             getGames()
-            
         })
     }
 }

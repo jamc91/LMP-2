@@ -11,39 +11,16 @@ import SwiftUI
 struct BSOView: View {
     
     @Environment(\.colorScheme) var colorScheme
-    let balls: [String]
-    let strikes: [String]
-    let outs: [String]
+    let balls: Int
+    let strikes: Int
+    let outs: Int
     
     var body: some View {
         VStack (alignment: .leading) {
-            HStack(spacing: 4) {
-                Text("B")
-                    .modifier(textModifier(font: .headline, fontColor: .secondary, fontDesing: .default))
-                ForEach(balls, id: \.self) { item in
-                    Image(systemName: colorScheme == .light ? item : "circle.fill")
-                        .foregroundColor(Color(isActive(status: item)))
-                        .font(.system(size: 11))
-                }
-            }
-            HStack(spacing: 4) {
-                Text("S")
-                    .modifier(textModifier(font: .headline, fontColor: .secondary, fontDesing: .default))
-                ForEach(strikes, id: \.self) { item in
-                    Image(systemName: colorScheme == .light ? item : "circle.fill")
-                        .foregroundColor(Color(isActive(status: item)))
-                        .font(.system(size: 11))
-                }
-            }
-            HStack(spacing: 4) {
-                Text("O")
-                    .modifier(textModifier(font: .headline, fontColor: .secondary, fontDesing: .default))
-                ForEach(outs, id: \.self) { item in
-                    Image(systemName: colorScheme == .light ? item : "circle.fill")
-                        .foregroundColor(Color(isActive(status: item)))
-                        .font(.system(size: 11))
-                }
-            }.offset(x: -2, y: 0)
+            LabelDots(label: "B", numberOfDots: 4, state: balls)
+            LabelDots(label: "S", numberOfDots: 3, state: strikes)
+            LabelDots(label: "O", numberOfDots: 3, state: outs)
+                .offset(x: -2, y: 0)
         }.frame(width: 100, height: 100)
     }
     func isActive(status: String) -> String {
@@ -56,13 +33,13 @@ struct BSOView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             BSOView(
-                balls: ["circle.fill", "circle", "circle", "circle"],
-                strikes: ["circle.fill", "circle", "circle"],
-                outs: ["circle.fill", "circle", "circle"]).previewLayout(.sizeThatFits)
+                balls: 1,
+                strikes: 2,
+                outs: 1).previewLayout(.sizeThatFits)
             BSOView(
-                balls: ["circle.fill", "circle", "circle", "circle"],
-                strikes: ["circle.fill", "circle", "circle"],
-                outs: ["circle.fill", "circle", "circle"]).previewLayout(.sizeThatFits).preferredColorScheme(.dark)
+                balls: 1,
+                strikes: 2,
+                outs: 1).previewLayout(.sizeThatFits).preferredColorScheme(.dark)
         }
     }
 }
@@ -78,5 +55,28 @@ struct textModifier: ViewModifier {
             .font(font)
             .foregroundColor(fontColor)
             
+    }
+}
+
+
+struct LabelDots: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    let label: String
+    let numberOfDots: Int
+    let state: Int
+    
+    var body: some View {
+        HStack(spacing: 2) {
+            Text(label)
+                .font(.headline)
+                .foregroundColor(colorScheme == .light ? .primary : Color("LightGray"))
+            ForEach(0..<numberOfDots) { index in
+                Image(systemName: index < state ? "circle.fill" : "circle")
+                    .font(.system(size: 11))
+                    .foregroundColor((index < state || colorScheme == .light) ? Color("ActiveColor") : Color("LightGray") )
+            }
+        }
+        
     }
 }

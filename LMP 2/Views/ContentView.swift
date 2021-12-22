@@ -10,12 +10,21 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var viewModel: ContentViewModel
+    @EnvironmentObject var scoresViewModel: ScoresViewModel
+    @State private var showDatePicker = false
     
     var body: some View {
         ZStack {
-            TabBarView()
-            CalendarView()
+            TabBarView() {
+                showDatePicker = true
+            }
+            CalendarView(date: $scoresViewModel.date, show: $showDatePicker)
+        }
+        .onChange(of: scoresViewModel.date) { value in
+            withAnimation(.spring()) {
+                scoresViewModel.changeDate()
+                showDatePicker = false
+            }
         }
     }
 }
@@ -23,6 +32,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(ContentViewModel())
+            .environmentObject(ScoresViewModel())
     }
 }

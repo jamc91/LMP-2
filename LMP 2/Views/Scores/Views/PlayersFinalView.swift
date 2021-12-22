@@ -74,9 +74,17 @@ struct DecisionsPlayerView: View {
     var body: some View {
         HStack {
             player.webImage
+                .resizable()
+                .placeholder {
+                    Image("default-player")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+                }
+                .scaledToFit()
                 .background(Color(.systemGray5))
                 .clipShape(Circle())
-                .frame(width: 50, height: 50, alignment: .center)
+                .frame(width: 60, height: 60)
             VStack(alignment: .leading) {
                 Text(title)
                     .font(.caption)

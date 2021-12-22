@@ -32,8 +32,7 @@ struct HeaderView: View {
                 }
             }
         }
-        .frame(height: 80, alignment: .bottom)
-        .padding(.horizontal, 20)
+        .frame(height: 50, alignment: .bottom)
     }
 }
 

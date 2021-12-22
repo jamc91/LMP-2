@@ -10,24 +10,23 @@ import SwiftUI
 
 struct TabBarView: View {
     
-    @EnvironmentObject var viewModel: ContentViewModel
+    @EnvironmentObject var scoresViewModel: ScoresViewModel
+    let didTapCalendarButton: () -> Void
     
     var body: some View {
         TabView {
-            ScoresView()
+            ScoresView(didTapCalendarButton: didTapCalendarButton)
             StandingLMPView()
             NewsView()
-            Text("Stats").tabItem { Label("Stats", systemImage: "chart.bar.fill") }
-            Text("Settings").tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }
-        .accentColor(.black)
+        .padding(.top, 1)
+        .background(Color(.systemGroupedBackground))
     }
 }
 
 struct TabBarView_Previews: PreviewProvider {
     
     static var previews: some View {
-        TabBarView()
-            .environmentObject(ContentViewModel(games: Constats.shared.games.dates.flatMap { $0.games }, standingMLB: Constats.shared.standingMLB, standingLMP: Constats.shared.standingLMP))
+        TabBarView(didTapCalendarButton: {})
     }
 }

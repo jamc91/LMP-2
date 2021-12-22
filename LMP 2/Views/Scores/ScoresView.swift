@@ -7,39 +7,69 @@
 //
 
 import SwiftUI
-import Combine
 
 struct ScoresView: View {
     
-    @EnvironmentObject var contentViewModel: ContentViewModel
-    @State private var dealt = Set<Int>()
-    @State private var game: Game? = nil
+    @EnvironmentObject var scoresViewModel: ScoresViewModel
+    @State private var game: Game?
+    @State private var showBoxscore = false
+    let didTapCalendarButton: () -> Void
     
     var body: some View {
-        MainScrollView {
+        List {
             HeaderView(
                 title: "Scores",
                 showCalendarButton: true,
-                showPicker: contentViewModel.didTapCalendarButton)
-            StateView
+                showPicker: didTapCalendarButton)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets())
+            ForEach(leagueGameForKey, id: \.self) { section in
+                Section(header: Text(section)) {
+                    ForEach(gamesInDictionaryForLeague[section, default: .init()]) { game in
+                        getGameCell(game: game)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                            .onTapGesture {
+                                self.game = game
+                        }
+                    }
+                }
+                .headerProminence(.increased)
+            }
         }
-        .fullScreenCover(isPresented: $contentViewModel.showSheet, content: {
-            ContentLiveView(game: game)
-        })
+        .id(UUID())
+        .overlay {
+            if scoresViewModel.loadingState == .loading {
+                loading
+            } else if scoresViewModel.loadingState == .empty {
+                empty
+            }
+        }
+        .refreshable {
+            scoresViewModel.refreshScores()
+        }
+        .sheet(item: $game) { game in
+            NavigationView {
+                ContentLiveView(game: game)
+            }
+        }
         .tabItem { Label("Scores", systemImage: "newspaper.fill") }
     }
 }
 
 struct ScoresView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoresView().environmentObject(ContentViewModel())
+        ScoresView(didTapCalendarButton: { })
+            .environmentObject(ScoresViewModel())
     }
 }
 
 // MARK: - Variables
 extension ScoresView {
     var gamesInDictionaryForLeague: [String: [Game]] {
-        Dictionary(grouping: contentViewModel.games, by: { $0.teams.away.team.league.nameLeague })
+        Dictionary(grouping: scoresViewModel.games, by: { $0.teams.away.team.league.nameLeague })
     }
     
     var leagueGameForKey: [String] {
@@ -49,6 +79,7 @@ extension ScoresView {
 
 // MARK: - Views
 extension ScoresView {
+    /// VISTA VACIA.
     var empty: some View {
         Group {
             Spacer(minLength: UIScreen.main.bounds.height / 3)
@@ -56,14 +87,20 @@ extension ScoresView {
                 .foregroundColor(.secondary)
         }
     }
-    
+    /// VISTA DE CARGA.
     var loading: some View {
         Group {
             Spacer(minLength: UIScreen.main.bounds.height / 3)
-            ProgressView()
+            VStack(spacing: 5) {
+                ProgressView()
+                Text("LOADING")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
         }
     }
     
+    /// VISTA DE CELDA SEGUN EL ESTADO DEL JUEGO.
     @ViewBuilder
     func getGameCell(game: Game) -> some View {
         switch game.status.abstractGameState {
@@ -74,78 +111,5 @@ extension ScoresView {
         case .preview:
             ScorePreviewCell(game: game)
         }
-    }
-    
-    private func dealAnimation(game: Game) -> Animation {
-        var delay = 0.0
-        if let index = contentViewModel.games.firstIndex(where: { $0.gamePk == game.gamePk }) {
-            delay = Double(index) * 0.2
-        }
-        return Animation.spring().delay(delay)
-    }
-    
-    private func deal(_ game: Game) {
-        
-        dealt.insert(game.gamePk)
-    }
-
-    private func isUnDealt(game: Game) -> Bool {
-        dealt.contains(game.gamePk)
-    }
-    
-    private func chooseGame(_ game: Game) -> Int {
-        guard let index = contentViewModel.games.firstIndex(where: { $0.id == game.id }) else { return 0 }
-        return contentViewModel.games[index].gamePk
-    }
-    
-    var StateView: some View {
-            VStack(alignment: .center, spacing: 10) {
-                switch contentViewModel.loadingState {
-                case .loading:
-                    loading
-                        .onAppear {
-                            dealt.removeAll()
-                        }
-                case .loaded:
-                    ForEach(leagueGameForKey, id: \.self) { section in
-                        Section(header: HeaderSectionView(title: section)) {
-                            ForEach(gamesInDictionaryForLeague[section, default: .init()].filter(isUnDealt)) { game in
-                                getGameCell(game: game)
-                                    .onTapGesture {
-                                        self.game = game
-                                        contentViewModel.showSheet = true
-                                        contentViewModel.stopTimer()
-                                    }
-                                    
-                            }
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                        }
-                    }
-                    .onAppear {
-                        for game in contentViewModel.games {
-                            withAnimation(dealAnimation(game: game)) {
-                                deal(game)
-                            }
-                        }
-                    }
-                case .empty:
-                    empty
-                }
-            }
-            .padding([.horizontal, .bottom])
-    }
-}
-
-struct HeaderSectionView: View {
-    
-    var title: String
-    
-    var body: some View {
-        HStack {
-            Text(title)
-                .fontWeight(.bold)
-                .font(.system(size: 22))
-            Spacer()
-        }.padding(.top, 10)
     }
 }

@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		14056741269D5B7300EBC053 /* MLBApiEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14056740269D5B7300EBC053 /* MLBApiEndpoints.swift */; };
+		1406DDD92772D44900D00289 /* DetailPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1406DDD82772D44900D00289 /* DetailPostViewModel.swift */; };
 		1417CCDB2665C27400706B7D /* PlayersFinalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1417CCDA2665C27400706B7D /* PlayersFinalView.swift */; };
 		141F9A08254F740B00AFAD9D /* ProbablePitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141F9A07254F740B00AFAD9D /* ProbablePitcherView.swift */; };
 		143A7715259064A3009D790F /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A7714259064A3009D790F /* RequestBuilder.swift */; };
 		143A771825906503009D790F /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A771725906503009D790F /* ApiError.swift */; };
 		143A771E25906A8C009D790F /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A771D25906A8C009D790F /* EndPoint.swift */; };
-		143A772425906F98009D790F /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A772325906F98009D790F /* ContentViewModel.swift */; };
 		143A772C2591787F009D790F /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A772B2591787E009D790F /* HeaderView.swift */; };
 		144A5EE2252198DC00315B07 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE1252198DC00315B07 /* TeamView.swift */; };
 		144A5EE525219B8400315B07 /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE425219B8400315B07 /* ScoreView.swift */; };
@@ -115,12 +115,12 @@
 
 /* Begin PBXFileReference section */
 		14056740269D5B7300EBC053 /* MLBApiEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLBApiEndpoints.swift; sourceTree = "<group>"; };
+		1406DDD82772D44900D00289 /* DetailPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPostViewModel.swift; sourceTree = "<group>"; };
 		1417CCDA2665C27400706B7D /* PlayersFinalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersFinalView.swift; sourceTree = "<group>"; };
 		141F9A07254F740B00AFAD9D /* ProbablePitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbablePitcherView.swift; sourceTree = "<group>"; };
 		143A7714259064A3009D790F /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		143A771725906503009D790F /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		143A771D25906A8C009D790F /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
-		143A772325906F98009D790F /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		143A772B2591787E009D790F /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		144A5EE1252198DC00315B07 /* TeamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
 		144A5EE425219B8400315B07 /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
@@ -618,11 +618,11 @@
 		14DC6F912546794A000A2F45 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				143A772325906F98009D790F /* ContentViewModel.swift */,
 				14EA8A452664512A00D24C2F /* ScoresViewModel.swift */,
 				14EA8A49266472A200D24C2F /* LiveViewModel.swift */,
 				14EA8A5526648D8D00D24C2F /* StandingsViewModel.swift */,
 				14EA8A5726648F3000D24C2F /* NewsViewModel.swift */,
+				1406DDD82772D44900D00289 /* DetailPostViewModel.swift */,
 				14EA8A592664956900D24C2F /* TimerManager.swift */,
 			);
 			path = ViewModels;
@@ -856,9 +856,9 @@
 				14BC636E2629537100F8C551 /* RecordTeam.swift in Sources */,
 				14EA9B2524774F7700AE32AF /* StandingLMPModel.swift in Sources */,
 				1489549F261FEAA20013CB5B /* TeamContent.swift in Sources */,
-				143A772425906F98009D790F /* ContentViewModel.swift in Sources */,
 				14BE4FE3263623B900DFEB30 /* VideosView.swift in Sources */,
 				14EA8A5626648D8D00D24C2F /* StandingsViewModel.swift in Sources */,
+				1406DDD92772D44900D00289 /* DetailPostViewModel.swift in Sources */,
 				146184292622D963004EF195 /* RowStatsView.swift in Sources */,
 				14BC63672629511900F8C551 /* Venue.swift in Sources */,
 				148954D2261FF8CB0013CB5B /* PitchingStats.swift in Sources */,
@@ -1016,6 +1016,7 @@
 				DEVELOPMENT_TEAM = EWVYY5R697;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "LMP 2/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1038,6 +1039,7 @@
 				DEVELOPMENT_TEAM = EWVYY5R697;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "LMP 2/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -24,6 +24,7 @@ struct TeamView: View {
                 .foregroundColor(.secondary)
         }
         .padding(.horizontal)
+        .padding(.vertical, 5)
     }
 }
 

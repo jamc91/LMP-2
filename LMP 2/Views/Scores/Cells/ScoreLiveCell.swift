@@ -11,7 +11,6 @@ import SwiftUI
 struct ScoreLiveCell: View {
     
     let game: Game
-    @State private var animation = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -35,15 +34,15 @@ struct ScoreLiveCell: View {
                 DiamondView(baseState: linescore.offense.diamondState)
                 Spacer()
                 BSOView(
-                    balls: linescore.ballsState,
-                    strikes: linescore.strikesState,
-                    outs: linescore.outsState)
+                    balls: linescore.balls,
+                    strikes: linescore.strikes,
+                    outs: linescore.outs)
             }
             .padding(.horizontal)
             }
         }
         .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10.0))
     }
 }
 

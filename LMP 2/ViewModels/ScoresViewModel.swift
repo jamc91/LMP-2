@@ -10,10 +10,12 @@ import Foundation
 import Combine
 import SwiftUI
 
-final class ScoresViewModel {
+final class ScoresViewModel: ObservableObject {
     
     @Published var games = [Game]()
     @Published var loadingState: LoadingState = .loading
+    @Published var date = Date()
+   // let timerManager = TimerManager()
     
     init() {
         getScheduledGames()
@@ -31,6 +33,11 @@ final class ScoresViewModel {
         }
     }
     
+    func refreshScores() {
+        getScheduledGames(date: date)
+        print("se han recargado los juegos.")
+    }
+    
     private func printApiErrorMessage(error: ApiError) {
         switch error {
         case .decodingError(let errorDecoding):
@@ -41,4 +48,35 @@ final class ScoresViewModel {
             print("error desconocido")
         }
     }
+    
+//    /// Detiene Timer.
+//    func stopTimer() {
+//        timerManager.stopTimer()
+//    }
+//
+//    /// Inicia Timer.
+//    func startTimer() {
+//        timerManager.startTimer {
+//            self.getScheduledGames(date: self.date)
+//        }
+//    }
+//
+//    func didTapCalendarButton() {
+//      //  showDatePicker = true
+//        stopTimer()
+//    }
+
+    func changeDate() {
+            loadingState = .loading
+            games.removeAll()
+          //  showDatePicker = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.getScheduledGames(date: self.date)
+        }
+    }
+
+//    func dismissCalendar() {
+//        showDatePicker = false
+//        startTimer()
+//    }
 }

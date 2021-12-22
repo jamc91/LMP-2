@@ -10,8 +10,8 @@ import SwiftUI
 
 struct CalendarView: View {
     
-    @EnvironmentObject var viewModel: ContentViewModel
-    let deviceName = UIDevice.current.name
+    @Binding var date: Date
+    @Binding var show: Bool
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -19,36 +19,31 @@ struct CalendarView: View {
         }
         .padding([.horizontal, .bottom], 7)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        .background((viewModel.showDatePicker ? Color.black.opacity(0.7) : Color.clear)
+        .background((show ? Color.black.opacity(0.7) : Color.clear)
                         .onTapGesture {
-                            withAnimation(.spring()) {
-                                self.viewModel.showDatePicker = false
-                            }
-                        }
-                        .disabled(!viewModel.showDatePicker))
-        .ignoresSafeArea()
-        .onChange(of: viewModel.date, perform: { value in
             withAnimation(.spring()) {
-                viewModel.changeDate()
+                show = false
             }
-        })
+        }
+        .disabled(!show))
+        .ignoresSafeArea()
     }
 }
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView().environmentObject(ContentViewModel())
+        CalendarView(date: .constant(Date()), show: .constant(false))
     }
 }
 
 extension CalendarView {
     var calendar: some View {
-        DatePicker("", selection: $viewModel.date, displayedComponents: .date)
+        DatePicker("", selection: $date, displayedComponents: .date)
             .datePickerStyle(GraphicalDatePickerStyle())
             .padding([.horizontal, .top])
             .offset(y: 20.0)
             .background(Color(.secondarySystemGroupedBackground))
             .mask(RoundedRectangle(cornerRadius: 40.0, style: .continuous))
-            .offset(y: viewModel.showDatePicker ? 0 : UIScreen.main.bounds.minY+470)
+            .offset(y: show ? 0 : UIScreen.main.bounds.minY+470)
     }
 }
