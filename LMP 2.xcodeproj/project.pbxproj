@@ -68,6 +68,7 @@
 		148D2E892598628C005BB4F3 /* ScoreLiveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148D2E882598628C005BB4F3 /* ScoreLiveCell.swift */; };
 		149385D62626C74D003A6321 /* Inning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149385D52626C74D003A6321 /* Inning.swift */; };
 		149385D92626C77A003A6321 /* InningTeamResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149385D82626C77A003A6321 /* InningTeamResults.swift */; };
+		149483972777C3A200B01B80 /* PreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149483962777C3A200B01B80 /* PreviewCell.swift */; };
 		14988D14264317DF00623694 /* StandingLMPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14988D13264317DF00623694 /* StandingLMPView.swift */; };
 		14988D162643237E00623694 /* RowStanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14988D152643237E00623694 /* RowStanding.swift */; };
 		14B7BD62264385F80025FBE4 /* StandingRegularView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B7BD61264385F80025FBE4 /* StandingRegularView.swift */; };
@@ -175,6 +176,7 @@
 		148D2E882598628C005BB4F3 /* ScoreLiveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreLiveCell.swift; sourceTree = "<group>"; };
 		149385D52626C74D003A6321 /* Inning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inning.swift; sourceTree = "<group>"; };
 		149385D82626C77A003A6321 /* InningTeamResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InningTeamResults.swift; sourceTree = "<group>"; };
+		149483962777C3A200B01B80 /* PreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCell.swift; sourceTree = "<group>"; };
 		14988D13264317DF00623694 /* StandingLMPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingLMPView.swift; sourceTree = "<group>"; };
 		14988D152643237E00623694 /* RowStanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowStanding.swift; sourceTree = "<group>"; };
 		14B7BD61264385F80025FBE4 /* StandingRegularView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingRegularView.swift; sourceTree = "<group>"; };
@@ -477,6 +479,7 @@
 			isa = PBXGroup;
 			children = (
 				148954F1262035C00013CB5B /* ScoresView.swift */,
+				149483962777C3A200B01B80 /* PreviewCell.swift */,
 				144A5EE0252198AB00315B07 /* Views */,
 				148954F626203FAC0013CB5B /* Cells */,
 				1461841626221DC6004EF195 /* Detail */,
@@ -854,6 +857,7 @@
 				14B7BD642643863C0025FBE4 /* StandingPointsView.swift in Sources */,
 				149385D62626C74D003A6321 /* Inning.swift in Sources */,
 				14BC636E2629537100F8C551 /* RecordTeam.swift in Sources */,
+				149483972777C3A200B01B80 /* PreviewCell.swift in Sources */,
 				14EA9B2524774F7700AE32AF /* StandingLMPModel.swift in Sources */,
 				1489549F261FEAA20013CB5B /* TeamContent.swift in Sources */,
 				14BE4FE3263623B900DFEB30 /* VideosView.swift in Sources */,

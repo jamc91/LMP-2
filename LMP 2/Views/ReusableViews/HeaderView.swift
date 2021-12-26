@@ -26,10 +26,13 @@ struct HeaderView: View {
                         showPicker!()
                     }
                 }) {
-                    Image(systemName: "calendar.circle.fill")
-                        .font(.system(size: 30))
-                        .foregroundColor(.primary)
+                    Image(systemName: "calendar")
+                        .imageScale(.large)
+                        
                 }
+                .buttonStyle(.bordered)
+                .clipShape(Circle())
+                .tint(.blue)
             }
         }
         .frame(height: 50, alignment: .bottom)

@@ -18,7 +18,7 @@ struct ScoresView: View {
     var body: some View {
         List {
             HeaderView(
-                title: "Scores",
+                title: "Games",
                 showCalendarButton: true,
                 showPicker: didTapCalendarButton)
                 .listRowBackground(Color.clear)
@@ -37,9 +37,12 @@ struct ScoresView: View {
                     }
                 }
                 .headerProminence(.increased)
+                .listRowInsets(EdgeInsets())
             }
         }
         .id(UUID())
+        .padding(.top, 1)
+        .background(Color(.systemGroupedBackground))
         .overlay {
             if scoresViewModel.loadingState == .loading {
                 loading
@@ -55,13 +58,14 @@ struct ScoresView: View {
                 ContentLiveView(game: game)
             }
         }
-        .tabItem { Label("Scores", systemImage: "newspaper.fill") }
+        .tabItem { Label("Games", systemImage: "lanyardcard") }
     }
 }
 
 struct ScoresView_Previews: PreviewProvider {
     static var previews: some View {
         ScoresView(didTapCalendarButton: { })
+            .preferredColorScheme(.dark)
             .environmentObject(ScoresViewModel())
     }
 }
@@ -109,7 +113,7 @@ extension ScoresView {
         case .final:
             ScoreFinalCell(game: game)
         case .preview:
-            ScorePreviewCell(game: game)
+            PreviewCell(game: game)
         }
     }
 }

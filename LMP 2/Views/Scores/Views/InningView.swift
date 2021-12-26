@@ -10,18 +10,18 @@ import SwiftUI
 
 struct InningView: View {
     
-    var arrowStatus: String
-    var currentInning: String
+    let arrowStatus: String
+    let currentInning: String
     
     var body: some View {
         HStack {
             Image(systemName: arrowStatus)
                 .foregroundColor(Color("ActiveColor"))
-                .font(.title2)
             Text(currentInning)
                 .foregroundColor(.secondary)
-                .font(.title2)
-        }.frame(width: 100, height: 100)
+        }
+        .font(.title2)
+        .frame(width: 100, height: 100)
     }
 }
 

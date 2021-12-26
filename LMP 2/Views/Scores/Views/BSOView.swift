@@ -73,7 +73,7 @@ struct LabelDots: View {
                 .foregroundColor(colorScheme == .light ? .primary : Color("LightGray"))
             ForEach(0..<numberOfDots) { index in
                 Image(systemName: index < state ? "circle.fill" : "circle")
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundColor((index < state || colorScheme == .light) ? Color("ActiveColor") : Color("LightGray") )
             }
         }

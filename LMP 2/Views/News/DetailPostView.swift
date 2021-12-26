@@ -18,31 +18,30 @@ struct DetailPostView: View {
     }
     
     var body: some View {
-        ZStack {
-            if !detailPostViewModel.isLoading {
-                ScrollView {
+        ScrollView {
+            VStack {
+                GeometryReader { proxy in
                     WebImage(url: URL(string: detailPostViewModel.detailPost?.cover ?? ""))
                         .resizable()
-                        .placeholder {
-                            RoundedRectangle(cornerRadius: 15.0, style: .continuous)
-                                .foregroundColor(Color(.systemGray5))
-                        }
-                        .indicator(.activity)
                         .aspectRatio(contentMode: .fill)
-                        .frame(height: 350, alignment: .center)
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(detailPostViewModel.detailPost?.title ?? "")
-                            .font(.system(size: 20, weight: .semibold, design: .serif))
-                            .italic()
-                        Text(detailPostViewModel.detailPost?.date ?? Date(), style: .date)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        Text(detailPostViewModel.detailPost?.content.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil) ?? "")
-                    }
-                    .padding(10)
-                    .frame(width: UIScreen.main.bounds.width)
+                        .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
                 }
-            } else {
+                .frame(height: 300)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(detailPostViewModel.detailPost?.title ?? "")
+                        .font(.system(size: 20, weight: .semibold, design: .serif))
+                        .italic()
+                    Text(detailPostViewModel.detailPost?.date ?? Date(), style: .date)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text(detailPostViewModel.detailPost?.content.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil) ?? "")
+                }
+                .padding(10)
+                .frame(width: UIScreen.main.bounds.width)
+            }
+        }
+        .overlay {
+            if detailPostViewModel.isLoading {
                 loading
             }
         }
@@ -52,15 +51,21 @@ struct DetailPostView: View {
 
 struct DetailPostView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailPostView(slug: "")
+        DetailPostView(slug: "isaias-tejeda-se-suma-a-naranjeros-de-cara-a-la-postemporada")
     }
 }
 
 extension DetailPostView {
     var loading: some View {
-        Group {
-            Spacer(minLength: UIScreen.main.bounds.height / 3)
-            ProgressView()
+        ZStack {
+            Color(.systemBackground).ignoresSafeArea()
+            VStack(spacing: 5) {
+                ProgressView()
+                Text("LOADING")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

@@ -26,9 +26,6 @@ struct ScoreFinalCell: View {
                          losses: game.teams.home.leagueRecord.losses)
             }
             .padding(10)
-            Divider()
-            PlayersFinalView(decisions: game.decisions)
-                
         }
         .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10.0))

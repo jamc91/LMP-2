@@ -19,8 +19,6 @@ struct TabBarView: View {
             StandingLMPView()
             NewsView()
         }
-        .padding(.top, 1)
-        .background(Color(.systemGroupedBackground))
     }
 }
 
