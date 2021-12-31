@@ -67,12 +67,10 @@ final class ScoresViewModel: ObservableObject {
 //    }
 
     func changeDate() {
-            loadingState = .loading
-            games.removeAll()
-          //  showDatePicker = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            self.getScheduledGames(date: self.date)
-        }
+        loadingState = .loading
+        games.removeAll()
+        //  showDatePicker = false
+        getScheduledGames(date: date)
     }
 
 //    func dismissCalendar() {

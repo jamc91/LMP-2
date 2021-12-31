@@ -14,8 +14,9 @@ final class NewsViewModel: ObservableObject {
     @Published var detailPost: Post?
     var index = 2
     
-    init() {
-        getPosts(page: 1)
+    init(posts: [Post]) {
+        self.posts = posts
+        getPosts(page: 2)
     }
     
     func getPosts(page: Int) {

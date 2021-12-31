@@ -11,13 +11,27 @@ import SwiftUI
 struct TabBarView: View {
     
     @EnvironmentObject var scoresViewModel: ScoresViewModel
-    let didTapCalendarButton: () -> Void
+    @State private var selectedTab = 0
+    @State private var showDatePicker = false
     
     var body: some View {
-        TabView {
-            ScoresView(didTapCalendarButton: didTapCalendarButton)
-            StandingLMPView()
-            NewsView()
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tag(0)
+            ScoresView() {
+                showDatePicker = true
+            }
+            .tag(1)
+            .environmentObject(scoresViewModel)
+        }
+        .onChange(of: scoresViewModel.date, perform: { newValue in
+            scoresViewModel.changeDate()
+            withAnimation(.spring()) {
+                showDatePicker = false
+            }
+        })
+        .overlay {
+            CalendarView(date: $scoresViewModel.date, show: $showDatePicker)
         }
     }
 }
@@ -25,6 +39,7 @@ struct TabBarView: View {
 struct TabBarView_Previews: PreviewProvider {
     
     static var previews: some View {
-        TabBarView(didTapCalendarButton: {})
+        TabBarView()
+            .environmentObject(ScoresViewModel())
     }
 }

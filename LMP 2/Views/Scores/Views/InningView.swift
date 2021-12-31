@@ -18,10 +18,8 @@ struct InningView: View {
             Image(systemName: arrowStatus)
                 .foregroundColor(Color("ActiveColor"))
             Text(currentInning)
-                .foregroundColor(.secondary)
         }
         .font(.title2)
-        .frame(width: 100, height: 100)
     }
 }
 

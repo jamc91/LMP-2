@@ -15,31 +15,31 @@ struct PostCell: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            GeometryReader { _ in
+            GeometryReader { proxy in
                 WebImage(url: URL(string: post.cover))
                     .resizable()
                     .placeholder {
-                        RoundedRectangle(cornerRadius: 15.0, style: .continuous)
+                        RoundedRectangle(cornerRadius: 10.0, style: .continuous)
                             .foregroundColor(Color(.systemGray5))
                     }
                     .indicator(.activity)
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: UIScreen.main.bounds.width-40, height: 225, alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: 15.0, style: .continuous))
+                    .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
             }
-            .frame(width: UIScreen.main.bounds.width-40, height: 225, alignment: .center)
-            VStack(alignment: .leading, spacing: 5) {
-                Text(post.title)
-                    .font(.system(size: 20, weight: .semibold, design: .serif))
-                    .italic()
-                    .lineLimit(2)
-                Text(post.description.replacingOccurrences(of: "[&]|acute;", with: "", options: .regularExpression, range: nil))
-                    .lineLimit(2)
-                Text(post.date, style: .date)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
+            .clipShape(RoundedRectangle(cornerRadius: 10.0, style: .continuous))
+            Text(post.date, style: .date)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(.secondary)
+            Text(post.title)
+                .font(.headline)
+                .lineLimit(2)
+            Text(post.description.replacingOccurrences(of: "[&]|acute;", with: "", options: .regularExpression, range: nil))
+                .lineLimit(2)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
+        .aspectRatio(1.1, contentMode: .fit)
     }
 }
 

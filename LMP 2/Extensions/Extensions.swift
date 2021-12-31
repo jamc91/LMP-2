@@ -14,6 +14,12 @@ extension Date {
         formatter.dateFormat = "MM/d/yyyy"
         return formatter.string(from: self)
     }
+    
+    func dateFormatterForCalendar() -> String {
+       let formatter = DateFormatter()
+       formatter.dateFormat = "yyyy-MM-d"
+       return formatter.string(from: self)
+   }
 }
 
 extension String {

@@ -16,55 +16,55 @@ struct ScoresView: View {
     let didTapCalendarButton: () -> Void
     
     var body: some View {
-        List {
-            HeaderView(
-                title: "Games",
-                showCalendarButton: true,
-                showPicker: didTapCalendarButton)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets())
-            ForEach(leagueGameForKey, id: \.self) { section in
-                Section(header: Text(section)) {
-                    ForEach(gamesInDictionaryForLeague[section, default: .init()]) { game in
-                        getGameCell(game: game)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
-                            .onTapGesture {
-                                self.game = game
+            List {
+                HeaderView(
+                    title: "Scoreboard",
+                    showCalendarButton: true,
+                    showPicker: didTapCalendarButton)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                ForEach(leagueGameForKey, id: \.self) { section in
+                    Section(header: Text(section)) {
+                        ForEach(gamesInDictionaryForLeague[section, default: .init()]) { game in
+                            getGameCell(game: game)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                                .onTapGesture {
+                                    self.game = game
+                            }
                         }
                     }
+                    .headerProminence(.increased)
+                    .listRowInsets(EdgeInsets())
                 }
-                .headerProminence(.increased)
-                .listRowInsets(EdgeInsets())
             }
-        }
-        .id(UUID())
-        .padding(.top, 1)
-        .background(Color(.systemGroupedBackground))
-        .overlay {
-            if scoresViewModel.loadingState == .loading {
-                loading
-            } else if scoresViewModel.loadingState == .empty {
-                empty
+            .id(UUID())
+            .padding(.top, 1)
+            .background(Color(.systemGroupedBackground))
+            .overlay {
+                if scoresViewModel.loadingState == .loading {
+                    loading
+                } else if scoresViewModel.loadingState == .empty {
+                    empty
+                }
             }
-        }
-        .refreshable {
-            scoresViewModel.refreshScores()
-        }
-        .sheet(item: $game) { game in
-            NavigationView {
-                ContentLiveView(game: game)
+            .refreshable {
+                scoresViewModel.refreshScores()
             }
-        }
-        .tabItem { Label("Games", systemImage: "lanyardcard") }
+            .sheet(item: $game) { game in
+                NavigationView {
+                    ContentLiveView(game: game)
+                }
+            }
+            .tabItem { Label("Scoreboard", systemImage: "lanyardcard") }
     }
 }
 
 struct ScoresView_Previews: PreviewProvider {
     static var previews: some View {
-        ScoresView(didTapCalendarButton: { })
+        ScoresView(didTapCalendarButton: {})
             .preferredColorScheme(.dark)
             .environmentObject(ScoresViewModel())
     }
@@ -87,8 +87,13 @@ extension ScoresView {
     var empty: some View {
         Group {
             Spacer(minLength: UIScreen.main.bounds.height / 3)
-            Text("No Scheduled Games.")
-                .foregroundColor(.secondary)
+            VStack(spacing: 5) {
+                Text("No Scheduled Games")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                Text("Please try another date.")
+                    .foregroundColor(.secondary)
+            }
         }
     }
     /// VISTA DE CARGA.

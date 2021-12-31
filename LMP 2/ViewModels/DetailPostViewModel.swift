@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class DetailPostViewModel: ObservableObject {
     
@@ -22,7 +23,11 @@ final class DetailPostViewModel: ObservableObject {
             switch response {
             case .success(let detailPost):
                 self.detailPost = detailPost.response
-                self.isLoading = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    withAnimation {
+                        self.isLoading = false
+                    }
+                }
             case .failure(let error):
                 debugPrint(error)
             }

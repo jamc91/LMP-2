@@ -15,7 +15,7 @@ struct LMP2App: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabBarView()
                 .environmentObject(scoresViewModel)
         }
     }

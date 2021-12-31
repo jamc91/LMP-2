@@ -16,7 +16,7 @@ struct ScoreView: View {
     var body: some View {
         VStack {
             Text("\(awayScore)-\(homeScore)")
-                .font(.system(size: 45, weight: .semibold, design: .rounded))
+                .font(.system(size: 45, weight: .semibold, design: .default))
                 .lineLimit(1)
                 .foregroundColor(.primary)
             Text(status)

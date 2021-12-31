@@ -15,9 +15,6 @@ struct DetailPreview: View {
     
     var body: some View {
         List {
-            Group {
-                ScorePreviewCell(game: game, venue: previewData.gameData.venue)
-            }.listRowInsets(EdgeInsets())
             VStack(alignment: .leading, spacing: 10) {
                 Text("LINEUPS")
                     .font(.subheadline)

@@ -17,6 +17,7 @@ enum EndPoint {
     case image(Int)
     case posts(Int)
     case postDetail(String)
+    case calendar(Date)
 }
 
 extension EndPoint: RequestBuilder {
@@ -38,6 +39,8 @@ extension EndPoint: RequestBuilder {
             return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/posts?page=\(page)")
         case .postDetail(let slug):
             return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/posts/\(slug)?param=slug")
+        case .calendar(let date):
+            return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/calendar?date=\(date.dateFormatterForCalendar())")
         }
     }
     

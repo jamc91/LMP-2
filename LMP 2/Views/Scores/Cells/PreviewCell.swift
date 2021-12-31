@@ -15,67 +15,46 @@ struct PreviewCell: View {
     var body: some View {
         VStack(alignment: .leading) {
             GeometryReader { proxy in
-                HStack {
+                HStack(spacing: 0) {
                     Image(String(game.teams.away.team.id))
                         .resizable()
                         .scaledToFit()
-                        .frame(width: proxy.size.width / 2, height: 80)
-                    Spacer()
+                        .frame(width: proxy.size.width / 2, height: proxy.size.height / 2.2)
                     Image(String(game.teams.home.team.id))
                         .resizable()
                         .scaledToFit()
-                        .frame(width: proxy.size.width / 2, height: 80)
+                        .frame(width: proxy.size.width / 2, height: proxy.size.height / 2.2)
                 }
-                .frame(height: 180)
-                .background(TeamBackgroundShape().fill(getBackgroundColor(teamId: game.teams.home.team.id)))
-                .background(getBackgroundColor(teamId: game.teams.away.team.id))
+                .frame(maxHeight: .infinity)
+                .background(TeamBackgroundShape().fill(game.teams.home.team.teamBackgroundColor))
+                .background(game.teams.away.team.teamBackgroundColor)
                 .overlay(alignment: .topLeading) {
-                    Text(game.gameDate, style: .time)
+                    Text(game.gameDate.timePM)
                         .font(.subheadline)
                         .bold()
                         .foregroundColor(.secondary)
                         .padding(.vertical, 2)
                         .padding(.horizontal, 5)
-                        .background(.regularMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 5.0))
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 3.0))
                         .padding(10)
                 }
             }
-            .frame(height: 180)
+            .frame(height: 170)
             .clipShape(RoundedRectangle(cornerRadius: 7.0))
             VStack(alignment: .leading, spacing: 4) {
-                Text(game.venue.name)
-                    .font(.subheadline)
-                    .bold()
-                    .foregroundColor(.blue)
+                HStack {
+                    Text(game.venue.name)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.blue)
+                }
                 Text("\(game.teams.away.team.name) at \(game.teams.home.team.name)")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .lineLimit(2)
                     .frame(height: 55)
             }
-        }
-    }
-    
-    func getBackgroundColor(teamId: Int) -> Color {
-        switch teamId {
-        case 680:
-            return Color("blue")
-        case 5482:
-            return Color("brown")
-        case 5483:
-            return Color("darkBlue")
-        case 677:
-            return Color("Orange")
-        case 678:
-            return Color("cayenne")
-        case 676:
-            return Color("red")
-        case 673:
-            return Color("red")
-        case 674:
-            return Color("blue")
-        default:
-            return Color.white
         }
     }
 }
@@ -96,10 +75,10 @@ struct TeamBackgroundShape: Shape {
     
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        path.move(to: CGPoint(x: rect.midX-55, y: rect.maxY))
+        path.move(to: CGPoint(x: rect.midX / 1.2, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.midX+55, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.midX * 1.2, y: rect.minY))
         return path
     }
 }

@@ -13,36 +13,42 @@ struct ScoreLiveCell: View {
     let game: Game
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                TeamView(teamName: "\(game.teams.away.team.id)",
-                         wins: game.teams.away.leagueRecord.wins,
-                         losses: game.teams.away.leagueRecord.losses)
-                Spacer()
-                ScoreView(awayScore: game.teams.away.score, homeScore: game.teams.home.score, status: game.status.abstractGameState.rawValue)
-                Spacer()
-                TeamView(teamName: "\(game.teams.home.team.id)",
-                         wins: game.teams.home.leagueRecord.wins,
-                         losses: game.teams.home.leagueRecord.losses)
+        ZStack {
+            GeometryReader { proxy in
+                VStack(spacing: 0) {
+                    HStack(spacing: 0) {
+                        TeamView(teamName: "\(game.teams.away.team.id)",
+                                 wins: game.teams.away.leagueRecord.wins,
+                                 losses: game.teams.away.leagueRecord.losses)
+                            .frame(width: proxy.size.width / 3)
+                        ScoreView(awayScore: game.teams.away.score, homeScore: game.teams.home.score, status: game.status.abstractGameState.rawValue)
+                            .frame(width: proxy.size.width / 3)
+                        TeamView(teamName: "\(game.teams.home.team.id)",
+                                 wins: game.teams.home.leagueRecord.wins,
+                                 losses: game.teams.home.leagueRecord.losses)
+                            .frame(width: proxy.size.width / 3)
+                    }
+                    .padding(.vertical, 10)
+                    Divider()
+                    if let linescore = game.linescore {
+                        HStack(spacing: 0) {
+                            InningView(arrowStatus: linescore.inningArrowStatus, currentInning: linescore.currentInningOrdinal)
+                                .frame(width: proxy.size.width / 3)
+                            DiamondView(baseState: linescore.offense.diamondState)
+                                .frame(width: proxy.size.width / 3)
+                            BSOView(
+                                balls: linescore.balls,
+                                strikes: linescore.strikes,
+                                outs: linescore.outs)
+                                .frame(width: proxy.size.width / 3)
+                        }
+                    }
+                }
+                .background(Color(.secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 10.0))
             }
-            .padding(10)
-            Divider()
-            if let linescore = game.linescore {
-            HStack {
-                InningView(arrowStatus: linescore.inningArrowStatus, currentInning: linescore.currentInningOrdinal)
-                Spacer()
-                DiamondView(baseState: linescore.offense.diamondState)
-                Spacer()
-                BSOView(
-                    balls: linescore.balls,
-                    strikes: linescore.strikes,
-                    outs: linescore.outs)
-            }
-            .padding(.horizontal)
-            }
+            .frame(height: 205)
         }
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10.0))
     }
 }
 
@@ -51,7 +57,6 @@ struct ScoreCellView_Previews: PreviewProvider {
         ZStack {
             ScoreLiveCell(game: Constats.shared.games.dates.first!.games.first!)
         }
-        .padding()
         .background(Color(.systemGroupedBackground))
         .previewLayout(.sizeThatFits)
     }
