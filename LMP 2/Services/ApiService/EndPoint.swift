@@ -18,6 +18,7 @@ enum EndPoint {
     case posts(Int)
     case postDetail(String)
     case calendar(Date)
+    case leaders(String, Int, String)
 }
 
 extension EndPoint: RequestBuilder {
@@ -41,6 +42,8 @@ extension EndPoint: RequestBuilder {
             return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/posts/\(slug)?param=slug")
         case .calendar(let date):
             return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/calendar?date=\(date.dateFormatterForCalendar())")
+        case .leaders(let mode, let limit, let type):
+            return EndPoint.buildURLRequest(urlString: "https://api.lmp.mx/3.0.0/leaders?mode=\(mode)&column=avg&order=desc&limit=\(limit)&type=\(type)&year=2021&cache=2")
         }
     }
     

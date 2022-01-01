@@ -37,7 +37,7 @@ final class HomeViewModel: ObservableObject {
             switch response {
             case .success(let posts):
                 self.posts = posts.response.posts
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     withAnimation {
                         self.isLoading = false
                     }

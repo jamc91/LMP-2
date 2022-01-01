@@ -30,12 +30,13 @@ struct SectionView<Content, ButtonSection>: View where Content: View, ButtonSect
                 Spacer()
                 buttonSection
             }
-            .padding([.horizontal, .top], 20)
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     content
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
             }
         }
     }

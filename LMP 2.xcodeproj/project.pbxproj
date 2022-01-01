@@ -15,6 +15,9 @@
 		143A771825906503009D790F /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A771725906503009D790F /* ApiError.swift */; };
 		143A771E25906A8C009D790F /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A771D25906A8C009D790F /* EndPoint.swift */; };
 		143A772C2591787F009D790F /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143A772B2591787E009D790F /* HeaderView.swift */; };
+		143C63F4277FCFDA00F2E1A3 /* LeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C63F3277FCFDA00F2E1A3 /* LeaderView.swift */; };
+		143C63F6277FCFEC00F2E1A3 /* LeadersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C63F5277FCFEC00F2E1A3 /* LeadersViewModel.swift */; };
+		143C63F9277FD01700F2E1A3 /* Leader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C63F8277FD01700F2E1A3 /* Leader.swift */; };
 		144A5EE2252198DC00315B07 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE1252198DC00315B07 /* TeamView.swift */; };
 		144A5EE525219B8400315B07 /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144A5EE425219B8400315B07 /* ScoreView.swift */; };
 		144AE0EC264F1D36005E5D66 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144AE0EB264F1D36005E5D66 /* DateFormatter+.swift */; };
@@ -129,6 +132,9 @@
 		143A771725906503009D790F /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		143A771D25906A8C009D790F /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		143A772B2591787E009D790F /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		143C63F3277FCFDA00F2E1A3 /* LeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderView.swift; sourceTree = "<group>"; };
+		143C63F5277FCFEC00F2E1A3 /* LeadersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LeadersViewModel.swift; path = "LMP 2/Views/Leaders/LeadersViewModel.swift"; sourceTree = SOURCE_ROOT; };
+		143C63F8277FD01700F2E1A3 /* Leader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leader.swift; sourceTree = "<group>"; };
 		144A5EE1252198DC00315B07 /* TeamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
 		144A5EE425219B8400315B07 /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
 		144AE0EB264F1D36005E5D66 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
@@ -247,6 +253,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		143C63F2277FCFC400F2E1A3 /* Leaders */ = {
+			isa = PBXGroup;
+			children = (
+				143C63F3277FCFDA00F2E1A3 /* LeaderView.swift */,
+			);
+			path = Leaders;
+			sourceTree = "<group>";
+		};
+		143C63F7277FD00C00F2E1A3 /* Leaders */ = {
+			isa = PBXGroup;
+			children = (
+				143C63F8277FD01700F2E1A3 /* Leader.swift */,
+			);
+			path = Leaders;
+			sourceTree = "<group>";
+		};
 		144A5EE0252198AB00315B07 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -327,6 +349,7 @@
 		14895473261FCFDE0013CB5B /* ApiModel */ = {
 			isa = PBXGroup;
 			children = (
+				143C63F7277FD00C00F2E1A3 /* Leaders */,
 				1494839C2778318700B01B80 /* Calendar */,
 				144E2BFC2583287500DF570D /* ScheduleResponse.swift */,
 				14895477261FD06C0013CB5B /* Dates.swift */,
@@ -512,6 +535,7 @@
 		1489550A26214F340013CB5B /* ReusableViews */ = {
 			isa = PBXGroup;
 			children = (
+				14D12C49277F89D1008A306E /* SectionView.swift */,
 				14D12C47277EBFCD008A306E /* LoadingView.swift */,
 				143A772B2591787E009D790F /* HeaderView.swift */,
 				146BC4282546807E00334333 /* MainScrollView.swift */,
@@ -574,8 +598,8 @@
 				148954F426203D350013CB5B /* Scores */,
 				14988D12264317B400623694 /* Standings */,
 				14EF807526449BEF00E26153 /* News */,
+				143C63F2277FCFC400F2E1A3 /* Leaders */,
 				1489550A26214F340013CB5B /* ReusableViews */,
-				14D12C49277F89D1008A306E /* SectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -661,6 +685,7 @@
 				1406DDD82772D44900D00289 /* DetailPostViewModel.swift */,
 				14EA8A592664956900D24C2F /* TimerManager.swift */,
 				1494839A277830D600B01B80 /* HomeViewModel.swift */,
+				143C63F5277FCFEC00F2E1A3 /* LeadersViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -856,6 +881,7 @@
 				144E2C15258481D300DF570D /* LiveResponse.swift in Sources */,
 				148954D8261FFB0B0013CB5B /* DisplayName.swift in Sources */,
 				14E0086D262A63F90075302F /* RHEText.swift in Sources */,
+				143C63F9277FD01700F2E1A3 /* Leader.swift in Sources */,
 				14BBFC4524ECC17000BA1B9E /* StandingMLBModel.swift in Sources */,
 				14895494261FE6BA0013CB5B /* GameData.swift in Sources */,
 				14895478261FD06C0013CB5B /* Dates.swift in Sources */,
@@ -875,6 +901,7 @@
 				14E0D920252AD01000C37C3C /* DiamondView.swift in Sources */,
 				14EF807826449D4300E26153 /* PostsModel.swift in Sources */,
 				14988D14264317DF00623694 /* StandingLMPView.swift in Sources */,
+				143C63F6277FCFEC00F2E1A3 /* LeadersViewModel.swift in Sources */,
 				144E2C062583395B00DF570D /* Linescore.swift in Sources */,
 				143A771E25906A8C009D790F /* EndPoint.swift in Sources */,
 				1461842D2623BD17004EF195 /* BattingStatsView.swift in Sources */,
@@ -917,6 +944,7 @@
 				14EA8A5826648F3000D24C2F /* NewsViewModel.swift in Sources */,
 				14E0D926252AD65500C37C3C /* BSOView.swift in Sources */,
 				143A771825906503009D790F /* ApiError.swift in Sources */,
+				143C63F4277FCFDA00F2E1A3 /* LeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

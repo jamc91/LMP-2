@@ -12,9 +12,30 @@ struct HomeView: View {
     
     @StateObject var homeViewModel = HomeViewModel()
     
+    init() {
+        let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(Date().dayAndMonth)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.secondary)
+                        Text("Today")
+                            .font(.largeTitle)
+                            .bold()
+                    }
+                    Spacer()
+                }
+                .padding([.horizontal, .top], 20)
+                .padding(.bottom, -5)
                 SectionView(title: "Scheduled Games") {
                     ForEach(homeViewModel.scheduledGames) { game in
                         CalendarRow(game: game)
@@ -34,6 +55,7 @@ struct HomeView: View {
                     .buttonStyle(StaticButtonStyle())
                 })
                 .frame(height: 350)
+                LeaderView()
                 Section(header: VStack {
                     TextHeader(title: "More to Explore").padding(.horizontal, 20).padding(.top, 15).padding(.bottom, -1)
                     Divider().padding(.leading, 20)
@@ -66,7 +88,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationBarTitle("Today")
+            .navigationBarHidden(true)
             .overlay {
                 if homeViewModel.isLoading {
                     LoadingView()
@@ -75,6 +97,7 @@ struct HomeView: View {
         }
         .navigationViewStyle(.stack)
         .tabItem { Label("Today", systemImage: "doc.text.image.fill") }
+        .padding(.top, 1)
     }
 }
 

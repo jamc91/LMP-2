@@ -12,7 +12,7 @@ struct LoadingView: View {
     
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+            Color(.systemBackground).ignoresSafeArea()
             ProgressView() {
                 Text("LOADING")
                     .font(.caption)
